@@ -7,7 +7,7 @@ import java.util.*;
 
 @Repository
 public class MemoryMemberRepository implements MemberRepository{
-    private static Map<Long, Member> memoryDB=new HashMap<>();
+    private static Map<Long, Member> memoryDB=new HashMap<>();//DB
     private static long sequence=0L;
 
     @Override

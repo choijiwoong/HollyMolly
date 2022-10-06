@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebController {
     @GetMapping("/register")
     public String register(Model model){
-        model.addAttribute("name", "testName");
+        model.addAttribute("name", "Choij");
         return "register";
     }
+
 }

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service//@Component in Repo, Controller..모든 component는 자바빈등록, 그 뒤 각각이 DI. 이러한 방식을 컴포넌트 스캔(자동)으로 자바빈에 등록한다고 한다.
+//@Service//@Component in Repo, Controller..모든 component는 자바빈등록, 그 뒤 각각이 DI. 이러한 방식을 컴포넌트 스캔(자동)으로 자바빈에 등록한다고 한다.
 public class MemberService {
     private final MemberRepository memberRepository;
-    @Autowired//controller->service->repo의존성이기에 repo연결을 위해 service에서도 autowired를 걸어준다. DI
+    //@Autowired//controller->service->repo의존성이기에 repo연결을 위해 service에서도 autowired를 걸어준다. DI
     public MemberService(MemberRepository memberRepository){//직접 생성이 아닌 외부에서 넣어주게끔 하여 공통 repository사용케
         this.memberRepository=memberRepository;
     }

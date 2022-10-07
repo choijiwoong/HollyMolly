@@ -4,8 +4,11 @@ import com.holly.molly.domain.Member;
 import com.holly.molly.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller//컨트롤러 에너테이션이 있다면 스프링 구동 시 스프링 컨테이너에 인스턴스화한 이후 가지고 있는데, 이들(컨테이너 요소) 자바 빈이라고 한다
 public class MemberController {
@@ -31,5 +34,12 @@ public class MemberController {
         memberService.register(member);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members=memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
     }
 }

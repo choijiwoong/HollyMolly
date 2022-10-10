@@ -17,9 +17,11 @@ public class JdbcMemberRepository implements MemberRepository{
         this.dataSource=dataSource;
     }
 
+    private static long sequence=0L;
+
     @Override
     public Member save(Member member) {
-        String sql="insert into member(name) values(?)";
+        String sql="insert into member(innerId, name, emailAddress, password) values(?,?,?,?)";
         Connection conn=null;
         PreparedStatement pstmt=null;
         ResultSet rs=null;
@@ -28,21 +30,13 @@ public class JdbcMemberRepository implements MemberRepository{
             conn=getConnection();
             pstmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//parameterIndex를 이용해 값을 넣을 예정
 
-            pstmt.setLong(1, member.getInnerId());//pstmt의 key를 사용하여 db항목들을 매칭
+            pstmt.setLong(1, ++sequence);//pstmt의 key를 사용하여 db항목들을 매칭
             pstmt.setString(2, member.getName());
             pstmt.setString(3, member.getEmailAddress());
             pstmt.setString(4, member.getPassword());
             pstmt.executeUpdate();
             rs=pstmt.getGeneratedKeys();//해당 키를 이용하여 결과를 저장한다.
 
-            if(rs.next()){//읽어들여진다면
-                member.setInnerId(rs.getLong(1));
-                member.setName(rs.getString(2));
-                member.setEmailAddress(rs.getString(3));
-                member.setPassword(rs.getString(4));
-            } else{
-                throw new SQLException("db 조회 실패");
-            }
             return member;
         } catch(Exception e){
             throw new IllegalStateException(e);

@@ -6,3 +6,6 @@ create table member
     password varchar(255),
     primary key (innerId)
 )
+
+//SHOW COLUMNS FROM `MEMBER`;
+//DELETE * FROM MEMBER;

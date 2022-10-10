@@ -11,10 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest//실제 스프린 컨테이너와 테스르를 실행한다.
+@Transactional//트랜젝션을 먼저 실행한 후, DB 롤백을 통해 복구해준다. ->다음 테스트를 실행할 수 있다.
 public class MemberServiceIntegrationTest {
     @Autowired
     MemberService memberService;
@@ -31,11 +32,10 @@ public class MemberServiceIntegrationTest {
 
         //when
         Long saveId=memberService.register(member);
-        System.out.println(memberService.findMembers().toString());
 
         //then
-        Member findMember=memberService.findOne(saveId).get();
-        assertThat(member.getInnerId()).isEqualTo(findMember.getInnerId());
+        Member findMember=memberRepository.findById(saveId).get();
+        assertEquals(member.getEmailAddress(), findMember.getEmailAddress());
     }
 
     @Test

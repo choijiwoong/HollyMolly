@@ -21,10 +21,10 @@ public class JdbcMemberRepository implements MemberRepository{
 
     @Override
     public Member save(Member member) {
-        String sql="insert into member(innerId, name, emailAddress, password) values(?,?,?,?)";
+        String sql="insert into member(innerId, name, emailAddress, password) values(?,?,?,?)";//해당 sql에 항목을 넣을건데, ? 순서대로 parameterIndex1~로 접근
         Connection conn=null;
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
+        PreparedStatement pstmt=null;//sql의 ?을 채우기 위한 준비과정의 sql
+        ResultSet rs=null;//결과를 반환할 ResultSet(당장은 사용하지 않음.)
 
         try{
             conn=getConnection();
@@ -35,8 +35,8 @@ public class JdbcMemberRepository implements MemberRepository{
             pstmt.setString(3, member.getEmailAddress());
             pstmt.setString(4, member.getPassword());
             pstmt.executeUpdate();
-            rs=pstmt.getGeneratedKeys();//해당 키를 이용하여 결과를 저장한다.
-
+            //rs=pstmt.getGeneratedKeys();//해당 키를 이용하여 결과를 저장한다.
+            member.setInnerId(sequence);
             return member;
         } catch(Exception e){
             throw new IllegalStateException(e);
@@ -59,13 +59,14 @@ public class JdbcMemberRepository implements MemberRepository{
             pstmt.setLong(1, innerId);
 
             rs=pstmt.executeQuery();
+            System.out.println(rs);
 
             if(rs.next()){
                 Member member=new Member();
-                member.setInnerId(rs.getLong(1));
-                member.setName(rs.getString(2));
-                member.setEmailAddress(rs.getString(3));
-                member.setPassword(rs.getString(4));
+                member.setInnerId(rs.getLong("innerId"));
+                member.setName(rs.getString("name"));
+                member.setEmailAddress(rs.getString("emailAddress"));
+                member.setPassword(rs.getString("password"));
                 return Optional.of(member);
             } else {
                 return Optional.empty();
@@ -173,4 +174,5 @@ public class JdbcMemberRepository implements MemberRepository{
     private void close(Connection conn) throws SQLException{//해제시 DataSourceUtils의 release를 이용
         DataSourceUtils.releaseConnection(conn, dataSource);
     }
+
 }

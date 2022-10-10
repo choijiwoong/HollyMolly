@@ -7,5 +7,5 @@ create table member
     primary key (innerId)
 )
 
-//SHOW COLUMNS FROM `MEMBER`;
-//DELETE * FROM MEMBER;
+--SHOW COLUMNS FROM `MEMBER`;
+--DELETE * FROM MEMBER;

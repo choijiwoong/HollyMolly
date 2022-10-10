@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller//컨트롤러 에너테이션이 있다면 스프링 구동 시 스프링 컨테이너에 인스턴스화한 이후 가지고 있는데, 이들(컨테이너 요소) 자바 빈이라고 한다
 public class MemberController {
@@ -41,5 +42,19 @@ public class MemberController {
         List<Member> members=memberService.findMembers();
         model.addAttribute("members", members);
         return "members/memberList";
+    }
+
+    @GetMapping("/members/login")
+    public String login(Model model){
+        return "members/login";
+    }
+
+    @PostMapping("/members/login")//post method
+    public String login(LoginForm form){
+        memberService.findOne(form.getEmailAddress())
+                .ifPresent(m -> {
+                    System.out.println(m.getName());
+                });
+        return "redirect:/";
     }
 }

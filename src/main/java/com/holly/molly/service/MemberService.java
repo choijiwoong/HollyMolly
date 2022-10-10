@@ -43,4 +43,5 @@ public class MemberService {
     public Optional<Member> findOne(Long innerId){
         return memberRepository.findById(innerId);
     }
+    public Optional<Member> findOne(String emailAddress){ return memberRepository.findByEmail(emailAddress); }
 }

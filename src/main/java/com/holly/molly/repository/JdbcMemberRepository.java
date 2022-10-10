@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class JdbcMemberRepository implements MemberRepository{
 
-    private final DataSource dataSource;
+    private final DataSource dataSource;//H2 spring이 application properties에 datasource속성 설정을 해뒀기에 알아서 연결해줌
 
     public JdbcMemberRepository(DataSource dataSource){
         this.dataSource=dataSource;
@@ -25,11 +25,11 @@ public class JdbcMemberRepository implements MemberRepository{
         Connection conn=null;
         PreparedStatement pstmt=null;//sql의 ?을 채우기 위한 준비과정의 sql
         ResultSet rs=null;//결과를 반환할 ResultSet(당장은 사용하지 않음.)
-
+        //연결을 위한 Connection객체, Connection객체로 DB와 연동되어 sql을 수행하는 PreparesStatement, 결과를 리턴받을 ResultSet
         try{
-            conn=getConnection();
-            pstmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//parameterIndex를 이용해 값을 넣을 예정
-
+            conn=getConnection();//DB연결 완료
+            pstmt=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//DB와 토대 sql문 연결완료
+            //pstmt라는 객체는 형재 DB연결, SQL 편집준비완료 상태
             pstmt.setLong(1, ++sequence);//pstmt의 key를 사용하여 db항목들을 매칭
             pstmt.setString(2, member.getName());
             pstmt.setString(3, member.getEmailAddress());

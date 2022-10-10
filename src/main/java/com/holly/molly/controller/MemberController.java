@@ -50,11 +50,11 @@ public class MemberController {
     }
 
     @PostMapping("/members/login")//post method
-    public String login(LoginForm form){
-        memberService.findOne(form.getEmailAddress())
-                .ifPresent(m -> {
-                    System.out.println(m.getName());
-                });
-        return "redirect:/";
+    public String login(LoginForm form, Model model){
+        Optional<Member> member=memberService.signUp(form);
+        if (member.isEmpty())
+            return "redirect:/";
+        model.addAttribute("info", member.get());
+        return "main";
     }
 }

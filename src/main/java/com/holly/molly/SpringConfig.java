@@ -2,6 +2,7 @@ package com.holly.molly;
 
 import com.holly.molly.domain.Member;
 import com.holly.molly.repository.JdbcMemberRepository;
+import com.holly.molly.repository.JdbcTemplateMemberRepository;
 import com.holly.molly.repository.MemberRepository;
 import com.holly.molly.repository.MemoryMemberRepository;
 import com.holly.molly.service.MemberService;
@@ -29,6 +30,7 @@ public class SpringConfig {
     @Bean
     public MemberRepository memberRepository(){
         //return new MemoryMemberRepository();
-        return new JdbcMemberRepository(dataSource);
+        //return new JdbcMemberRepository(dataSource);
+        return new JdbcTemplateMemberRepository(dataSource);
     }
 }

@@ -6,11 +6,13 @@ import com.holly.molly.repository.MemberRepository;
 import com.holly.molly.repository.MemoryMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 //@Service//@Component in Repo, Controller..모든 component는 자바빈등록, 그 뒤 각각이 DI. 이러한 방식을 컴포넌트 스캔(자동)으로 자바빈에 등록한다고 한다.
+@Transactional
 public class MemberService {
     private static Boolean isAuthenticated=false;
     private final MemberRepository memberRepository;

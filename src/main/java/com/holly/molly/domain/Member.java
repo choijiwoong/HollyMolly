@@ -1,9 +1,13 @@
 package com.holly.molly.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity //JPA가 관리하는 요소를 의미
 public class Member {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)//DB가 직접 ㄱ생성해줌을 의미
     private Long innerId;//내부적인 인원 번호. primary key
     private String name;//사용자 이름(닉네임 가능)
     private String emailAddress;//아이디처럼 사용 예정

@@ -2,7 +2,6 @@ package com.holly.molly.repository;
 
 import com.holly.molly.domain.Member;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

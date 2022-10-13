@@ -10,7 +10,7 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)//DB가 직접 ㄱ생성해줌을 의미
     private Long innerId;//내부적인 인원 번호. primary key
     private String name;//사용자 이름(닉네임 가능)
-    private String emailAddress;//아이디처럼 사용 예정
+    private String email;//아이디처럼 사용 예정
     private String password;//이메일 별 비밀번호
 
     public Long getInnerId(){
@@ -28,10 +28,10 @@ public class Member {
     }
 
     public String getEmailAddress(){
-        return emailAddress;
+        return email;
     }
     public void setEmailAddress(String emailAddress){
-        this.emailAddress=emailAddress;
+        this.email=emailAddress;
     }
 
     public String getPassword(){

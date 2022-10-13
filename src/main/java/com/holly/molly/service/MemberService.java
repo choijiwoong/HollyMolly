@@ -3,9 +3,6 @@ package com.holly.molly.service;
 import com.holly.molly.controller.LoginForm;
 import com.holly.molly.domain.Member;
 import com.holly.molly.repository.MemberRepository;
-import com.holly.molly.repository.MemoryMemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

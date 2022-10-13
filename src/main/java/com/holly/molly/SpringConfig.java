@@ -1,5 +1,6 @@
 package com.holly.molly;
 
+import com.holly.molly.aop.TimeTraceAop;
 import com.holly.molly.domain.Member;
 import com.holly.molly.repository.*;
 import com.holly.molly.service.MemberService;
@@ -23,4 +24,5 @@ public class SpringConfig {
     public MemberService memberService(){
         return new MemberService(memberRepository);
     }
+
 }

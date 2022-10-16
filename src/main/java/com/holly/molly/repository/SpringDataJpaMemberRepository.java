@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Long> , MemberRepository{//알맹이, 껍데기를 동시에 상속
 
     Optional<Member> findByEmail(String name);
+
+    long count();
 }

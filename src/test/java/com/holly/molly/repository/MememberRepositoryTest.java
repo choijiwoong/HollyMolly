@@ -1,21 +1,23 @@
 package com.holly.molly.repository;
 
 import com.holly.molly.domain.Member;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;//for assertThat
 
 
-public class MemoryMememberRepositoryTest {
-    MemoryMemberRepository repository=new MemoryMemberRepository();
+@SpringBootTest
+@Transactional
+public class MememberRepositoryTest {
+    @Autowired
+    MemberRepository repository;
 
-    @AfterEach
-    public void afterEach(){
-        repository.clearDB();//순서와 상관없게 하기 위함.(의존관계 X)
-    }
 
     @Test
     public void save(){
@@ -43,6 +45,7 @@ public class MemoryMememberRepositoryTest {
 
     @Test
     public void findAll(){
+        Long initSize=repository.count();
         Member member1=new Member();
         member1.setEmailAddress("spring1@naver.com");
         repository.save(member1);
@@ -52,8 +55,6 @@ public class MemoryMememberRepositoryTest {
         repository.save(member2);
 
         List<Member> result=repository.findAll();
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(initSize+2);
     }
-
-
 }

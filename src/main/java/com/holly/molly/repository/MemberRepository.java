@@ -10,4 +10,6 @@ public interface MemberRepository {
     Optional<Member> findById(Long id);
     Optional<Member> findByEmail(String email);
     List<Member> findAll();
+
+    long count();
 }

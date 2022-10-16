@@ -1,28 +1,29 @@
 package com.holly.molly.service;
 
 import com.holly.molly.domain.Member;
-import com.holly.molly.repository.MemoryMemberRepository;
+import com.holly.molly.repository.MemberRepository;
+import com.holly.molly.repository.SpringDataJpaMemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
 class MemberServiceTest {
 
     MemberService memberService;
-    MemoryMemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @BeforeEach
     public void beforeEach(){
-        memberRepository=new MemoryMemberRepository();//static 문제 해결. test시 독립적인 repo와 serv생성.
         memberService=new MemberService(memberRepository);
-    }
-
-    @AfterEach
-    public void afterEach(){
-        memberRepository.clearDB();
     }
 
     @Test

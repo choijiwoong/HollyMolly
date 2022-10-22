@@ -14,20 +14,20 @@ public class User1 {
     @Id
     @GeneratedValue
     @Column(name="user1_id")
-    private Long id;
+    private Long id;//고유(중복불가)
 
     private String name;
 
-    private String email;
+    private String email;//고유(중복불가)
 
     private String password;
 
-    private String phone;
+    private String phone;//고유(중복불가)
 
     @Embedded
     private Date birth;
 
-    private String pid;
+    private String pid;//고유(중복불가)
 
     @OneToMany(mappedBy = "user")//자기 맴버변수 이름을 참조
     private List<Request> requests=new ArrayList<>();

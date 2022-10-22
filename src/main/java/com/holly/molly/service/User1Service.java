@@ -22,18 +22,23 @@ public class User1Service {
     }
 
     private void validateDuplicateMember(User1 user1) {
-        List<User1> findMembers=user1Repository.findByEmail(user1.getName());
-        if(!findMembers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        try {
+            User1 findMembers1 = user1Repository.findByEmail(user1.getName());
+            throw new IllegalStateException("이미 등록된 이메일입니다.");
+        } catch(Exception e1){
+            User1 findMembers2 = user1Repository.findByPhone(user1.getPhone());
+            User1 findMembers3 = user1Repository.findByPid(user1.getPid());
         }
-    }
-
-    public List<User1> findMembers(){
-        return user1Repository.findAll();
     }
 
     public User1 findOne(Long memberId){
         return user1Repository.findOne(memberId);
     }
 
+    public List<User1> findByName(String name){ return user1Repository.findByName(name); }
+
+
+    public List<User1> findMembers() {
+        return user1Repository.findAll();
+    }
 }

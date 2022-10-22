@@ -50,4 +50,8 @@ public class Accept{
 
         return accept;
     }
+
+    public static Accept createNull(){
+        return new Accept();
+    }
 }

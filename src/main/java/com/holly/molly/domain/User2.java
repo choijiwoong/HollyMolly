@@ -30,6 +30,6 @@ public class User2 {
 
     private String pid;
 
-    @OneToMany(mappedBy = "user2s")
+    @OneToMany(mappedBy = "user")
     private List<Accept> accepts=new ArrayList<>();
 }

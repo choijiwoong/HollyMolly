@@ -29,6 +29,6 @@ public class User1 {
 
     private String pid;
 
-    @OneToMany(mappedBy = "user1")
+    @OneToMany(mappedBy = "user")//자기 맴버변수 이름을 참조
     private List<Request> requests=new ArrayList<>();
 }

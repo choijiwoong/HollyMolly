@@ -25,8 +25,7 @@ public class User2 {
 
     private String phone;
 
-    @Embedded
-    private Date birth;
+    private String birth;
 
 
     private String pid;

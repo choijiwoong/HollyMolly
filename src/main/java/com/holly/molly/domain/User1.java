@@ -24,8 +24,7 @@ public class User1 {
 
     private String phone;//고유(중복불가)
 
-    @Embedded
-    private Date birth;
+    private String birth;
 
     private String pid;//고유(중복불가)
 

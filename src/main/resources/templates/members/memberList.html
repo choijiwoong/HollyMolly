@@ -9,13 +9,15 @@
             <tr>
                 <th>#</th>
                 <th>이름</th>
+                <th>이메일</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr th:each="member : ${members}">
-                <td th:text="${member.innerId}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
-                <td th:text="${member.name}"></td>
+            <tr th:each="user1 : ${user1s}">
+                <td th:text="${user1.id}"></td>
+                <td th:text="${user1.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+                <td th:text="${user1.email}"></td>
             </tr>
             </tbody>
         </table>

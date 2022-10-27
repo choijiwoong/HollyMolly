@@ -1,10 +1,7 @@
 package com.holly.molly.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.holly.molly.domain.Member;
 
 @Controller
 public class HomeController {

@@ -19,18 +19,16 @@ public class User2 {
 
     private String name;
 
-    @Id
     private String email;
 
     private String password;
 
-    @Id
     private String phone;
 
     @Embedded
     private Date birth;
 
-    @Id
+
     private String pid;
 
     @OneToMany(mappedBy = "user")

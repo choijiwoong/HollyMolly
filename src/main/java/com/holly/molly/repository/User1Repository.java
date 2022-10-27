@@ -27,12 +27,16 @@ public class User1Repository {
                 .getResultList();
     }
 
-    public User1 findByEmail(String email){
-        return em.find(User1.class, email);
+    public List<User1> findByEmail(String email){
+        return em.createQuery("select u1 from User1 u1 where u1.email=:email", User1.class)
+                .setParameter("email", email)
+                .getResultList();
     }
 
-    public User1 findByPhone(String phone){
-        return em.find(User1.class, phone);
+    public List<User1> findByPhone(String phone){
+        return em.createQuery("select u1 from User1 u1 where u1.phone=:name", User1.class)
+                .setParameter("phone", phone)
+                .getResultList();
     }
 
     public List<User1> findByBirth(String birth){
@@ -41,8 +45,10 @@ public class User1Repository {
                 .getResultList();
     }
 
-    public User1 findByPid(String pid){
-        return em.find(User1.class, pid);
+    public List<User1> findByPid(String pid){
+        return em.createQuery("select u1 from User1 u1 where u1.pid=:pid", User1.class)
+                .setParameter("pid", pid)
+                .getResultList();
     }
 
     public List<User1> findAll(){

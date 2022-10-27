@@ -20,7 +20,7 @@ public class Accept{
     @JoinColumn(name="user2_id")
     private User2 user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToOne(mappedBy ="accept", fetch=FetchType.LAZY)
     private Volun volun;
 
     private LocalDateTime acctime;
@@ -40,7 +40,7 @@ public class Accept{
     }
 
     //---생성 메서드---
-    public static Accept createRequest(User2 user, Volun volun){
+    public static Accept createAccept(User2 user, Volun volun){
         Accept accept=new Accept();
         accept.setUser2(user);
         accept.setVolun(volun);

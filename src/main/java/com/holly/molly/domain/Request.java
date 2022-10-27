@@ -21,7 +21,7 @@ public class Request {
     @JoinColumn(name="user1_id")
     private User1 user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToOne(mappedBy = "request", fetch=FetchType.LAZY)
     private Volun volun;
 
     private LocalDateTime reqtime;
@@ -50,5 +50,9 @@ public class Request {
         request.setStatus(RequestStatus.REGISTER);
 
         return request;
+    }
+
+    public static Request createNull(){
+        return new Request();
     }
 }

@@ -22,13 +22,6 @@ public class User1Service {
     }
 
     private void validateDuplicateMember(User1 user1) {
-        try {
-            User1 findMembers1 = user1Repository.findByEmail(user1.getName());
-            throw new IllegalStateException("이미 등록된 이메일입니다.");
-        } catch(Exception e1){
-            User1 findMembers2 = user1Repository.findByPhone(user1.getPhone());
-            User1 findMembers3 = user1Repository.findByPid(user1.getPid());
-        }
     }
 
     public User1 findOne(Long memberId){

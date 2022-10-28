@@ -5,19 +5,37 @@
 <div class="container">
     <div>
         <table>
+        <thead>
+        <tr>
+            <th>#(User1)</th>
+            <th>이름</th>
+            <th>이메일</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="user1 : ${user1s}">
+            <td th:text="${user1.id}"></td>
+            <td th:text="${user1.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+            <td th:text="${user1.email}"></td>
+        </tr>
+        </tbody>
+        </table>
+
+        <table>
             <thead>
             <tr>
-                <th>#</th>
+                <th>#(User2)</th>
                 <th>이름</th>
                 <th>이메일</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr th:each="user1 : ${user1s}">
-                <td th:text="${user1.id}"></td>
-                <td th:text="${user1.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
-                <td th:text="${user1.email}"></td>
+            <tr th:each="user2 : ${user2s}">
+                <td th:text="${user2.id}"></td>
+                <td th:text="${user2.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+                <td th:text="${user2.email}"></td>
             </tr>
             </tbody>
         </table>

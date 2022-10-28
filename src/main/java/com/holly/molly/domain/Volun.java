@@ -26,6 +26,8 @@ public class Volun {
     @Enumerated(EnumType.STRING)
     private VolunStatus status;
 
+    private String address;
+
     //---연관관계 메서드---
     //생성 메서드
     public static Volun createVolun(Request request, LocalDateTime time){

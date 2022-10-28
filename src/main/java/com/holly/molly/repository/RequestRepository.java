@@ -29,6 +29,12 @@ public class RequestRepository {
                 .getResultList();
     }
 
+    public List<Request> findByUser1(User1 user){
+        return em.createQuery("select r from Request r where r.user.id=:id", Request.class)
+                .setParameter("id", user.getId())
+                .getResultList();
+    }
+
     public List<Request> findByStatus(RequestStatus status){
         return em.createQuery("select r from Request r where r.status=:status", Request.class)
                 .setParameter("status", status)

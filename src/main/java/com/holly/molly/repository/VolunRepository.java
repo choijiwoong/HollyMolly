@@ -1,5 +1,7 @@
 package com.holly.molly.repository;
 
+import com.holly.molly.domain.Accept;
+import com.holly.molly.domain.Request;
 import com.holly.molly.domain.Volun;
 import com.holly.molly.domain.VolunStatus;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,18 @@ public class VolunRepository {
     public List<Volun> findByStatus(VolunStatus status){
         return em.createQuery("select v from Volun v where v.status=:status", Volun.class)
                 .setParameter("status", status)
+                .getResultList();
+    }
+
+    public List<Volun> findByAccept(Accept accept){
+        return em.createQuery("select v from Volun v where v.accept.id=:id", Volun.class)
+                .setParameter("id", accept.getId())
+                .getResultList();
+    }
+
+    public List<Volun> findByRequest(Request request){
+        return em.createQuery("select v from Volun v where v.request.id=:id", Volun.class)
+                .setParameter("id", request.getId())
                 .getResultList();
     }
 

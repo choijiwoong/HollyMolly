@@ -24,6 +24,15 @@ public class User1Service {
     }
 
     private void validateDuplicateMember(User1 user1) {
+        if(!user1Repository.findByEmail(user1.getEmail()).isEmpty())
+            throw new RuntimeException("중복된 회원입니다.");
+
+        if(!user1Repository.findByPhone(user1.getPhone()).isEmpty())
+            throw new RuntimeException("중복된 회원입니다.");
+
+        if(!user1Repository.findByPid(user1.getPid()).isEmpty())
+            throw new RuntimeException("중복된 회원입니다.");
+        return;
     }
 
     public User1 findOne(Long memberId){
@@ -45,5 +54,4 @@ public class User1Service {
                         .equals(loginDTO.getPassword()))
                 .findFirst();
     }
-
 }

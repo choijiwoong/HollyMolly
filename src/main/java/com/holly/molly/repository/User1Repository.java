@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public class User1Repository {
-
     @PersistenceContext
     private EntityManager em;
 
@@ -35,7 +34,7 @@ public class User1Repository {
     }
 
     public List<User1> findByPhone(String phone){
-        return em.createQuery("select u1 from User1 u1 where u1.phone=:name", User1.class)
+        return em.createQuery("select u1 from User1 u1 where u1.phone=:phone", User1.class)
                 .setParameter("phone", phone)
                 .getResultList();
     }

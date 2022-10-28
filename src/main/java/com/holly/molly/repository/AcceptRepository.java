@@ -1,7 +1,6 @@
 package com.holly.molly.repository;
 
-import com.holly.molly.domain.Accept;
-import com.holly.molly.domain.AcceptStatus;
+import com.holly.molly.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +26,12 @@ public class AcceptRepository {
     public List<Accept> findByStatus(AcceptStatus status){
         return em.createQuery("select a from Accept a where a.status=:status", Accept.class)
                 .setParameter("status", status)
+                .getResultList();
+    }
+
+    public List<Accept> findByUser2(User2 user){
+        return em.createQuery("select r from Request r where r.user.id=:id", Accept.class)
+                .setParameter("id", user.getId())
                 .getResultList();
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-public class User2 {
+public class User2 {//봉사자
     @Id
     @GeneratedValue
     @Column(name = "user2_id")
@@ -26,7 +26,6 @@ public class User2 {
     private String phone;
 
     private String birth;
-
 
     private String pid;
 

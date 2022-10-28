@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class User1 {
+public class User1 {//피봉사자
     @Id
     @GeneratedValue
     @Column(name="user1_id")

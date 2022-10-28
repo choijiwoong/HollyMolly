@@ -30,7 +30,7 @@ public class LoginController {
 
     @PostMapping("/members/register")
     public String register(RegisterDTO registerDTO){
-        User1 user=new User1();
+        User1 user = new User1();
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
         user.setBirth(registerDTO.getBirth());
@@ -45,8 +45,11 @@ public class LoginController {
     @PostMapping("/members/login")
     public String login(LoginDTO loginDTO, Model model){
         Optional<User1> user=user1Service.signUp(loginDTO);
-        if (user.isEmpty())
+        if (user.isEmpty()) {
+            System.out.println("login fail!");
             return "redirect:/";
+        }
+        System.out.println("login success!");
         model.addAttribute("user1", user);
         return "/members/memberList";
     }

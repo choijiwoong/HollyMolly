@@ -2,7 +2,7 @@ package com.holly.molly.service;
 
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
-import com.holly.molly.domain.User1;
+import com.holly.molly.domain.User;
 import com.holly.molly.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ public class RequestService {
         return requestRepository.findOne(id);
     }
 
-    public List<Request> findByUser1(User1 user){
-        return requestRepository.findByUser1(user);
+    public List<Request> findByUser(User user){
+        return requestRepository.findByUser(user);
     }
 
     public List<Request> findByStatus(RequestStatus requestStatus){

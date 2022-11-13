@@ -25,8 +25,8 @@ public class AcceptService {
         return acceptRepository.findOne(id);
     }
 
-    public List<Accept> findByUser2(User2 user){
-        return acceptRepository.findByUser2(user);
+    public List<Accept> findByUser(User user){
+        return acceptRepository.findByUser(user);
     }
 
     public List<Accept> findByStatus(AcceptStatus acceptStatus){

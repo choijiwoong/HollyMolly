@@ -23,7 +23,4 @@ public class RegisterDTO {
 
     @Getter @Setter
     private String pid;
-
-    @Getter @Setter
-    private Optional<String> isUser1=Optional.empty();
 }

@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="accepts")
 @Getter
 @Setter
 public class Accept{
@@ -17,10 +16,10 @@ public class Accept{
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user2_id")
-    private User2 user;
+    @JoinColumn(name="user_id")
+    private User user;
 
-    @OneToOne(mappedBy ="accept", fetch=FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Volun volun;
 
     private LocalDateTime acctime;
@@ -29,7 +28,7 @@ public class Accept{
     private AcceptStatus status;
 
     //---연관관계 메서드---
-    public void setUser2(User2 user){
+    public void setUser(User user){
         this.user=user;
         user.getAccepts().add(this);
     }
@@ -40,9 +39,9 @@ public class Accept{
     }
 
     //---생성 메서드---
-    public static Accept createAccept(User2 user, Volun volun){
+    public static Accept createAccept(User user, Volun volun){
         Accept accept=new Accept();
-        accept.setUser2(user);
+        accept.setUser(user);
         accept.setVolun(volun);
 
         accept.setAcctime(LocalDateTime.now());

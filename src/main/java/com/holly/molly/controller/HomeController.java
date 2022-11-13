@@ -11,4 +11,7 @@ public class HomeController {
 
     @GetMapping("/introducePage")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
     public String intro(){ return "homeTemplate/post/firstStep"; }
+
+    @GetMapping("/kakaomap")
+    public String showMap(){ return "apis/kakaoMap"; }
 }

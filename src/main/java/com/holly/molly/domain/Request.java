@@ -16,11 +16,11 @@ public class Request {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="userR_id")
+    private User userR;
 
     @OneToOne(fetch =FetchType.LAZY)
-    private Volun volun;
+    private Volun volunR;
 
     private LocalDateTime reqtime;
 
@@ -28,21 +28,21 @@ public class Request {
     private RequestStatus status;
 
     //---연관관계 메서드---
-    public void setUser(User user){
-        this.user=user;
-        user.getRequests().add(this);
-    }
+    //public void setUser(User user){
+    //    this.userR=user;
+    //    user.getRequests().add(this);
+    //}
 
-    public void setVolun(Volun volun){
-        this.volun=volun;
-        volun.setRequest(this);
-    }
+    //public void setVolun(Volun volun){
+    //    this.volunR=volun;
+    //    volun.setRequest(this);
+    //}
 
     //---생성 메서드---
     public static Request createRequest(User user, Volun volun){
         Request request=new Request();
-        request.setUser(user);
-        request.setVolun(volun);
+        request.setUserR(user);
+        request.setVolunR(volun);
 
         request.setReqtime(LocalDateTime.now());
         request.setStatus(RequestStatus.REGISTER);

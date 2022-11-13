@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Table(name="users")
 public class User {//피봉사자
     @Id
     @GeneratedValue
@@ -27,9 +28,9 @@ public class User {//피봉사자
 
     private String pid;//고유(중복불가)
 
-    @OneToMany(mappedBy = "user")//자기 맴버변수 이름을 참조
+    @OneToMany(mappedBy = "userR")//자기 맴버변수 이름을 참조
     private List<Request> requests=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")//자기 맴버변수 이름을 참조
+    @OneToMany(mappedBy="userA")//자기 맴버변수 이름을 참조
     private List<Accept> accepts=new ArrayList<>();
 }

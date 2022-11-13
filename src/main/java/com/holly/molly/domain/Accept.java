@@ -16,11 +16,11 @@ public class Accept{
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="userA_id")
+    private User userA;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private Volun volun;
+    private Volun volunA;
 
     private LocalDateTime acctime;
 
@@ -28,21 +28,21 @@ public class Accept{
     private AcceptStatus status;
 
     //---연관관계 메서드---
-    public void setUser(User user){
-        this.user=user;
-        user.getAccepts().add(this);
-    }
+    //public void setUser(User user){
+    //    this.userA=user;
+    //    user.getAccepts().add(this);
+    //}
 
-    public void setVolun(Volun volun){
-        this.volun=volun;
-        volun.setAccept(this);
-    }
+    //public void setVolun(Volun volun){
+    //    this.volunA=volun;
+    //    volun.setAccept(this);
+    //}
 
     //---생성 메서드---
     public static Accept createAccept(User user, Volun volun){
         Accept accept=new Accept();
-        accept.setUser(user);
-        accept.setVolun(volun);
+        accept.setUserA(user);
+        accept.setVolunA(volun);
 
         accept.setAcctime(LocalDateTime.now());
         accept.setStatus(AcceptStatus.REGISTER);

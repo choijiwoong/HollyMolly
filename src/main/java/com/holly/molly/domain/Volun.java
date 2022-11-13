@@ -15,10 +15,10 @@ public class Volun {
     @Column(name="voluns")
     private Long id;
 
-    @OneToOne(mappedBy="volun", fetch=FetchType.LAZY)
+    @OneToOne(mappedBy="volunR", fetch=FetchType.LAZY)
     private Request request;
 
-    @OneToOne(mappedBy="volun", fetch=FetchType.LAZY)
+    @OneToOne(mappedBy="volunA", fetch=FetchType.LAZY)
     private Accept accept;
 
     private LocalDateTime exectime;

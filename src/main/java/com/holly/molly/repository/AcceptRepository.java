@@ -29,8 +29,8 @@ public class AcceptRepository {
                 .getResultList();
     }
 
-    public List<Accept> findByUser2(User2 user){
-        return em.createQuery("select r from Request r where r.user.id=:id", Accept.class)
+    public List<Accept> findByUser(User user){
+        return em.createQuery("select r from Request r where r.usera.id=:id", Accept.class)
                 .setParameter("id", user.getId())
                 .getResultList();
     }

@@ -11,7 +11,4 @@ public class LoginDTO {
 
     @Getter @Setter
     private String password;
-
-    @Getter @Setter
-    private Optional<String> isUser1= Optional.empty();
 }

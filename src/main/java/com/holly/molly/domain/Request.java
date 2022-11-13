@@ -5,10 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@Table(name="requests")
 @Getter
 @Setter
 public class Request {
@@ -18,10 +16,10 @@ public class Request {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user1_id")
-    private User1 user;
+    @JoinColumn(name="user_id")
+    private User user;
 
-    @OneToOne(mappedBy = "request", fetch=FetchType.LAZY)
+    @OneToOne(fetch =FetchType.LAZY)
     private Volun volun;
 
     private LocalDateTime reqtime;
@@ -30,7 +28,7 @@ public class Request {
     private RequestStatus status;
 
     //---연관관계 메서드---
-    public void setUser1(User1 user){
+    public void setUser(User user){
         this.user=user;
         user.getRequests().add(this);
     }
@@ -41,9 +39,9 @@ public class Request {
     }
 
     //---생성 메서드---
-    public static Request createRequest(User1 user, Volun volun){
+    public static Request createRequest(User user, Volun volun){
         Request request=new Request();
-        request.setUser1(user);
+        request.setUser(user);
         request.setVolun(volun);
 
         request.setReqtime(LocalDateTime.now());

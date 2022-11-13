@@ -2,7 +2,7 @@ package com.holly.molly.repository;
 
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
-import com.holly.molly.domain.User1;
+import com.holly.molly.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -29,8 +29,8 @@ public class RequestRepository {
                 .getResultList();
     }
 
-    public List<Request> findByUser1(User1 user){
-        return em.createQuery("select r from Request r where r.user.id=:id", Request.class)
+    public List<Request> findByUser(User user){
+        return em.createQuery("select r from Request r where r.userr.id=:id", Request.class)
                 .setParameter("id", user.getId())
                 .getResultList();
     }

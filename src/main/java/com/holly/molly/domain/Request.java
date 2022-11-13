@@ -17,10 +17,10 @@ public class Request {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private User user;
+    private User userR;
 
     @OneToOne(fetch =FetchType.LAZY)
-    private Volun volun;
+    private Volun volunR;
 
     private LocalDateTime reqtime;
 
@@ -29,12 +29,12 @@ public class Request {
 
     //---연관관계 메서드---
     public void setUser(User user){
-        this.user=user;
+        this.userR=user;
         user.getRequests().add(this);
     }
 
     public void setVolun(Volun volun){
-        this.volun=volun;
+        this.volunR=volun;
         volun.setRequest(this);
     }
 

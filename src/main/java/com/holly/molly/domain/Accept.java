@@ -17,10 +17,10 @@ public class Accept{
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private User user;
+    private User userA;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private Volun volun;
+    private Volun volunA;
 
     private LocalDateTime acctime;
 
@@ -29,12 +29,12 @@ public class Accept{
 
     //---연관관계 메서드---
     public void setUser(User user){
-        this.user=user;
+        this.userA=user;
         user.getAccepts().add(this);
     }
 
     public void setVolun(Volun volun){
-        this.volun=volun;
+        this.volunA=volun;
         volun.setAccept(this);
     }
 

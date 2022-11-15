@@ -8,6 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,18 +46,28 @@ public class LoginController {
     }
 
     @PostMapping("/members/login")
-    public String login(LoginDTO loginDTO, Model model){
+    public String login(LoginDTO loginDTO, Model model, HttpServletResponse response){
         Optional<User> user = userService.signUp(loginDTO);
-
-        if (user.isEmpty()) {
+        if (user.isEmpty()) {//로그인 실패시
             System.out.println("login fail!");
-            return "redirect:/";
-        } else if(user.isPresent()) {
-            System.out.println("login success!");
-            model.addAttribute("user", user);
+            return "members/login";
         }
 
-        return "redirect:/";//문법
+        //로그인 성공시
+        System.out.println("Login Success");
+        Cookie idCookie=new Cookie("userId", String.valueOf(user.get().getId()));
+        idCookie.setPath("/");
+        response.addCookie(idCookie);
+        return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session= request.getSession(false);//false시 세션없으면 null을, true시 새 세션을 반환
+        if(session!=null){
+            session.invalidate();
+        }
+        return "redirect:/";
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
@@ -19,12 +20,12 @@ public class HomeController {
     private final UserService userService;
     @GetMapping("/")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
     public String home(Model model, @CookieValue(value="userId", required = false) Cookie cookie){
-        if(cookie!=null){
-            System.out.println("Exist Cookie");
-            model.addAttribute("user", Optional.of(userService.findOne(Long.valueOf(cookie.getValue()))));//cookie의 string(id)를 integer로
-        } else{
+        if(cookie==null || cookie.getValue().equals("")){
             System.out.println("NotExist Cookie");
             model.addAttribute("user", Optional.empty());
+        } else{
+            System.out.println("Exist Cookie");
+            model.addAttribute("user", Optional.of(userService.findOne(Long.valueOf(cookie.getValue()))));//cookie의 string(id)를 integer로
         }
         return "homeTemplate/home";
     }

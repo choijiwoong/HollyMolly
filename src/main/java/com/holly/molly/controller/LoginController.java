@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -61,13 +63,12 @@ public class LoginController {
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session= request.getSession(false);//false시 세션없으면 null을, true시 새 세션을 반환
-        if(session!=null){
-            session.invalidate();
-        }
+    @GetMapping("/members/logout")
+    public String logout(HttpServletResponse response){
+        Cookie idCookie=new Cookie("userId", null);
+        idCookie.setPath("/");
+        response.addCookie(idCookie);
+
         return "redirect:/";
     }
-
 }

@@ -8,16 +8,27 @@
             <thead>
             <tr>
                 <th>#(Request)</th>
-                <th>요청한 유저 이름</th>
-                <th>요청 시간</th>
+                <th>요청한 유저이름</th>
+                <th>봉사장소</th>
+                <th>봉사날짜</th>
+                <th>요청내용</th>
+                <th>요청시간</th>
+                <th>수락</th>
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="request : ${requests}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.userR.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
-                <td th:text="${user.reqtime}"></td>
+                <td th:text="${request.id}"></td>
+                <td th:text="${request.userR.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+                <td th:text="${request.location}"></td>
+                <td th:text="${request.exectime}"></td>
+                <td th:text="${request.content}"></td>
+                <td th:text="${request.reqtime}"></td>
+                <td>
+                    <a href="#" th:href="@{/volun/accept/{requestid} (requestid=${request.id})}"
+                       class="btn btn-primary" role="button">수락하기</a>
+                </td>
             </tr>
             </tbody>
         </table>

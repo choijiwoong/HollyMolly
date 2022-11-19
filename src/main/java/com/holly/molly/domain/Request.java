@@ -19,13 +19,19 @@ public class Request {
     @JoinColumn(name="userR_id")
     private User userR;
 
-    @OneToOne(fetch =FetchType.LAZY)
-    private Volun volunR;
-
     private LocalDateTime reqtime;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+
+    private LocalDateTime exectime;
+
+    private String location;
+
+    private String content;
+
+    @OneToOne(fetch =FetchType.LAZY)
+    private Accept accept;
 
     //---연관관계 메서드---
     //public void setUser(User user){
@@ -39,10 +45,9 @@ public class Request {
     //}
 
     //---생성 메서드---
-    public static Request createRequest(User user, Volun volun){
+    public static Request createRequest(User user){
         Request request=new Request();
         request.setUserR(user);
-        request.setVolunR(volun);
 
         request.setReqtime(LocalDateTime.now());
         request.setStatus(RequestStatus.REGISTER);

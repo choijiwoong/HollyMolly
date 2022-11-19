@@ -15,6 +15,7 @@ import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,21 +40,16 @@ public class LogicController {
         request.setContent(requestDTO.getContent());
 
         String exectime= requestDTO.getExectime();//2022.11.16.14.24
-        System.out.println(exectime);
-        if(exectime.length()!=16){
+        if(!checkLocaldatetime(exectime)){
             System.out.println("check time format");
             return "redirect:/";
         }
+
         Integer year=Integer.parseInt(exectime.substring(0,4));
         Integer month=Integer.parseInt(exectime.substring(5,7));
         Integer date=Integer.parseInt(exectime.substring(8,10));
         Integer hour=Integer.parseInt(exectime.substring(11,13));
         Integer minute=Integer.parseInt(exectime.substring(14,16));
-        System.out.println(year);
-        System.out.println(month);
-        System.out.println(date);
-        System.out.println(hour);
-        System.out.println(minute);
 
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
         request.setLocation(requestDTO.getLocation());
@@ -106,5 +102,13 @@ public class LogicController {
             throw new RuntimeException("cannot find current user information on cookie");
         }
         return userInfo.get();
+    }
+
+    //<-------내부 함수-------->
+    private boolean checkLocaldatetime(String time){
+        String pattern="^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$";
+        if(!Pattern.matches(pattern, time))
+            return false;
+        return true;
     }
 }

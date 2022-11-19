@@ -31,13 +31,9 @@ public class LogicController {
     @PostMapping("/volun/createRequest")
     public String saveRequest(RequestDTO requestDTO, @CookieValue(value="userId", required = false) Cookie cookie){
         Request request=new Request();
-        Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
-        if(userInfo.isEmpty()){
-            System.out.println("cannot find current user information on cookie");
-            return "redirect:/";
-        }
+        User userInfo=parseUserCookie(cookie);
 
-        request.setUserR(userInfo.get());
+        request.setUserR(userInfo);
         request.setReqtime(LocalDateTime.now());
         request.setStatus(RequestStatus.REGISTER);
         request.setContent(requestDTO.getContent());
@@ -62,7 +58,7 @@ public class LogicController {
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
         request.setLocation(requestDTO.getLocation());
 
-        userInfo.get().getRequests().add(request);
+        userInfo.getRequests().add(request);
 
         requestService.join(request);
 
@@ -78,8 +74,37 @@ public class LogicController {
     }
 
     @GetMapping("/volun/accept/{requestid}")
-    public String accept(@PathVariable("requestid") Long requestId){
+    public String accept(@PathVariable("requestid") Long requestId, @CookieValue(value="userId", required = false) Cookie cookie){
         System.out.println("accept requestId is "+requestId);
+        Request request=requestService.findOne(requestId);
+
+        Accept accept=new Accept();
+        accept.setUserA(parseUserCookie(cookie));
+        accept.setAcctime(LocalDateTime.now());
+        accept.setStatus(AcceptStatus.REGISTER);
+        request.setStatus(RequestStatus.ACCEPT);
+
+        accept.setRequest(request);
+        request.setAccept(accept);
+
+        acceptService.join(accept);
+
         return "redirect:/";
+    }
+
+    @GetMapping("/volun/acceptList")
+    public String acceptList(Model model){
+        List<Accept> accepts=acceptService.findAll();
+        System.out.println("accepts list length: "+accepts.size());
+        model.addAttribute("accepts", accepts);
+        return "volun/acceptList";
+    }
+
+    private User parseUserCookie(Cookie cookie){
+        Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
+        if(userInfo.isEmpty()){
+            throw new RuntimeException("cannot find current user information on cookie");
+        }
+        return userInfo.get();
     }
 }

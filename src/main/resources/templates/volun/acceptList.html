@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>#(Volun)</th>
+                <th>피봉사자</th>
+                <th>봉사자</th>
+                <th>봉사내용</th>
+                <th>봉사장소</th>
+                <th>봉사시간</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="accept : ${accepts}">
+                <td th:text="${accept.id}"></td>
+                <td th:text="${accept.request.userR.name}"></td>
+                <td th:text="${accept.userA.name}"></td>
+                <td th:text="${accept.request.content}"></td>
+                <td th:text="${accept.request.location}"></td>
+                <td th:text="${accept.request.exectime}"></td>
+                <td th:text="${accept.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

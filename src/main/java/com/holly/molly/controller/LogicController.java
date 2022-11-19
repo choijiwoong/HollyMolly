@@ -4,18 +4,15 @@ import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
-import com.holly.molly.service.VolunService;
-import com.sun.istack.NotNull;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +22,6 @@ public class LogicController {
     private final UserService userService;
     private final RequestService requestService;
     private final AcceptService acceptService;
-    private final VolunService volunService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest(){
@@ -33,7 +29,7 @@ public class LogicController {
     }
 
     @PostMapping("/volun/createRequest")
-    public String saveRequest(VolunDTO volunDTO, @CookieValue(value="userId", required = false) Cookie cookie){
+    public String saveRequest(RequestDTO requestDTO, @CookieValue(value="userId", required = false) Cookie cookie){
         Request request=new Request();
         Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
         if(userInfo.isEmpty()){
@@ -44,18 +40,28 @@ public class LogicController {
         request.setUserR(userInfo.get());
         request.setReqtime(LocalDateTime.now());
         request.setStatus(RequestStatus.REGISTER);
+        request.setContent(requestDTO.getContent());
 
-        Volun volun=new Volun();//완성되지 않은 Volun객체 생성 및 저장, Accept시 Volun완성 예정 고로 status체크가 중요. 실제 Volun의 저장은 Accept시 같이 수행 예정
-        volun.setStatus(VolunStatus.REQUEST);
-        String exectime= volunDTO.getExectime();
+        String exectime= requestDTO.getExectime();//2022.11.16.14.24
         System.out.println(exectime);
-        String[] timeInfo=exectime.split(".", 5);
-        System.out.println(timeInfo[0]);
-        volun.setExectime(LocalDateTime.of(Integer.parseInt(timeInfo[0]), Integer.parseInt(timeInfo[1]), Integer.parseInt(timeInfo[2]), Integer.parseInt(timeInfo[3]), Integer.parseInt(timeInfo[4])));
-        volun.setAddress(volunDTO.getAddress());
+        if(exectime.length()!=16){
+            System.out.println("check time format");
+            return "redirect:/";
+        }
+        Integer year=Integer.parseInt(exectime.substring(0,4));
+        Integer month=Integer.parseInt(exectime.substring(5,7));
+        Integer date=Integer.parseInt(exectime.substring(8,10));
+        Integer hour=Integer.parseInt(exectime.substring(11,13));
+        Integer minute=Integer.parseInt(exectime.substring(14,16));
+        System.out.println(year);
+        System.out.println(month);
+        System.out.println(date);
+        System.out.println(hour);
+        System.out.println(minute);
 
-        //연관관계매핑
-        request.setVolunR(volun);
+        request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
+        request.setLocation(requestDTO.getLocation());
+
         userInfo.get().getRequests().add(request);
 
         requestService.join(request);
@@ -66,7 +72,14 @@ public class LogicController {
     @GetMapping("/volun/requestList")
     public String requestList(Model model){
         List<Request> requests=requestService.findAll();
+        System.out.println("request list length: "+requests.size());
         model.addAttribute("requests", requests);
         return "volun/requestList";
+    }
+
+    @GetMapping("/volun/accept/{requestid}")
+    public String accept(@PathVariable("requestid") Long requestId){
+        System.out.println("accept requestId is "+requestId);
+        return "redirect:/";
     }
 }

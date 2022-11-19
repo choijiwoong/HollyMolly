@@ -19,13 +19,13 @@ public class Accept{
     @JoinColumn(name="userA_id")
     private User userA;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Volun volunA;
-
     private LocalDateTime acctime;
 
     @Enumerated(EnumType.STRING)
     private AcceptStatus status;
+
+    @OneToOne(mappedBy="accept", fetch=FetchType.LAZY)
+    private Request request;
 
     //---연관관계 메서드---
     //public void setUser(User user){
@@ -39,10 +39,9 @@ public class Accept{
     //}
 
     //---생성 메서드---
-    public static Accept createAccept(User user, Volun volun){
+    public static Accept createAccept(User user){
         Accept accept=new Accept();
         accept.setUserA(user);
-        accept.setVolunA(volun);
 
         accept.setAcctime(LocalDateTime.now());
         accept.setStatus(AcceptStatus.REGISTER);

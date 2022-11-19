@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +37,10 @@ public class LoginController {
 
     @PostMapping("/members/register")
     public String register(RegisterDTO registerDTO){
+        if(!checkRegisterDTO(registerDTO)){
+            throw new RuntimeException("register format is incorrect!");
+        }
+
         User user = new User();
         user.setName(registerDTO.getName());
         user.setEmail(registerDTO.getEmail());
@@ -70,5 +75,50 @@ public class LoginController {
         response.addCookie(idCookie);
 
         return "redirect:/";
+    }
+
+    //<---------내부 함수---------->
+    private boolean checkRegisterDTO(RegisterDTO registerDTO) {
+        String nameRegex="^[가-힣a-zA-Z]+$";//영문자, 한글 허용(1개이상)
+        if(!Pattern.matches(nameRegex, registerDTO.getName())) {
+            System.out.println("[DEBUG] incorrect name format on register form");
+            return false;
+        }
+
+        String emailRegex="\\w+@\\w+\\.\\w+(\\.\\w+)?";
+        if(!Pattern.matches(emailRegex, registerDTO.getEmail())) {
+            System.out.println("[DEBUG] incorrect email format on register form");
+            return false;
+        }
+
+        String phoneRegex="^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$";
+        if(!Pattern.matches(phoneRegex, registerDTO.getPhone())) {
+            System.out.println("[DEBUG] incorrect phone format on register form");
+            return false;
+        }
+
+        String birthRegex="^[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}$";
+        if(!Pattern.matches(birthRegex, registerDTO.getBirth())) {
+            System.out.println("[DEBUG] incorrect birth format on register form");
+            return false;
+        }
+
+        String pidRegex="[0-9]{6}-[1-4][0-9]{6}";
+        if(!Pattern.matches(pidRegex, registerDTO.getPid())) {
+            System.out.println("[DEBUG] incorrect pid format on register form");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkLoginDTO(LoginDTO loginDTO){
+        String emailRegex="\\w+@\\w+\\.\\w+(\\.\\w+)?";
+        if(!Pattern.matches(emailRegex, loginDTO.getEmail())) {
+            System.out.println("[DEBUG] incorrect email format on login form");
+            return false;
+        }
+
+        return true;
     }
 }

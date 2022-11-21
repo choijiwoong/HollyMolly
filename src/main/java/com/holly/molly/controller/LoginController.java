@@ -77,9 +77,36 @@ public class LoginController {
         return "redirect:/";
     }
 
+    @GetMapping("/admin")
+    public String test(HttpServletResponse response){
+        //기존 쿠키 제거
+        Cookie prevCookie=new Cookie("userId", null);
+        prevCookie.setPath("/");
+        response.addCookie(prevCookie);
+
+        //어드민 정보 생성
+        User admin=new User();
+        admin.setName("admin");
+        admin.setBirth("a");
+        admin.setEmail("a");
+        admin.setPassword("a");
+        admin.setPid("a");
+        admin.setPhone("a");
+
+        userService.join(admin);
+
+        //어드민 쿠키 등록
+        Cookie idCookie=new Cookie("userId", String.valueOf(admin.getId()));
+        idCookie.setPath("/");
+        response.addCookie(idCookie);
+
+        return "redirect:/";
+    }
+
     //<---------내부 함수---------->
     private boolean checkRegisterDTO(RegisterDTO registerDTO) {
-        String nameRegex="^[가-힣a-zA-Z]+$";//영문자, 한글 허용(1개이상)
+        /*
+        String nameRegex="^[0-9가-힣a-zA-Z]+$";//영문자, 한글 허용(1개이상)
         if(!Pattern.matches(nameRegex, registerDTO.getName())) {
             System.out.println("[DEBUG] incorrect name format on register form");
             return false;
@@ -108,17 +135,18 @@ public class LoginController {
             System.out.println("[DEBUG] incorrect pid format on register form");
             return false;
         }
-
+        */
         return true;
     }
 
     private boolean checkLoginDTO(LoginDTO loginDTO){
+        /*
         String emailRegex="\\w+@\\w+\\.\\w+(\\.\\w+)?";
         if(!Pattern.matches(emailRegex, loginDTO.getEmail())) {
             System.out.println("[DEBUG] incorrect email format on login form");
             return false;
         }
-
+        */
         return true;
     }
 }

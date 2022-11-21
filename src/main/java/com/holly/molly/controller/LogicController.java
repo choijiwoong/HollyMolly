@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -41,8 +42,7 @@ public class LogicController {
 
         String exectime= requestDTO.getExectime();//2022.11.16.14.24
         if(!checkLocaldatetime(exectime)){
-            System.out.println("check time format");
-            return "redirect:/";
+            throw new RuntimeException("check time format");
         }
 
         Integer year=Integer.parseInt(exectime.substring(0,4));
@@ -81,6 +81,10 @@ public class LogicController {
         accept.setStatus(AcceptStatus.REGISTER);
         request.setStatus(RequestStatus.ACCEPT);
 
+        if(checkDuplicatedUserRequestAccept(request, accept)){
+            throw new RuntimeException("Request user & Accept user is same");
+        }
+
         accept.setRequest(request);
         request.setAccept(accept);
 
@@ -96,6 +100,26 @@ public class LogicController {
         model.addAttribute("accepts", accepts);
         return "volun/acceptList";
     }
+
+    @GetMapping("/kakaomap")
+    public String showMap(Model model){
+        List<Request> requests=requestService.findAll().stream().filter(
+                r->r.getStatus().equals(RequestStatus.ACCEPT)).toList();
+
+        ArrayList<Double> latitudes=new ArrayList<>();
+        ArrayList<Double> longitudes=new ArrayList<>();
+        for(Request request: requests){
+            latitudes.add(request.getLatitude());
+            longitudes.add(request.getLongitude());
+        }
+
+        model.addAttribute("latitudes", latitudes);
+        model.addAttribute("longitudes", longitudes);
+
+        return "apis/kakaoMap";
+    }
+
+    //<-----내부 로직------>
 
     private User parseUserCookie(Cookie cookie){
         Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
@@ -113,5 +137,11 @@ public class LogicController {
             return false;
          */
         return true;
+    }
+
+    private boolean checkDuplicatedUserRequestAccept(Request request, Accept accept){
+        if(request.getUserR().getId()==accept.getUserA().getId())
+            return true;
+        return false;
     }
 }

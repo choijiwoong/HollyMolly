@@ -55,8 +55,4 @@ public class Request {
 
         return request;
     }
-
-    public static Request createNull(){
-        return new Request();
-    }
 }

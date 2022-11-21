@@ -81,6 +81,10 @@ public class LogicController {
         accept.setStatus(AcceptStatus.REGISTER);
         request.setStatus(RequestStatus.ACCEPT);
 
+        if(checkDuplicatedUserRequestAccept(request, accept)){
+            throw new RuntimeException("Request user & Accept user is same");
+        }
+
         accept.setRequest(request);
         request.setAccept(accept);
 
@@ -96,6 +100,13 @@ public class LogicController {
         model.addAttribute("accepts", accepts);
         return "volun/acceptList";
     }
+
+    @GetMapping("/kakaomap")
+    public String showMap(Model model){
+        return "apis/kakaoMap";
+    }
+
+    //<-----내부 로직------>
 
     private User parseUserCookie(Cookie cookie){
         Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
@@ -113,5 +124,11 @@ public class LogicController {
             return false;
          */
         return true;
+    }
+
+    private boolean checkDuplicatedUserRequestAccept(Request request, Accept accept){
+        if(request.getUserR().getId()==accept.getUserA().getId())
+            return true;
+        return false;
     }
 }

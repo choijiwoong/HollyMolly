@@ -52,7 +52,8 @@ public class LogicController {
         Integer minute=Integer.parseInt(exectime.substring(14,16));
 
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
-        request.setLocation(requestDTO.getLocation());
+        request.setLatitude(Double.parseDouble(requestDTO.getLatitude()));
+        request.setLongitude(Double.parseDouble(requestDTO.getLongitude()));
 
         userInfo.getRequests().add(request);
 
@@ -106,9 +107,11 @@ public class LogicController {
 
     //<-------내부 함수-------->
     private boolean checkLocaldatetime(String time){
+        /*
         String pattern="^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$";
         if(!Pattern.matches(pattern, time))
             return false;
+         */
         return true;
     }
 }

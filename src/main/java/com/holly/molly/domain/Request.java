@@ -26,7 +26,8 @@ public class Request {
 
     private LocalDateTime exectime;
 
-    private String location;
+    //private String location;
+    private double latitude, longitude;
 
     private String content;
 

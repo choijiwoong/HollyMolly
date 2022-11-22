@@ -1,27 +1,37 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
 <body>
 
-<div class="container">
-    <div>
-        <table>
-        <thead>
-        <tr>
-            <th>#(User)</th>
-            <th>이름</th>
-            <th>이메일</th>
-        </tr>
-        </thead>
+    <div class="container">
+        <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
-        <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
-            <td th:text="${user.email}"></td>
-        </tr>
-        </tbody>
-        </table>
+        <div>
+            <table class="table table-striped">
+
+            <thead>
+                <tr>
+                    <th>#(User)</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+                    <td th:text="${user.email}"></td>
+                </tr>
+            </tbody>
+
+            </table>
+        </div>
+
+        <div th:replace="fragments/footer :: footer" />
     </div>
-</div>
 </body>
+
 </html>

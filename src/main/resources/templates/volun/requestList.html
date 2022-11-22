@@ -8,13 +8,12 @@
 
     <div class="container">
         <div>
-            <table>
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#(Request)</th>
-                        <th>요청한 유저이름</th>
-                        <th>봉사경도</th>
-                        <th>봉사위도</th>
+                        <th>유저이름</th>
+                        <th>봉사장소</th>
                         <th>봉사날짜</th>
                         <th>요청내용</th>
                         <th>요청시간</th>
@@ -26,8 +25,7 @@
                     <tr th:each="request : ${requests}">
                         <td th:text="${request.id}"></td>
                         <td th:text="${request.userR.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
-                        <td th:text="${request.latitude}"></td>
-                        <td th:text="${request.longitude}"></td>
+                        <td th:text="${request.address}"></td>
                         <td th:text="${request.exectime}"></td>
                         <td th:text="${request.content}"></td>
                         <td th:text="${request.reqtime}"></td>

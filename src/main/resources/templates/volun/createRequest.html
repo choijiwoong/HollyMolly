@@ -1,30 +1,36 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
 <body>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
-<div class="container">
-    <form action="/volun/createRequest" method="post"><!--값을 입력할 수 있게하는 툴-->
-        <div class="form-group">
-            <label for="exectime">봉사시간</label>
-            <input type="text" id="exectime" name="exectime" placeholder="0000-00-00-00-00">
-        </div>
+    <div class="container">
+        <form action="/volun/createRequest" method="post"><!--값을 입력할 수 있게하는 툴-->
+            <div class="form-group">
+                <div class="card-header">봉사시간</div>
+                <input type="text" id="exectime" name="exectime" placeholder="0000-00-00-00-00", style="width:300px;">
+            </div>
 
-        <div class="form-group">
-            <label for="location">주소(아래의 지도에서 마커로 표시해주세요)</label>
-            <input type="text" id="location" name="location" placeholder="검색할 주소를 입력해주세요"><button type="button" onclick="searchByAddress()">검색</button>
-            <input type="text" id="latitude" name="latitude" placeholder="위도">
-            <input type="text" id="longitude" name="longitude" placeholder="경도">
-            <div id="map" style="width:750px;height:350px;"></div>
-        </div>
+            <div class="form-group">
+                <div class="card-header">주소(아래의 지도에서 마커로 표시해주세요)</div>
+                <input type="text" id="location" name="location" placeholder="검색할 주소를 입력해주세요", style="width:300px;"><button type="button" onclick="searchByAddress()">검색</button>
+                <input type="text" id="latitude" name="latitude" placeholder="위도"/>
+                <input type="text" id="longitude" name="longitude" placeholder="경도"/>
+                <div id="map" style="width:750px;height:350px;"></div>
+            </div>
 
-        <div class="form-group">
-            <label for="content">봉사내용</label>
-            <input type="text" id="content" name="content" placeholder="원하시는 봉사활동을 입력하세요">
-        </div>
+            <div class="form-group">
+                <div class="card-header">봉사내용</div>
+                <input type="text" id="content" name="content" placeholder="원하시는 봉사활동을 입력하세요", style="width:600px;">
+            </div>
 
-        <button type="submit">등록</button><!--form action method에 따라 post 수행-->
-    </form>
-</div>
+            <button class="btn btn-primary" type="submit">등록</button><!--form action method에 따라 post 수행-->
+        </form>
+
+        <div th:replace="fragments/footer :: footer" />
+    </div>
 </body>
 
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f&libraries=services"></script>
@@ -62,6 +68,8 @@ kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
     buffer.value=marker.getPosition().getLat();
     buffer=document.getElementById("longitude");
     buffer.value=marker.getPosition().getLng();
+
+    alert("위치가 설정되었습니다!");
 });
 
 //주소검색기능
@@ -79,6 +87,7 @@ function searchByAddress(){
             buffer.value=marker.getPosition().getLat();
             buffer=document.getElementById("longitude");
             buffer.value=marker.getPosition().getLng();
+            alert("위치가 설정되었습니다!");
         }
     });
 }

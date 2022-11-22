@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class RequestDTO {
     private String exectime;
-    //private String location;
-    private String latitude, longitude;
+    private String address;
     private String content;
 }

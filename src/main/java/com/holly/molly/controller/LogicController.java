@@ -52,8 +52,7 @@ public class LogicController {
         Integer minute=Integer.parseInt(exectime.substring(14,16));
 
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
-        request.setLatitude(Double.parseDouble(requestDTO.getLatitude()));
-        request.setLongitude(Double.parseDouble(requestDTO.getLongitude()));
+        request.setAddress(requestDTO.getAddress());
 
         userInfo.getRequests().add(request);
 
@@ -64,7 +63,7 @@ public class LogicController {
 
     @GetMapping("/volun/requestList")
     public String requestList(Model model){
-        List<Request> requests=requestService.findAll();
+        List<Request> requests=requestService.findByStatus(RequestStatus.REGISTER);
         System.out.println("request list length: "+requests.size());
         model.addAttribute("requests", requests);
         return "volun/requestList";
@@ -95,26 +94,17 @@ public class LogicController {
 
     @GetMapping("/volun/acceptList")
     public String acceptList(Model model){
-        List<Accept> accepts=acceptService.findAll();
+        List<Accept> accepts=acceptService.findByStatus(AcceptStatus.REGISTER);
         System.out.println("accepts list length: "+accepts.size());
         model.addAttribute("accepts", accepts);
         return "volun/acceptList";
     }
 
     @GetMapping("/kakaomap")
-    public String showMap(Model model){
+    public String showMap(Model model){//보완필요
         List<Request> requests=requestService.findAll().stream().filter(
                 r->r.getStatus().equals(RequestStatus.ACCEPT)).toList();
-
-        ArrayList<Double> latitudes=new ArrayList<>();
-        ArrayList<Double> longitudes=new ArrayList<>();
-        for(Request request: requests){
-            latitudes.add(request.getLatitude());
-            longitudes.add(request.getLongitude());
-        }
-
-        model.addAttribute("latitudes", latitudes);
-        model.addAttribute("longitudes", longitudes);
+        model.addAttribute("addresses", requests);
 
         return "apis/kakaoMap";
     }

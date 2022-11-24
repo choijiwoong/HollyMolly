@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +38,21 @@ public class RequestService {
 
     public List<Request> findByReqtime(LocalDateTime localDateTime){
         return requestRepository.findByReqtime(localDateTime);
+    }
+
+    public List<Request> findByAddress(String address){
+        return requestRepository.findByAddress(address);
+    }
+
+    public List<Long> findRegisterAcceptAddress(){
+        List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
+
+        ArrayList<Long> ids=new ArrayList<>();
+        for(Request request: requests){
+            ids.add(request.getId());
+        }
+
+        return ids.stream().toList();
     }
 
     public List<Request> findAll(){

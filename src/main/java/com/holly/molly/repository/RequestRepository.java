@@ -41,6 +41,12 @@ public class RequestRepository {
                 .getResultList();
     }
 
+    public List<Request> findByAddress(String address){
+        return em.createQuery("select r from Request r where r.address=:address", Request.class)
+                .setParameter("address", address)
+                .getResultList();
+    }
+
     public List<Request> findAll(){
         return em.createQuery("select r from Request r", Request.class).getResultList();
     }

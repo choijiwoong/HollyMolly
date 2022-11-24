@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
 <body>
-<div id="map" style="width:750px;height:350px;"></div>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <div id="map" style="width:750px;height:350px;"></div>
+
+    <div th:replace="fragments/footer :: footer" />
+</div>
 </body>
 </html>
 
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f"></script>
-<script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f&libraries=services"></script>
+<script th:inline="javascript">
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(37.56622714621121, 126.97793436924096), // 지도의 중심좌표
@@ -18,36 +23,50 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     };
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+showMarkers();
 
-// 마커를 표시할 위치와 title 객체 배열입니다
-var positions_gui = [];
-const list_gui_lat=[[${latitudes}]];
-const list_gui_long=[[${longitudes}]];
-alert(list_gui_lat.length);
+function showMarkers(){
+    /*<![CDATA[*/
+    var addresses=/*[[${addresses}]]*/;
+    var ids=/*[[${ids}]]*/;
+    /*]]>*/
 
-for (var index=0; index<list_gui_lat.length-1; index++){
-	var data_lat = list_gui_lat[index];
-	var data_lng = list_gui_long[index];
-	positions_gui.push(new kakao.maps.LatLng(data_lat, data_lng));
+    //지리코더
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    for (var index=0; index<addresses.length; index++){
+        var currentIndex=index;
+        //주소->경위도
+        geocoder.addressSearch(addresses[index], function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+	            var location=new kakao.maps.LatLng(result[0].y, result[0].x);
+
+	            //마커생성
+                var marker = new kakao.maps.Marker({
+		            map: map, // 마커를 표시할 지도
+		            position: location,
+	            });
+
+
+	            //인포윈도우 생성
+                var infowindow = new kakao.maps.InfoWindow({
+    	            position: location,
+                    content: '<div style="padding:5px;">request!</div>'// 인포윈도우에 표시할 내용
+                });
+
+                //이벤트 리스너 등록
+                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    var url="http://"+window.location.host+"/volun/detailRequest/"+ids[currentIndex];
+                    window.location.href=url;
+                });
+            }
+        });
+    }
+
 }
 
-for (var i = 0; i < positions_gui.length; i ++) {//가이드 마크
-	var marker = new kakao.maps.Marker({
-		map: map, // 마커를 표시할 지도
-		position: positions_gui[i],
-	});
-	// 마커에 표시할 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-    	position: positions_use[i],
-        content: '<div style="padding:5px;">guide request!</div>'// 인포윈도우에 표시할 내용
-    });
-
-    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-    // 이벤트 리스너로는 클로저를 만들어 등록합니다
-    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-}
 
 // 인포윈도우를 표시하는 클로저를 만드는 함수입니다
 function makeOverListener(map, marker, infowindow) {
@@ -63,38 +82,10 @@ function makeOutListener(infowindow) {
     };
 }
 
-//주소검색기능
-function searchByAddress(){
-    //주소-좌표 변환 객체
-    var geocoder = new kakao.maps.services.Geocoder();
-    geocoder.addressSearch(document.getElementById("location").value, function(result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-            marker.setPosition(coords);
-            map.setCenter(coords);
-
-            //주소저장
-            searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var buffer=document.getElementById("address");
-                    buffer.value=result[0].road_address.address_name;
-                }
-            });
-
-            alert("위치가 설정되었습니다!");
-        }
-    });
-}
 
 //<-------------개발도우미------------->
 // 지도에 확대 축소 컨트롤을 생성한다
 var zoomControl = new kakao.maps.ZoomControl();
 // 지도의 우측에 확대 축소 컨트롤을 추가한다
 map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-kakao.maps.event.addListener(map, 'dragend', function() {
-    var message =  "노랑이는 유저꺼 파랑이는 가이드꺼!";
-    var resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = message;
-});
 </script>

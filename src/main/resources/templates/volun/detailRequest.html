@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
+<body>
+    <div class="container">
+        <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+        <div class="container">
+            <div class="form-group">
+                <div class="card-header">봉사시간</div>
+                <td th:text="${request.exectime}"></td>
+            </div>
+
+            <div class="form-group">
+                <div class="card-header">봉사장소</div>
+                <td id="addr" th:text="${request.address}">default</td>
+                <div id="map" style="width:750px;height:350px;"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="card-header">피봉사자</div>
+                <td th:text="${request.userR.name}"></td>
+            </div>
+
+            <div class="form-group">
+                <div class="card-header">봉사내용</div>
+                <td th:text="${request.content}"></td>
+            </div>
+
+            <div class="form-group">
+                <div class="card-header">등록시간</div>
+                <td th:text="${request.reqtime}"></td>
+            </div>
+
+            <div>
+                <a href="#" th:href="@{/volun/accept/{requestid} (requestid=${request.id})}"
+               class="btn btn-primary" role="button">수락하기</a>
+            </div>
+
+            <div th:replace="fragments/footer :: footer" />
+        </div>
+    </div>
+</body>
+
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f&libraries=services"></script>
+<script th:inline="javascript">
+//-------------카카오맵-------------
+//지도 설정
+var mapContainer = document.getElementById('map')
+    mapOption = {
+        center: new kakao.maps.LatLng(37.56622714621121, 126.97793436924096),
+        level: 8
+    };
+//지도 가시화
+var map = new kakao.maps.Map(mapContainer, mapOption);
+//기본 마커 표시
+var marker = new kakao.maps.Marker({
+    map: map,
+    position: map.getCenter()
+});
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+
+//<-------------개발도우미------------->
+// 지도에 확대 축소 컨트롤을 생성한다
+var zoomControl = new kakao.maps.ZoomControl();
+// 지도의 우측에 확대 축소 컨트롤을 추가한다
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+var address=/*[[${request.address}]]*/;
+
+geocoder.addressSearch(address, function(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        marker.setPosition(coords);
+        map.setCenter(coords)
+    }
+});
+
+</script>
+
+</html>

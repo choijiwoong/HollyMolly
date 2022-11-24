@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.websocket.server.PathParam;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Controller
@@ -97,16 +96,29 @@ public class LogicController {
         List<Accept> accepts=acceptService.findByStatus(AcceptStatus.REGISTER);
         System.out.println("accepts list length: "+accepts.size());
         model.addAttribute("accepts", accepts);
+
         return "volun/acceptList";
     }
 
     @GetMapping("/kakaomap")
-    public String showMap(Model model){//보완필요
-        List<Request> requests=requestService.findAll().stream().filter(
-                r->r.getStatus().equals(RequestStatus.ACCEPT)).toList();
-        model.addAttribute("addresses", requests);
+    public String showMap(Model model){
+        List<Long> requestIds=requestService.findRegisterAcceptAddress();
+        ArrayList<String> addresses=new ArrayList<String>();
+        ArrayList<Long> ids=new ArrayList<Long>();
+        for(Long id: requestIds){
+            addresses.add(requestService.findOne(id).getAddress());
+            ids.add(id);
+        }
+        model.addAttribute("addresses", addresses);
+        model.addAttribute("ids", ids);
 
         return "apis/kakaoMap";
+    }
+
+    @GetMapping("/volun/detailRequest/{requestid}")
+    public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
+        model.addAttribute("request", requestService.findOne(requestId));
+        return "volun/detailRequest";
     }
 
     //<-----내부 로직------>

@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <!-- Categories widget-->
-                    <div class="card mb-4">
+                    <div class="card mb-4" th:if="${user.isPresent()}">
                         <div class="card-header">카테고리</div>
                         <div class="card-body">
                             <div class="row">
@@ -144,7 +144,7 @@
                                 <div class="col-sm-6">
                                     <ul class="list-unstyled mb-0">
                                         <li><a href="#!">급구</a></li>
-                                        <li><a href="#!">최근내역</a></li>
+                                        <li><a href="/mypage/recentHistory">최근내역</a></li>
                                         <li><a href="#!">봉사지수</a></li>
                                     </ul>
                                 </div>
@@ -152,7 +152,7 @@
                         </div>
                     </div>
                     <!-- Side widget-->
-                    <div class="card mb-4">
+                    <div class="card mb-4" th:if="${user.isPresent()}">
                         <div class="card-header">당신의 봉사지수, 너의 이야기를 들려줘</div>
                         <div class="card-body">이번달 봉사지수: 0 <br>이번연도 봉사지수: 0 <br>나의 포인트: 0</div>
                     </div>

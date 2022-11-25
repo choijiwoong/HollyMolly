@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AsyncService {
     private final AcceptService acceptService;
+    private final MailService mailService;
 
     //@Async
     public void checkVolunStatus(){
@@ -26,12 +27,12 @@ public class AsyncService {
             for (Accept accept : accepts) {
                 Request request = accept.getRequest();
                 if (request.getStatus() == RequestStatus.ACCEPT) {
-                    if (isEmailTime(request.getExectime())) {
-                        sendEmail(request.getUserR().getEmail());
-                        sendEmail(accept.getUserA().getEmail());
+                    if (isEmailTime(request.getExectime())) {//봉사활동 예정일 하루 전 이메일 전송
+                        mailService.sendMail(request.getUserR().getEmail());
+                        mailService.sendMail(accept.getUserA().getEmail());
                     }
 
-                    if (isComplete(request.getExectime())) {
+                    if (isComplete(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
                         request.setStatus(RequestStatus.COMPLETE);
                         accept.setStatus(AcceptStatus.COMPLETE);
                     }

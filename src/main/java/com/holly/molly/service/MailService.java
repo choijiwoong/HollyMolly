@@ -12,9 +12,9 @@ public class MailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendMail(){
+    public void sendMail(String email){
         ArrayList<String> toUserList=new ArrayList<>();
-        toUserList.add("e");
+        toUserList.add(email);
 
         int toUserSize=toUserList.size();
 
@@ -22,9 +22,9 @@ public class MailService {
 
         simpleMessage.setTo((String[]) toUserList.toArray(new String[toUserSize]));
 
-        simpleMessage.setSubject("title");
+        simpleMessage.setSubject("[세모봉] 봉사활동이 바로 다음날이에요!");
 
-        simpleMessage.setText("Text sample");
+        simpleMessage.setText("늦지않게 준비해주세요:)");
 
         javaMailSender.send(simpleMessage);
     }

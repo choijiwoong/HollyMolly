@@ -1,5 +1,7 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.service.AcceptService;
+import com.holly.molly.service.AsyncService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,8 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HomeController {
     private final UserService userService;
+    private final AsyncService asyncService;
+
     @GetMapping("/")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
     public String home(Model model, @CookieValue(value="userId", required = false) Cookie cookie){
+        //asyncService.checkVolunStatus();//async task
+
         if(cookie==null || cookie.getValue().equals("")){
             System.out.println("NotExist Cookie");//ㄴㄴ
             model.addAttribute("user", Optional.empty());

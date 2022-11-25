@@ -33,11 +33,6 @@ public class Accept{
     //    user.getAccepts().add(this);
     //}
 
-    //public void setVolun(Volun volun){
-    //    this.volunA=volun;
-    //    volun.setAccept(this);
-    //}
-
     //---생성 메서드---
     public static Accept createAccept(User user){
         Accept accept=new Accept();

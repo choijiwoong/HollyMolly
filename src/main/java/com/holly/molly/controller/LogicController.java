@@ -7,6 +7,7 @@ import com.holly.molly.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -119,6 +120,42 @@ public class LogicController {
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
         model.addAttribute("request", requestService.findOne(requestId));
         return "volun/detailRequest";
+    }
+
+    @GetMapping("request/makeComplete/{requestid}")
+    public String makeRequestComplete(@PathVariable("requestid") Long requestId){
+        Request request=requestService.findOne(requestId);
+        if(request.getStatus()!=RequestStatus.ACCEPT){
+            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
+        }
+
+        Accept accept=request.getAccept();
+        if(accept.getStatus()!=AcceptStatus.REGISTER){
+            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
+        }
+
+        request.setStatus(RequestStatus.COMPLETE);
+        accept.setStatus(AcceptStatus.COMPLETE);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("accept/makeComplete/{acceptid}")
+    public String makeAcceptComplete(@PathVariable("acceptid") Long acceptId){
+        Accept accept=acceptService.findOne(acceptId);
+        if(accept.getStatus()!=AcceptStatus.REGISTER){
+            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
+        }
+
+        Request request=accept.getRequest();
+        if(request.getStatus()!=RequestStatus.ACCEPT){
+            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
+        }
+
+        request.setStatus(RequestStatus.COMPLETE);
+        accept.setStatus(AcceptStatus.COMPLETE);
+
+        return "redirect:/";
     }
 
     //<-----내부 로직------>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+  <div class="container">
+    <p class="lead mb-0 text-muted">최근 봉사 활동</p>
+    <div>
+      <!--유저의 Request List-->
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>요청한 봉사활동</th>
+          <th>유저이름</th>
+          <th>봉사장소</th>
+          <th>봉사날짜</th>
+          <th>요청내용</th>
+          <th>요청시간</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="request : ${user.requests}">
+          <td th:text="${request.id}"></td>
+          <td th:text="${request.userR.name}"></td><!--Member의 프로퍼티가 private지만 게터세터로 알아서 접근-->
+          <td th:text="${request.address}"></td>
+          <td th:text="${request.exectime}"></td>
+          <td th:text="${request.content}"></td>
+          <td th:text="${request.reqtime}"></td>
+          <td th:text="${request.status}"></td>
+          <td>
+            <a th:if="${request.status}==REGISTER" href="#" th:href="@{/volun/detailRequest/{requestid} (requestid=${request.id})}"
+               class="btn btn-primary" role="button">상세보기</a>
+            <a th:if="${request.status}==COMPLETE" href="#" th:href="@{/request/makeReview/{requestid} (requestid=${request.id})}"
+               class="btn btn-primary" role="button">리뷰작성</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--유저의 Accept List-->
+    <div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>#수락한 봉사활동</th>
+          <th>피봉사자</th>
+          <th>봉사자</th>
+          <th>봉사내용</th>
+          <th>봉사장소</th>
+          <th>봉사시간</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="accept : ${user.accepts}">
+          <td th:text="${accept.id}"></td>
+          <td th:text="${accept.request.userR.name}"></td>
+          <td th:text="${accept.userA.name}"></td>
+          <td th:text="${accept.request.content}"></td>
+          <td th:text="${accept.request.address}"></td>
+          <td th:text="${accept.request.exectime}"></td>
+          <td th:text="${accept.status}"></td>
+          <a th:if="${accept.status}==COMPLETE" href="#" th:href="@{/accept/makeReview/{acceptid} (acceptid=${accept.id})}"
+             class="btn btn-primary" role="button">리뷰작성</a>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+  </div>
+</div>
+</body>
+
+</html>

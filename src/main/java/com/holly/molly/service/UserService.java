@@ -23,6 +23,12 @@ public class UserService {
         return user.getId();
     }
 
+    @Transactional
+    public Long delete(User user){
+        userRepository.delete(user);
+        return user.getId();
+    }
+
     private void validateDuplicateMember(User user) {
         if(!userRepository.findByEmail(user.getEmail()).isEmpty())
             throw new RuntimeException("중복된 회원입니다.");

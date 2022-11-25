@@ -2,6 +2,7 @@ package com.holly.molly.controller;
 
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
+import com.holly.molly.service.AsyncService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.Getter;
@@ -122,8 +123,10 @@ public class LogicController {
         return "volun/detailRequest";
     }
 
+    @Transactional
     @GetMapping("request/makeComplete/{requestid}")
     public String makeRequestComplete(@PathVariable("requestid") Long requestId){
+        System.out.println("[DEBUG] CALL MAKEREQUESTCOMPLETE");
         Request request=requestService.findOne(requestId);
         if(request.getStatus()!=RequestStatus.ACCEPT){
             throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
@@ -134,14 +137,16 @@ public class LogicController {
             throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
         }
 
-        request.setStatus(RequestStatus.COMPLETE);
         accept.setStatus(AcceptStatus.COMPLETE);
+        request.setStatus(RequestStatus.COMPLETE);
 
         return "redirect:/";
     }
 
+    @Transactional
     @GetMapping("accept/makeComplete/{acceptid}")
     public String makeAcceptComplete(@PathVariable("acceptid") Long acceptId){
+        System.out.println("[DEBUG] CALL MAKEACCEPTCOMPLETE");
         Accept accept=acceptService.findOne(acceptId);
         if(accept.getStatus()!=AcceptStatus.REGISTER){
             throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
@@ -152,8 +157,8 @@ public class LogicController {
             throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
         }
 
-        request.setStatus(RequestStatus.COMPLETE);
         accept.setStatus(AcceptStatus.COMPLETE);
+        request.setStatus(RequestStatus.COMPLETE);
 
         return "redirect:/";
     }

@@ -34,10 +34,30 @@ public class Request {
     private Accept accept;
 
     //---연관관계 메서드---
-    //public void setUser(User user){
-    //    this.userR=user;
-    //    user.getRequests().add(this);
-    //}
+    public void setUser(User user){
+        this.userR=user;
+        user.getRequests().add(this);
+    }
+
+    /*public void setStatus(RequestStatus status){
+        if(status==RequestStatus.REGISTER) {
+
+        }
+
+        if(status==RequestStatus.CANCEL){
+            this.accept.setStatus(AcceptStatus.CANCEL);
+        }
+
+        if(status==RequestStatus.ACCEPT){
+            this.accept.setStatus(AcceptStatus.REGISTER);
+        }
+
+        if(status==RequestStatus.COMPLETE){
+            this.accept.setStatus(AcceptStatus.COMPLETE);
+        }
+    }
+    */
+
 
     //public void setVolun(Volun volun){
     //    this.volunR=volun;

@@ -28,10 +28,24 @@ public class Accept{
     private Request request;
 
     //---연관관계 메서드---
-    //public void setUser(User user){
-    //    this.userA=user;
-    //    user.getAccepts().add(this);
-    //}
+    public void setUser(User user){
+        this.userA=user;
+        user.getAccepts().add(this);
+    }
+
+    /*public void setStatus(AcceptStatus status){
+        if(status==AcceptStatus.REGISTER){
+            this.request.setStatus(RequestStatus.ACCEPT);
+        }
+
+        if(status==AcceptStatus.CANCEL){
+            this.request.setStatus(RequestStatus.CANCEL);
+        }
+
+        if(status==AcceptStatus.COMPLETE){
+            this.request.setStatus(RequestStatus.COMPLETE);
+        }
+    }*/
 
     //---생성 메서드---
     public static Accept createAccept(User user){

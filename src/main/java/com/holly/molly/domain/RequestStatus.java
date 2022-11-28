@@ -4,5 +4,6 @@ public enum RequestStatus {
     REGISTER,//요청등록
     ACCEPT,//수락완료
     CANCEL,//봉사기간 전 취소
-    COMPLETE//봉사완료
+    COMPLETE,//봉사완료
+    REVIEWD//리뷰작성완료
 }

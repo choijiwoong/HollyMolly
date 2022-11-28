@@ -12,19 +12,37 @@ public class MailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendMail(String email){
+    public void advanceNotice(String email){
         ArrayList<String> toUserList=new ArrayList<>();
         toUserList.add(email);
 
-        int toUserSize=toUserList.size();
+        this.sendMail(toUserList, "[세모봉] 봉사활동이 바로 다음날이에요!", "늦지않게 준비해주세요:)");
+    }
+
+    public void requestReview(String email, Long id, Boolean isUserR){
+        ArrayList<String> toUserList=new ArrayList<>();
+        toUserList.add(email);
+
+        String reviewUrl="http://localhost:8080/review/";
+        if(isUserR){
+            reviewUrl+="r/"+id;
+        } else{
+            reviewUrl+="a/"+id;
+        }
+
+        this.sendMail(toUserList, "[세모봉] 오늘의 봉사활동은 어떠셨나요?", "아래의 링크를 통해 후기를 남겨주세요!\n"+reviewUrl);
+    }
+
+    private void sendMail(ArrayList<String> emailTargets, String title, String content){
+        int toUserSize=emailTargets.size();
 
         SimpleMailMessage simpleMessage=new SimpleMailMessage();
 
-        simpleMessage.setTo((String[]) toUserList.toArray(new String[toUserSize]));
+        simpleMessage.setTo((String[]) emailTargets.toArray(new String[toUserSize]));
 
-        simpleMessage.setSubject("[세모봉] 봉사활동이 바로 다음날이에요!");
+        simpleMessage.setSubject(title);
 
-        simpleMessage.setText("늦지않게 준비해주세요:)");
+        simpleMessage.setText(content);
 
         javaMailSender.send(simpleMessage);
     }

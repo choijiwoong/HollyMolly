@@ -51,8 +51,6 @@ public class LogicController {
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
         request.setAddress(requestDTO.getAddress());
 
-        userInfo.getRequests().add(request);
-
         requestService.join(request);
 
         return "redirect:/";
@@ -115,46 +113,6 @@ public class LogicController {
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
         model.addAttribute("request", requestService.findOne(requestId));
         return "volun/detailRequest";
-    }
-
-    @Transactional
-    @GetMapping("request/makeComplete/{requestid}")
-    public String makeRequestComplete(@PathVariable("requestid") Long requestId){
-        System.out.println("[DEBUG] CALL MAKEREQUESTCOMPLETE");
-        Request request=requestService.findOne(requestId);
-        if(request.getStatus()!=RequestStatus.ACCEPT){
-            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
-        }
-
-        Accept accept=request.getAccept();
-        if(accept.getStatus()!=AcceptStatus.REGISTER){
-            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
-        }
-
-        accept.setStatus(AcceptStatus.COMPLETE);
-        request.setStatus(RequestStatus.COMPLETE);
-
-        return "redirect:/";
-    }
-
-    @Transactional
-    @GetMapping("accept/makeComplete/{acceptid}")
-    public String makeAcceptComplete(@PathVariable("acceptid") Long acceptId){
-        System.out.println("[DEBUG] CALL MAKEACCEPTCOMPLETE");
-        Accept accept=acceptService.findOne(acceptId);
-        if(accept.getStatus()!=AcceptStatus.REGISTER){
-            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
-        }
-
-        Request request=accept.getRequest();
-        if(request.getStatus()!=RequestStatus.ACCEPT){
-            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
-        }
-
-        accept.setStatus(AcceptStatus.COMPLETE);
-        request.setStatus(RequestStatus.COMPLETE);
-
-        return "redirect:/";
     }
 
     //<-----내부 로직------>

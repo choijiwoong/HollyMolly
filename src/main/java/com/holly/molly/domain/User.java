@@ -9,8 +9,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@Table(name="users")
-public class User {//피봉사자
+@Table(name="users")//DB SQL user키워드와의 충돌을 방지
+public class User {
     @Id
     @GeneratedValue
     @Column(name="user_id")

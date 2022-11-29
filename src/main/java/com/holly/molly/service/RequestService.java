@@ -36,14 +36,6 @@ public class RequestService {
         return requestRepository.findByStatus(requestStatus);
     }
 
-    public List<Request> findByReqtime(LocalDateTime localDateTime){
-        return requestRepository.findByReqtime(localDateTime);
-    }
-
-    public List<Request> findByAddress(String address){
-        return requestRepository.findByAddress(address);
-    }
-
     public List<Long> findRegisterAcceptAddress(){
         List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
 

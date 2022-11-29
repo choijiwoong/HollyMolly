@@ -29,6 +29,11 @@ public class AsyncService {
             List<Accept> accepts = acceptService.findByStatus(AcceptStatus.REGISTER);
             for (Accept accept : accepts) {
                 Request request = accept.getRequest();
+
+                if(request.getStatus()==RequestStatus.CANCEL){//요청자 취소시
+                    accept.setStatus(AcceptStatus.CANCEL);
+                }
+
                 if (request.getStatus() == RequestStatus.ACCEPT) {
                     if (isEmailTime(request.getExectime())) {//봉사활동 예정일 하루 전 이메일 전송
                         mailService.advanceNotice(request.getUserR().getEmail());

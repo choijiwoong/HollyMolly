@@ -2,12 +2,9 @@ package com.holly.molly.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +18,9 @@ public class Review {
     String title;
 
     String content;
+
+    @ElementCollection//1:N매핑
+    List<String> comment;
 
     //MultipartFile image;
 }

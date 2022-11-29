@@ -1,5 +1,6 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.ReviewDTO;
 import com.holly.molly.domain.AcceptStatus;
 import com.holly.molly.domain.RequestStatus;
 import com.holly.molly.domain.Review;
@@ -13,10 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor

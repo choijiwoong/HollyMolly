@@ -1,11 +1,10 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
-import com.holly.molly.service.AsyncService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.websocket.server.PathParam;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -54,8 +50,6 @@ public class LogicController {
 
         request.setExectime(LocalDateTime.of(year, month, date, hour, minute));
         request.setAddress(requestDTO.getAddress());
-
-        userInfo.getRequests().add(request);
 
         requestService.join(request);
 
@@ -102,7 +96,7 @@ public class LogicController {
 
     @GetMapping("/kakaomap")
     public String showMap(Model model){
-        List<Long> requestIds=requestService.findRegisterAcceptAddress();
+        List<Long> requestIds=requestService.findKakaomapList();
         ArrayList<String> addresses=new ArrayList<String>();
         ArrayList<Long> ids=new ArrayList<Long>();
         for(Long id: requestIds){
@@ -119,46 +113,6 @@ public class LogicController {
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
         model.addAttribute("request", requestService.findOne(requestId));
         return "volun/detailRequest";
-    }
-
-    @Transactional
-    @GetMapping("request/makeComplete/{requestid}")
-    public String makeRequestComplete(@PathVariable("requestid") Long requestId){
-        System.out.println("[DEBUG] CALL MAKEREQUESTCOMPLETE");
-        Request request=requestService.findOne(requestId);
-        if(request.getStatus()!=RequestStatus.ACCEPT){
-            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
-        }
-
-        Accept accept=request.getAccept();
-        if(accept.getStatus()!=AcceptStatus.REGISTER){
-            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
-        }
-
-        accept.setStatus(AcceptStatus.COMPLETE);
-        request.setStatus(RequestStatus.COMPLETE);
-
-        return "redirect:/";
-    }
-
-    @Transactional
-    @GetMapping("accept/makeComplete/{acceptid}")
-    public String makeAcceptComplete(@PathVariable("acceptid") Long acceptId){
-        System.out.println("[DEBUG] CALL MAKEACCEPTCOMPLETE");
-        Accept accept=acceptService.findOne(acceptId);
-        if(accept.getStatus()!=AcceptStatus.REGISTER){
-            throw new RuntimeException("Accept의 상태가 Register가 아닙니다!");
-        }
-
-        Request request=accept.getRequest();
-        if(request.getStatus()!=RequestStatus.ACCEPT){
-            throw new RuntimeException("Request의 상태가 Accept가 아닙니다!");
-        }
-
-        accept.setStatus(AcceptStatus.COMPLETE);
-        request.setStatus(RequestStatus.COMPLETE);
-
-        return "redirect:/";
     }
 
     //<-----내부 로직------>

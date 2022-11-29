@@ -38,4 +38,31 @@ public class Accept{
         request.setStatus(RequestStatus.ACCEPT);
         this.request=request;
     }
+
+    public void setStatus(AcceptStatus status){
+        if(status.equals(AcceptStatus.COMPLETE)){
+            this.status=AcceptStatus.COMPLETE;
+
+            this.request.setStatus(RequestStatus.COMPLETE);
+        }
+
+        if(status.equals(AcceptStatus.CANCEL)){
+            this.status=AcceptStatus.CANCEL;
+
+            if(this.getRequest().getExectime().isBefore(LocalDateTime.now())){
+                this.request.setStatus(RequestStatus.CANCEL);
+            } else{
+                this.request.setStatus(RequestStatus.REGISTER);
+            }
+        }
+
+        if(status.equals(AcceptStatus.REGISTER)){
+            //throw new RuntimeException("Incorrect handling");
+            this.status=AcceptStatus.REGISTER;
+        }
+
+        if(status.equals(AcceptStatus.REVIEWD)){
+            this.status=AcceptStatus.REVIEWD;
+        }
+    }
 }

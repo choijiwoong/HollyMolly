@@ -1,6 +1,6 @@
 package com.holly.molly.service;
 
-import com.holly.molly.controller.LoginDTO;
+import com.holly.molly.DTO.LoginDTO;
 import com.holly.molly.domain.User;
 import com.holly.molly.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,9 @@ public class UserService {
     }
 
     @Transactional
+    public void clear(){ userRepository.clear(); }//for test
+
+    @Transactional
     public Long delete(User user){
         userRepository.delete(user);
         return user.getId();
@@ -31,13 +34,13 @@ public class UserService {
 
     private void validateDuplicateMember(User user) {
         if(!userRepository.findByEmail(user.getEmail()).isEmpty())
-            throw new RuntimeException("중복된 회원입니다.");
+            throw new IllegalStateException("이메일이 중복된 회원입니다.");
 
         if(!userRepository.findByPhone(user.getPhone()).isEmpty())
-            throw new RuntimeException("중복된 회원입니다.");
+            throw new IllegalStateException("전화번호가 중복된 회원입니다.");
 
         if(!userRepository.findByPid(user.getPid()).isEmpty())
-            throw new RuntimeException("중복된 회원입니다.");
+            throw new IllegalStateException("주민번호가 중복된 회원입니다.");
         return;
     }
 
@@ -47,7 +50,7 @@ public class UserService {
 
     public List<User> findByName(String name){ return userRepository.findByName(name); }
 
-    public List<User> findMembers() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class AcceptService {
     private final AcceptRepository acceptRepository;
     @Transactional//필요시에만 readOnly=false
-    public Long join(Accept accept){
+    public Long join(Accept accept){//accept는 특성상 duplicate가 발생할 수 없음.
         accept.getRequest().setStatus(RequestStatus.ACCEPT);
         accept.getRequest().setAccept(accept);
         acceptRepository.save(accept);
@@ -38,4 +38,6 @@ public class AcceptService {
     public List<Accept> findAll(){
         return acceptRepository.findAll();
     }
+
+    public void clear(){ acceptRepository.clear(); }//for test
 }

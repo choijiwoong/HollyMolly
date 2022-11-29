@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -19,18 +18,14 @@ public class RequestRepository {
         em.persist(request);
     }
 
+    public void delete(Request request){ em.remove(request); }
+
     public Request findOne(Long id){
         return em.find(Request.class, id);
     }
 
-    public List<Request> findByReqtime(LocalDateTime reqtime){
-        return em.createQuery("select r from Request r where r.reqtime=:reqtime", Request.class)
-                .setParameter("reqtime", reqtime)
-                .getResultList();
-    }
-
     public List<Request> findByUser(User user){
-        return em.createQuery("select r from Request r where r.userr.id=:id", Request.class)
+        return em.createQuery("select r from Request r where r.userR.id=:id", Request.class)
                 .setParameter("id", user.getId())
                 .getResultList();
     }
@@ -41,13 +36,9 @@ public class RequestRepository {
                 .getResultList();
     }
 
-    public List<Request> findByAddress(String address){
-        return em.createQuery("select r from Request r where r.address=:address", Request.class)
-                .setParameter("address", address)
-                .getResultList();
-    }
-
     public List<Request> findAll(){
         return em.createQuery("select r from Request r", Request.class).getResultList();
     }
+
+    public void clear(){ em.clear(); }//for test code
 }

@@ -34,44 +34,8 @@ public class Request {
     private Accept accept;
 
     //---연관관계 메서드---
-    public void setUser(User user){
+    public void setUserR(User user){
         this.userR=user;
-        user.getRequests().add(this);
-    }
-
-    /*public void setStatus(RequestStatus status){
-        if(status==RequestStatus.REGISTER) {
-
-        }
-
-        if(status==RequestStatus.CANCEL){
-            this.accept.setStatus(AcceptStatus.CANCEL);
-        }
-
-        if(status==RequestStatus.ACCEPT){
-            this.accept.setStatus(AcceptStatus.REGISTER);
-        }
-
-        if(status==RequestStatus.COMPLETE){
-            this.accept.setStatus(AcceptStatus.COMPLETE);
-        }
-    }
-    */
-
-
-    //public void setVolun(Volun volun){
-    //    this.volunR=volun;
-    //    volun.setRequest(this);
-    //}
-
-    //---생성 메서드---
-    public static Request createRequest(User user){
-        Request request=new Request();
-        request.setUserR(user);
-
-        request.setReqtime(LocalDateTime.now());
-        request.setStatus(RequestStatus.REGISTER);
-
-        return request;
+        user.getRequests().add(this);//유저에 변경사항 적용
     }
 }

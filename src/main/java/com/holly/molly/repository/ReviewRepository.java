@@ -1,16 +1,16 @@
 package com.holly.molly.repository;
 
 import com.holly.molly.domain.Review;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class ReviewRepository {
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public void save(Review review){
         em.persist(review);
@@ -25,7 +25,5 @@ public class ReviewRepository {
         return em.createQuery("select r from Review r", Review.class).getResultList();
     }
 
-    public void clear(){
-        em.clear();
-    }
+    public void clear(){ em.clear(); }//for test code
 }

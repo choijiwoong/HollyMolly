@@ -1,6 +1,7 @@
 package com.holly.molly.repository;
 
 import com.holly.molly.domain.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,64 +9,137 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class UserRepositoryTest {
+class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Autowired UserRepository userRepository;
 
-    @BeforeEach
-    public void clear(){
+    @AfterEach
+    public void afterEach(){
         userRepository.clear();
     }
 
     @Test
-    void save() {
-        //User user=new User();
-        //user.setName("zonpark");
-        //user.setBirth("2000.01.01");
-        //user.setEmail("zonpark@gmail.com");
-        //user.setPassword("1234");
-        //user.setPhone("010-0000-0000");
-
-        //userRepository.save(user);
-
-        //List<User> members=userRepository.findAll();
-        //assertThat(!members.isEmpty());//비어있는지 확인
-
-        //assertThat(members.stream().findFirst().get().getEmail().equals("zonpark@gmail.com"));
-        //assertThat(members.stream().findFirst().get().getPhone().equals("010-0000-0000"));
-    }
-
-    @Test
     void findOne() {
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
+
+        userRepository.save(user);
+
+        //when
+        User user2=userRepository.findOne(user.getId());
+
+        //then
+        assertEquals(user2.getPid(), user.getPid());
     }
 
     @Test
     void findByName() {
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
+
+        userRepository.save(user);
+
+        //when
+        List<User> users=userRepository.findByName(user.getName());
+
+        //then
+        assertEquals(users.stream().findFirst().get().getId(), user.getId());
     }
 
     @Test
     void findByEmail() {
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
+
+        userRepository.save(user);
+
+        //when
+        List<User> users=userRepository.findByEmail(user.getEmail());
+
+        //then
+        assertEquals(users.stream().findFirst().get().getId(), user.getId());
     }
 
     @Test
     void findByPhone() {
-    }
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
 
-    @Test
-    void findByBirth() {
+        userRepository.save(user);
+
+        //when
+        List<User> users=userRepository.findByPhone(user.getPhone());
+
+        //then
+        assertEquals(users.stream().findFirst().get().getId(), user.getId());
     }
 
     @Test
     void findByPid() {
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
+
+        userRepository.save(user);
+
+        //when
+        List<User> users=userRepository.findByPid(user.getPid());
+
+        //then
+        assertEquals(users.stream().findFirst().get().getId(), user.getId());
     }
 
     @Test
     void findAll() {
+        //given
+        User user=new User();
+        user.setName("홍길동");
+        user.setPhone("010-0000-0000");
+        user.setEmail("hongil@gmail.com");
+        user.setPid("000000-0000000");
+        user.setPassword("1234");
+        user.setBirth("0000.00.00");
+
+        userRepository.save(user);
+
+        //when
+        List<User> users=userRepository.findAll();
+
+        //then
+        assertEquals(users.size(), 1l);
+        assertEquals(users.stream().findFirst().get().getId(), user.getId());
     }
 }

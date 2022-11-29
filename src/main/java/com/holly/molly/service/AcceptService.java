@@ -34,9 +34,6 @@ public class AcceptService {
         return acceptRepository.findByStatus(acceptStatus);
     }
 
-    public List<Accept> findByReqtime(LocalDateTime localDateTime){
-        return acceptRepository.findByAcctime(localDateTime);
-    }
 
     public List<Accept> findAll(){
         return acceptRepository.findAll();

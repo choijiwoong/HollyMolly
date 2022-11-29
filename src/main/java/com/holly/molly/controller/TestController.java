@@ -1,13 +1,12 @@
 package com.holly.molly.controller;
 
-import com.holly.molly.domain.Request;
-import com.holly.molly.domain.RequestStatus;
-import com.holly.molly.domain.User;
+import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
@@ -32,12 +31,23 @@ public class TestController {
         User admin=new User();
         admin.setName("admin");
         admin.setBirth("a");
-        admin.setEmail("a");
+        admin.setEmail("gogogi313@gmail.com");
         admin.setPassword("a");
         admin.setPid("a");
         admin.setPhone("a");
 
         userService.join(admin);
+
+        //어드민2 정보 생성
+        User admin2=new User();
+        admin2.setName("admin2");
+        admin2.setBirth("a2");
+        admin2.setEmail("zonpark75@gmail.com");
+        admin2.setPassword("a2");
+        admin2.setPid("a2");
+        admin2.setPhone("a2");
+
+        userService.join(admin2);
 
         //어드민 쿠키 등록
         Cookie idCookie=new Cookie("userId", String.valueOf(admin.getId()));
@@ -50,10 +60,17 @@ public class TestController {
         request.setReqtime(LocalDateTime.now());
         request.setContent("test");
         request.setUserR(admin);
-        request.setExectime(LocalDateTime.now());
-
+        request.setExectime(LocalDateTime.now().plusMinutes(1l));
         requestService.join(request);
 
-        return "redirect:/volun/detailRequest/"+request.getId();
+        Accept accept=new Accept();
+        accept.setStatus(AcceptStatus.REGISTER);
+        accept.setAcctime(LocalDateTime.now().plusSeconds(1l));
+        accept.setUserA(admin2);
+        accept.setRequest(request);
+
+        acceptService.join(accept);
+
+        return "redirect:/mypage/recentHistory";
     }
 }

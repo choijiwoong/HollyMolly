@@ -79,14 +79,12 @@ public class LogicController {
         accept.setUserA(parseUserCookie(cookie));
         accept.setAcctime(LocalDateTime.now());
         accept.setStatus(AcceptStatus.REGISTER);
-        request.setStatus(RequestStatus.ACCEPT);
 
         if(checkDuplicatedUserRequestAccept(request, accept)){
             throw new RuntimeException("Request user & Accept user is same");
         }
 
         accept.setRequest(request);
-        request.setAccept(accept);
 
         acceptService.join(accept);
 

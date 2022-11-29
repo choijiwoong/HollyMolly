@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -26,4 +28,10 @@ public class ReviewService {
         reviewRepository.delete(review);
         return review.getId();
     }
+
+    public List<Review> findAll(){
+        return reviewRepository.findAll();
+    }
+
+    public void clear(){ reviewRepository.clear(); }//for test
 }

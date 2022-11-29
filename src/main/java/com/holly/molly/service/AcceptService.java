@@ -16,6 +16,8 @@ public class AcceptService {
     private final AcceptRepository acceptRepository;
     @Transactional//필요시에만 readOnly=false
     public Long join(Accept accept){
+        accept.getRequest().setStatus(RequestStatus.ACCEPT);
+        accept.getRequest().setAccept(accept);
         acceptRepository.save(accept);
         return accept.getId();
     }

@@ -20,8 +20,15 @@ public class RequestService {
     private final RequestRepository requestRepository;
     @Transactional//필요시에만 readOnly=false
     public Long join(Request request){
+        validateDuplicateRequest(request);
         requestRepository.save(request);
         return request.getId();
+    }
+
+    private void validateDuplicateRequest(Request request) {//request를 보낸 유저의 기존 요청목록에 수행시간, 장소가 일치하는 항목이 이미 있는지 확인한다(유저기반)
+        if(!this.findByUser(request.getUserR()).stream().filter(r->r.getExectime().equals(request.getExectime())&r.getAddress().equals(request.getAddress())).toList().isEmpty()){
+            throw new IllegalStateException("이미 존재하는 봉사요청입니다.");
+        }
     }
 
     public Request findOne(Long id){
@@ -36,7 +43,7 @@ public class RequestService {
         return requestRepository.findByStatus(requestStatus);
     }
 
-    public List<Long> findRegisterAcceptAddress(){
+    public List<Long> findKakaomapList(){
         List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
 
         ArrayList<Long> ids=new ArrayList<>();
@@ -50,4 +57,6 @@ public class RequestService {
     public List<Request> findAll(){
         return requestRepository.findAll();
     }
+
+    public void clear(){ requestRepository.clear(); }//for test
 }

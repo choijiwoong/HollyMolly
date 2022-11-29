@@ -1,5 +1,7 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.LoginDTO;
+import com.holly.molly.DTO.RegisterDTO;
 import com.holly.molly.domain.User;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class LoginController {
 
     @GetMapping("/members/list")
     public String list(Model model){
-        List<User> users = userService.findMembers();
+        List<User> users = userService.findAll();
         model.addAttribute("users", users);
         return "members/memberList";
     }

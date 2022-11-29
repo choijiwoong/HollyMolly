@@ -1,11 +1,10 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
-import com.holly.molly.service.AsyncService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.websocket.server.PathParam;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -102,7 +98,7 @@ public class LogicController {
 
     @GetMapping("/kakaomap")
     public String showMap(Model model){
-        List<Long> requestIds=requestService.findRegisterAcceptAddress();
+        List<Long> requestIds=requestService.findKakaomapList();
         ArrayList<String> addresses=new ArrayList<String>();
         ArrayList<Long> ids=new ArrayList<Long>();
         for(Long id: requestIds){

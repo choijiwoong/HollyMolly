@@ -1,4 +1,4 @@
-package com.holly.molly.controller;
+package com.holly.molly.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

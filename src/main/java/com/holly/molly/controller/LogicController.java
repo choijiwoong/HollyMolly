@@ -1,8 +1,10 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.CommentDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
+import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class LogicController {
     private final UserService userService;
     private final RequestService requestService;
     private final AcceptService acceptService;
+
+    private final RequestCommentService requestCommentService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest(){
@@ -111,7 +115,36 @@ public class LogicController {
 
     @GetMapping("/volun/detailRequest/{requestid}")
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
-        model.addAttribute("request", requestService.findOne(requestId));
+        Request request=requestService.findOne(requestId);
+        model.addAttribute("request", request);
+
+        List<RequestComment> comments=request.getComments();
+        if(comments.isEmpty()){
+            System.out.println("[DEBUG] 비어있다!!!!!");
+        }
+        for(RequestComment cmt: comments){
+            System.out.println("[DEBUG] "+cmt.getContent());
+        }
+
+        return "volun/detailRequest";
+    }
+
+    @PostMapping("/comment/request")
+    public String makeCommentRequest(@CookieValue(value="userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model){
+        Long requestId=commentDTO.getHid();
+        User user=parseUserCookie(cookie);
+
+        RequestComment comment=new RequestComment();
+        comment.setName(user.getName());
+        comment.setPosttime(LocalDateTime.now());
+        comment.setContent(commentDTO.getContent());
+        Request request=requestService.findOne(requestId);
+        comment.setRequest(request);
+
+        requestCommentService.join(comment);
+
+        model.addAttribute("request", request);
+
         return "volun/detailRequest";
     }
 

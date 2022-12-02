@@ -15,10 +15,13 @@ import java.util.List;
 public class RequestCommentService {
     private final RequestCommentRepository requestCommentRepository;
 
+    @Transactional
     public void join(RequestComment requestComment){ requestCommentRepository.save(requestComment); }
 
+    @Transactional
     public void delete(RequestComment requestComment){ requestCommentRepository.delete(requestComment); }
 
+    @Transactional
     public void clear(){ requestCommentRepository.clear(); }
 
     public RequestComment findOne(Long id){ return requestCommentRepository.findOne(id); }

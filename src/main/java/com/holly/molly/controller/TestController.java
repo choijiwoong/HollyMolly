@@ -60,9 +60,10 @@ public class TestController {
         request.setReqtime(LocalDateTime.now());
         request.setContent("test");
         request.setUserR(admin);
-        request.setExectime(LocalDateTime.now().plusMinutes(1l));
+        request.setExectime(LocalDateTime.now().plusYears(1l));
         requestService.join(request);
 
+        /*
         Accept accept=new Accept();
         accept.setStatus(AcceptStatus.REGISTER);
         accept.setAcctime(LocalDateTime.now().plusSeconds(1l));
@@ -70,7 +71,9 @@ public class TestController {
         accept.setRequest(request);
 
         acceptService.join(accept);
+        */
 
-        return "redirect:/mypage/recentHistory";
+
+        return "redirect:/kakaomap";
     }
 }

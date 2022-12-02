@@ -115,23 +115,36 @@ public class LogicController {
 
     @GetMapping("/volun/detailRequest/{requestid}")
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
-        model.addAttribute("request", requestService.findOne(requestId));
+        Request request=requestService.findOne(requestId);
+        model.addAttribute("request", request);
+
+        List<RequestComment> comments=request.getComments();
+        if(comments.isEmpty()){
+            System.out.println("[DEBUG] 비어있다!!!!!");
+        }
+        for(RequestComment cmt: comments){
+            System.out.println("[DEBUG] "+cmt.getContent());
+        }
+
         return "volun/detailRequest";
     }
 
-    @GetMapping("/comment/request/{requestid}")
-    public String makeCommentRequest(@PathVariable("requestid") Long requestId, @CookieValue(value="userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model){
+    @PostMapping("/comment/request")
+    public String makeCommentRequest(@CookieValue(value="userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model){
+        Long requestId=commentDTO.getHid();
         User user=parseUserCookie(cookie);
 
         RequestComment comment=new RequestComment();
         comment.setName(user.getName());
         comment.setPosttime(LocalDateTime.now());
         comment.setContent(commentDTO.getContent());
-        comment.setRequest(requestService.findOne(requestId));
+        Request request=requestService.findOne(requestId);
+        comment.setRequest(request);
 
         requestCommentService.join(comment);
 
-        model.addAttribute(requestService.findOne(requestId));
+        model.addAttribute("request", request);
+
         return "volun/detailRequest";
     }
 

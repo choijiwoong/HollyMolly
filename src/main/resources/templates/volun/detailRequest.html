@@ -42,10 +42,12 @@
             <!------------댓글------------>
             <p>댓글</p>
             <div class="form-group">
-                <div class="card-header">댓글 남기기</div>
-                <input type="text" id="content" name="content" placeholder="남기실 댓글을 입력해주세요", style="width:500px;">
-                <a href="#" th:href="@{/comment/request/{requestid} (requestid=${request.id})}"
-                   class="btn btn-primary" role="button">작성하기</a>
+                <form action="/comment/request" method="post">
+                    <div class="card-header">댓글 남기기</div>
+                    <input type="text" id="content" name="content" placeholder="남기실 댓글을 입력해주세요", style="width:500px;">
+                    <input type="hidden" id="hid" name="hid">
+                    <button class="btn btn-primary" type="submit">작성하기</button>
+                </form>
             </div>
 
             <!------------댓글테이블------------>
@@ -76,6 +78,13 @@
 
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f&libraries=services"></script>
 <script th:inline="javascript">
+
+/*<![CDATA[*/
+    var id=/*[[${request.id}]]*/;
+/*]]>*/
+var buffer=document.getElementById("hid");
+buffer.value=id;
+
 //-------------카카오맵-------------
 //지도 설정
 var mapContainer = document.getElementById('map')

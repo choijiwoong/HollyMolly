@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +34,9 @@ public class Request {
 
     @OneToOne(fetch =FetchType.LAZY)
     private Accept accept;
+
+    @OneToMany(mappedBy = "request")//자기 맴버변수 이름을 참조
+    private List<RequestComment> comments=new ArrayList<>();
 
     //---연관관계 메서드---
     public void setUserR(User user){

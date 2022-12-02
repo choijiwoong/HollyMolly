@@ -1,8 +1,10 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.CommentDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
+import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class LogicController {
     private final UserService userService;
     private final RequestService requestService;
     private final AcceptService acceptService;
+
+    private final RequestCommentService requestCommentService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest(){
@@ -112,6 +116,22 @@ public class LogicController {
     @GetMapping("/volun/detailRequest/{requestid}")
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model){
         model.addAttribute("request", requestService.findOne(requestId));
+        return "volun/detailRequest";
+    }
+
+    @GetMapping("/comment/request/{requestid}")
+    public String makeCommentRequest(@PathVariable("requestid") Long requestId, @CookieValue(value="userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model){
+        User user=parseUserCookie(cookie);
+
+        RequestComment comment=new RequestComment();
+        comment.setName(user.getName());
+        comment.setPosttime(LocalDateTime.now());
+        comment.setContent(commentDTO.getContent());
+        comment.setRequest(requestService.findOne(requestId));
+
+        requestCommentService.join(comment);
+
+        model.addAttribute(requestService.findOne(requestId));
         return "volun/detailRequest";
     }
 

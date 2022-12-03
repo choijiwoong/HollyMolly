@@ -50,4 +50,11 @@ public class ReviewController {
         reviewService.join(review);
         return "redirect:/";
     }
+
+    @GetMapping("review/detail/{id}")
+    public String detailReview(@PathVariable("id") Long id, Model model){
+        Review review=reviewService.findOne(id);
+        model.addAttribute("review", review);
+        return "volun/detailReview";
+    }
 }

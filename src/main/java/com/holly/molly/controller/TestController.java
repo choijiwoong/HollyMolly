@@ -57,22 +57,20 @@ public class TestController {
         Request request=new Request();
         request.setAddress("서울시 서초구 방배동");
         request.setStatus(RequestStatus.REGISTER);
-        request.setReqtime(LocalDateTime.now());
+        request.setReqtime(LocalDateTime.now().minusMinutes(1));
         request.setContent("test");
         request.setUserR(admin);
-        request.setExectime(LocalDateTime.now().plusYears(1l));
+        request.setExectime(LocalDateTime.now().plusMinutes(1l));
         requestService.join(request);
 
-        /*
+
         Accept accept=new Accept();
         accept.setStatus(AcceptStatus.REGISTER);
-        accept.setAcctime(LocalDateTime.now().plusSeconds(1l));
+        accept.setAcctime(LocalDateTime.now());
         accept.setUserA(admin2);
         accept.setRequest(request);
 
         acceptService.join(accept);
-        */
-
 
         return "redirect:/kakaomap";
     }

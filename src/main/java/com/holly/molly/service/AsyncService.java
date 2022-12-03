@@ -77,6 +77,8 @@ public class AsyncService {
     }
 
     private Boolean isReviewTime(LocalDateTime time){
+        return true;
+        /*
         Long dayUnit=1l;
         time.minusHours(time.getHour());
         time.minusMinutes(time.getMinute());
@@ -87,6 +89,7 @@ public class AsyncService {
         } else{
             return false;
         }
+        */
     }
 
     private Boolean isComplete(LocalDateTime time){//

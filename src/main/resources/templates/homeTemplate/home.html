@@ -60,17 +60,18 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <!-- Blog post-->
-                            <div class="card mb-4">
+                            <div class="card mb-4" th:if="${reviewSize ge 1}">
                                 <a href="#!"><img class="card-img-top" src="https://developers.kakao.com/static/images/pc/product/detail/map.png" width="800" height="auto" alt="..." /></a>
                                 <div class="card-body">
                                     <div class="small text-muted">June 28, 2022</div>
-                                    <h2 class="card-title h4">Start of 이음</h2>
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
-                                    <a class="btn btn-primary" href="#!">Read more →</a>
+                                    <td th:text="${reviews.get(0).title}" class="card-title h4"></td>
+                                    <td th:text="${reviews.get(0).content}" class="card-text"></td>
+                                    <a href="#" th:href="@{/review/detail/{reviewid} (reviewid=${reviews.get(0).id})}"
+                                       class="btn btn-primary" role="button">Read more →</a>
                                 </div>
                             </div>
                             <!-- Blog post-->
-                            <div class="card mb-4">
+                            <div class="card mb-4" th:if="${reviewSize ge 2}">
                                 <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
                                 <div class="card-body">
                                     <div class="small text-muted">January 1, 2022</div>
@@ -82,7 +83,7 @@
                         </div>
                         <div class="col-lg-6">
                             <!-- Blog post-->
-                            <div class="card mb-4">
+                            <div class="card mb-4" th:if="${reviewSize ge 3}">
                                 <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
                                 <div class="card-body">
                                     <div class="small text-muted">January 1, 2022</div>
@@ -92,7 +93,7 @@
                                 </div>
                             </div>
                             <!-- Blog post-->
-                            <div class="card mb-4">
+                            <div class="card mb-4" th:if="${reviewSize ge 4}">
                                 <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
                                 <div class="card-body">
                                     <div class="small text-muted">January 1, 2022</div>

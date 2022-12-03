@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="/fragments/header :: header" />
+
+<body>
+  <div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <div class="container">
+      <div class="form-group">
+        <div class="card-header">제목</div>
+        <td th:text="${review.title}"></td>
+      </div>
+
+      <div class="form-group">
+        <div class="card-header">내용</div>
+        <td th:text="${review.content}"></td>
+      </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+  </div>
+</body>
+
+</html>

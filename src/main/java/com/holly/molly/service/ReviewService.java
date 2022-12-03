@@ -29,6 +29,8 @@ public class ReviewService {
         return review.getId();
     }
 
+    public Review findOne(Long id){ return reviewRepository.findOne(id); }
+
     public List<Review> findAll(){
         return reviewRepository.findAll();
     }

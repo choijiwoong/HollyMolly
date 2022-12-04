@@ -21,51 +21,73 @@ public class AsyncService {
     private final RequestService requestService;
     private final MailService mailService;
 
-    //@Async
+    public void join(){
+        List<Accept> accepts=acceptService.findAll();
+        List<Request> requests=requestService.findAll();
+        for(int i=0; i<1; i++){
+            checkCancelCondition(requests);//Request의 exectime이 지나는 경우 자동 cancel처리
+            checkCancleStatus(accepts);//Accept는 Register인데 연결된 Request가 cancel인 경우 accept도 cancel처리
+            checkNoticeMailTiming(accepts);//봉사 하루전 알림메일 전송
+            checkComplete(accepts);//exectime이 지나면 complete처리
+            checkReviewTiming(accepts);//exectime의 day가 지나면 리뷰url이 담긴 메일 전송
+        }
+    }
+
     @Transactional
-    public void checkVolunStatus(){
-        for(int i=0; i<1; i++) {//임시!
-            //accept 베이스 처리
-            List<Accept> accepts = acceptService.findByStatus(AcceptStatus.REGISTER);
-            for (Accept accept : accepts) {
-                Request request = accept.getRequest();
-
-                if(request.getStatus()==RequestStatus.CANCEL){//요청자 취소시
-                    accept.setStatus(AcceptStatus.CANCEL);
-                }
-
-                if (request.getStatus() == RequestStatus.ACCEPT) {
-                    if (isEmailTime(request.getExectime())) {//봉사활동 예정일 하루 전 이메일 전송
-                        mailService.advanceNotice(request.getUserR().getEmail());
-                        mailService.advanceNotice(accept.getUserA().getEmail());
-                    }
-
-                    if (isComplete(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
-                        request.setStatus(RequestStatus.COMPLETE);
-                        accept.setStatus(AcceptStatus.COMPLETE);
-                    }
-                }
+    public void checkCancelCondition(List<Request> requests){
+        for(Request request : requests){
+            if(request.getStatus()==RequestStatus.REGISTER && request.getExectime().isBefore(LocalDateTime.now())){
+                request.setStatus(RequestStatus.CANCEL);
             }
+        }
+    }
+    @Transactional
+    public void checkCancleStatus(List<Accept> accepts){
+        for (Accept accept : accepts) {
+            if(accept.getStatus() != AcceptStatus.REGISTER)
+                continue;
 
-            //request 베이스 처리
-            List<Request> requests=requestService.findByStatus(RequestStatus.REGISTER);
-            for(Request request : requests){
-                if(request.getExectime().isBefore(LocalDateTime.now())){
-                    request.setStatus(RequestStatus.CANCEL);
-                }
-            }
-
-            //Volun 베이스 처리
-            List<Accept> voluns=acceptService.findByStatus(AcceptStatus.COMPLETE);
-            for(Accept volun : voluns){
-                if(isReviewTime(volun.getRequest().getExectime())){
-                    mailService.requestReview(volun.getRequest().getUserR().getEmail(), volun.getId(), false);
-                    mailService.requestReview(volun.getUserA().getEmail(), volun.getRequest().getId(), true);
-                }
+            if (accept.getRequest().getStatus() == RequestStatus.CANCEL) {//요청자 취소시
+                accept.setStatus(AcceptStatus.CANCEL);
             }
         }
     }
 
+    public void checkNoticeMailTiming(List<Accept> accepts){
+        for (Accept accept : accepts) {
+            Request request = accept.getRequest();
+
+            if (request.getStatus() == RequestStatus.ACCEPT && isEmailTime(request.getExectime())) {
+                mailService.advanceNotice(request.getUserR().getEmail());
+                mailService.advanceNotice(accept.getUserA().getEmail());
+            }
+        }
+    }
+
+    @Transactional
+    public void checkComplete(List<Accept> accepts) {
+        for (Accept accept : accepts) {
+            if(accept.getStatus()==AcceptStatus.COMPLETE)//이미 처리된 경우
+                continue;
+
+            Request request = accept.getRequest();
+            if (isComplete(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
+                request.setStatus(RequestStatus.COMPLETE);
+                accept.setStatus(AcceptStatus.COMPLETE);
+            }
+        }
+    }
+
+    public void checkReviewTiming(List<Accept> accepts){
+        for(Accept accept : accepts){
+            if(accept.getStatus()==AcceptStatus.COMPLETE && isReviewTime(accept.getRequest().getExectime())){
+                mailService.requestReview(accept.getRequest().getUserR().getEmail(), accept.getId(), false);
+                mailService.requestReview(accept.getUserA().getEmail(), accept.getRequest().getId(), true);
+            }
+        }
+    }
+
+    //<---- 하위 내부 로직 ---->
     private Boolean isEmailTime(LocalDateTime time){
         Long dayUnit=1l;
         time.plusDays(dayUnit);

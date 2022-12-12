@@ -21,6 +21,7 @@ public class AsyncService {
     private final RequestService requestService;
     private final MailService mailService;
 
+    @Transactional
     public void join(){
         List<Accept> accepts=acceptService.findAll();
         List<Request> requests=requestService.findAll();

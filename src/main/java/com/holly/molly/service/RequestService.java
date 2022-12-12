@@ -21,8 +21,15 @@ public class RequestService {
     @Transactional//필요시에만 readOnly=false
     public Long join(Request request){
         validateDuplicateRequest(request);
+        checkExectime(request);
         requestRepository.save(request);
         return request.getId();
+    }
+
+    private void checkExectime(Request request) {
+        if(request.getExectime().isBefore(LocalDateTime.now().minusMinutes(1l))){//-1m하는 이유는, LocalDateTime비교식이 너무 정밀하여 일부러 오차범위를 만듬.(for asyncservice.checkCancelCondition)
+            throw new IllegalStateException("수행시간이 현재시간보다 이전입니다.");
+        }
     }
 
     private void validateDuplicateRequest(Request request) {//request를 보낸 유저의 기존 요청목록에 수행시간, 장소가 일치하는 항목이 이미 있는지 확인한다(유저기반)

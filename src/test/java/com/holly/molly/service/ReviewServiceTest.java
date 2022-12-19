@@ -22,10 +22,7 @@ class ReviewServiceTest {
     @Test
     void findAll() {
         //given
-        Review review=new Review();
-        review.setTitle("test");
-        review.setContent("skaks");
-
+        Review review=new Review("test", "askla");
         reviewService.join(review);
 
         //when

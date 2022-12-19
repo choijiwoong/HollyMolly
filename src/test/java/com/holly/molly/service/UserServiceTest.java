@@ -25,39 +25,14 @@ class UserServiceTest {
     @Test
     void join() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
-        User user2=new User();//pid중복
-        user2.setBirth("1000.00.00");
-        user2.setPassword("1234");
-        user2.setPid("000000-0000000");
-        user2.setEmail("1user@gmail.com");
-        user2.setPhone("100-0000-0000");
-        user2.setName("user2");
+        User user2=new User("user2", "1user@gmail.com", "1234", "100-0000-0000", "000000-0000000");//pid중복
 
-        User user3=new User();//email중복
-        user3.setBirth("1000.00.00");
-        user3.setPassword("1234");
-        user3.setPid("0002000-0000000");
-        user3.setEmail("user@gmail.com");
-        user3.setPhone("102-0000-0000");
-        user3.setName("user3");
+        User user3=new User("user3","user@gmail.com","1234","010-0010-0000","000100-0000000");
 
-        User user4=new User();//전화번호 중복
-        user4.setBirth("0000.00.00");
-        user4.setPassword("1234");
-        user4.setPid("500000-0000000");
-        user4.setEmail("us5er@gmail.com");
-        user4.setPhone("000-0000-0000");
-        user4.setName("user4");
+        User user4=new User("user4","us1er@gmail.com","1234","010-0000-0000","000010-0000000");
 
         //When
         IllegalStateException e2 = assertThrows(IllegalStateException.class,
@@ -76,42 +51,21 @@ class UserServiceTest {
     @Test
     void delete() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
         //when
         userService.delete(user1);
 
         //then
-        User user2=new User();
-        user2.setBirth("0000.00.00");//same information
-        user2.setPassword("1234");
-        user2.setPid("000000-0000000");
-        user2.setEmail("user@gmail.com");
-        user2.setPhone("000-0000-0000");
-        user2.setName("user1");
-
+        User user2=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");//same infotmation
         userService.join(user2);
     }
 
     @Test
     void findOne() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
         //when
@@ -121,14 +75,7 @@ class UserServiceTest {
     @Test
     void findByName() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
         //when
@@ -139,14 +86,7 @@ class UserServiceTest {
     @Test
     void findAll() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
         //when
@@ -157,14 +97,7 @@ class UserServiceTest {
     @Test
     void findByEmail() {
         //given
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
-
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
         //when
@@ -175,13 +108,7 @@ class UserServiceTest {
     @Test
     void signUp() {
         //given1(등록되지 않은 회원의 정보로 로그인 하려는 경우)
-        User user1=new User();
-        user1.setBirth("0000.00.00");
-        user1.setPassword("1234");
-        user1.setPid("000000-0000000");
-        user1.setEmail("user@gmail.com");
-        user1.setPhone("000-0000-0000");
-        user1.setName("user1");
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
 
         LoginDTO loginDTO=new LoginDTO();
         loginDTO.setEmail("user@gmail.com");

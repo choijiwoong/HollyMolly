@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class RequestRequestCommentRepositoryTest {
+class RequestCommentRepositoryTest {
     @Autowired
     RequestCommentRepository requestCommentRepository;
     @Autowired RequestRepository requestRepository;
@@ -29,11 +29,13 @@ class RequestRequestCommentRepositoryTest {
     @Test
     void findOne() {
         //given
-        RequestComment requestComment =new RequestComment();
-        requestComment.setName("홍길동");
-        requestComment.setPosttime(LocalDateTime.now());
-        requestComment.setContent("안녕하세요");
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
+        userRepository.save(user);
 
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        requestRepository.save(request);
+
+        RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
         requestCommentRepository.save(requestComment);
 
         //when
@@ -47,11 +49,13 @@ class RequestRequestCommentRepositoryTest {
     @Test
     void findAll() {
         //given
-        RequestComment requestComment =new RequestComment();
-        requestComment.setName("홍길동");
-        requestComment.setPosttime(LocalDateTime.now());
-        requestComment.setContent("안녕하세요");
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
+        userRepository.save(user);
 
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        requestRepository.save(request);
+
+        RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
         requestCommentRepository.save(requestComment);
 
         //when
@@ -65,32 +69,13 @@ class RequestRequestCommentRepositoryTest {
     @Test
     void findByRequest(){
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request();
-        request.setUserR(user);
-        request.setStatus(RequestStatus.REGISTER);
-        request.setExectime(LocalDateTime.now().plusDays(1l));
-        request.setContent("아동복지관 봉사활동");
-        request.setReqtime(LocalDateTime.now());
-        request.setAddress("서울시 서초구 방배동");
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
         requestRepository.save(request);
 
-        RequestComment requestComment =new RequestComment();
-        requestComment.setName("홍길동");
-        requestComment.setPosttime(LocalDateTime.now());
-        requestComment.setContent("안녕하세요");
-        requestComment.setRequest(request);
-
+        RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
         requestCommentRepository.save(requestComment);
 
         //when

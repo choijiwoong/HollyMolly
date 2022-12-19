@@ -20,6 +20,8 @@ public class IntegralTest {
     @Autowired AcceptService acceptService;
     @Autowired ReviewService reviewService;
 
+    @Autowired AsyncService asyncService;
+
     @Autowired
     RequestCommentService requestCommentService;
 
@@ -35,72 +37,33 @@ public class IntegralTest {
     @Test
     public void fullLogic(){
         //given
-        User user1=new User();
-        user1.setName("홍길동");
-        user1.setPhone("010-1234-5678");
-        user1.setEmail("honghonghong@gmail.com");
-        user1.setPid("950128-2038273");
-        user1.setPassword("0000");
-        user1.setBirth("1995.01.28");
-
-        User user2=new User();
-        user2.setName("홍승만");
-        user2.setPhone("010-5678-1234");
-        user2.setEmail("hongmangirl@gmail.com");
-        user2.setPid("450128-2038273");
-        user2.setPassword("1234");
-        user2.setBirth("1945.01.28");
-
+        User user1=new User("홍길동", "honghonghong@gmail.com", "0000", "010-1234-5678", "950128-2038273");
+        User user2=new User("홍승만", "hongmangirl@gmail.com", "1234", "010-5678-1234", "450128-2038273");
         userService.join(user1);
         userService.join(user2);
 
-        Request request=new Request();
-        request.setStatus(RequestStatus.REGISTER);
-        request.setContent("시력보조");
-        request.setExectime(LocalDateTime.of(2022, 12, 25, 13,0));
-        request.setReqtime(LocalDateTime.now());
-        request.setUserR(user1);
-
+        Request request=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "시력보조");
         requestService.join(request);
 
-        RequestComment comment=new RequestComment();
-        comment.setName(user2.getName());
-        comment.setContent("봉사는 정확히 어떤 활동인가요?");
-        comment.setPosttime(LocalDateTime.now());
-        comment.setRequest(request);
-
+        RequestComment comment=new RequestComment(request, user2.getName(), "봉사는 정확히 어떤 활동인가요?");
         requestCommentService.join(comment);
 
-        RequestComment comment1=new RequestComment();
-        comment1.setName(user1.getName());
-        comment1.setContent("그냥 제 얘기 들어주시면 됩니다!");
-        comment1.setPosttime(LocalDateTime.now());
-        comment1.setRequest(request);
-
+        RequestComment comment1=new RequestComment(request, user1.getName(), "그냥 제 얘기 들어주시면 됩니다!");
         requestCommentService.join(comment1);
 
-        Accept accept=new Accept();
-        accept.setUserA(user2);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(user2, request);
         acceptService.join(accept);
 
-        Accept accept2=acceptService.findOne(accept.getId());
-        accept2.setStatus(AcceptStatus.COMPLETE);
+        request.setExectime(LocalDateTime.now().minusMinutes(1l));
+        //리뷰후 status변경 필요
 
-        Review review=new Review();
-        review.setTitle("봉사후기");
-        review.setContent("좆같았어요");
-
+        Review review=new Review("봉사후기", "좆같았어요");
         reviewService.join(review);
 
-        Review review1=new Review();
-        review1.setTitle("피봉사자가 욕을 많이하네요..");
-        review1.setContent("전 열심히 했는데 자꾸 좆같았데요...");
-
+        Review review1=new Review("피봉사자가 욕을 많이하네요..", "전 열심히 했는데 자꾸 좆같았데요...");
         reviewService.join(review1);
+
+        asyncService.join();
 
         //when (user<->request and user<->accept)
         //then

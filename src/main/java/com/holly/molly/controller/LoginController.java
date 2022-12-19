@@ -38,12 +38,7 @@ public class LoginController {
             throw new RuntimeException("register format is incorrect!");
         }
 
-        User user = new User();
-        user.setName(registerDTO.getName());
-        user.setEmail(registerDTO.getEmail());
-        user.setBirth(registerDTO.getBirth());
-        user.setPassword(registerDTO.getPassword());
-        user.setPid(registerDTO.getPid());
+        User user = new User(registerDTO.getName(), registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getPhone(), registerDTO.getPid());
 
         userService.join(user);
         return "redirect:/";
@@ -82,13 +77,7 @@ public class LoginController {
         response.addCookie(prevCookie);
 
         //어드민 정보 생성
-        User admin=new User();
-        admin.setName("admin");
-        admin.setBirth("a");
-        admin.setEmail("a");
-        admin.setPassword("a");
-        admin.setPid("a");
-        admin.setPhone("a");
+        User admin=new User("admin", "a", "a", "a", "a");
 
         userService.join(admin);
 

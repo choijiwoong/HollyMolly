@@ -30,36 +30,16 @@ class RequestServiceTest {
     @Test
     void join() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
+        LocalDateTime time=LocalDateTime.now().plusDays(1l);
 
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setUserR(user);
-
+        Request request=new Request(user, time, "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when
-        Request request2=new Request();
-        request2.setAddress("서울시 서초구 방배동");
-        request2.setExectime(exectime);
-        request2.setReqtime(LocalDateTime.now());
-        request2.setContent("교육봉사");
-        request2.setStatus(RequestStatus.REGISTER);
-        request2.setUserR(user);
+        Request request2=new Request(user, time, "서울시 서초구 방배동", "교육봉사");
 
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class,
@@ -70,26 +50,10 @@ class RequestServiceTest {
     @Test
     void findOne() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
-
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setUserR(user);
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when
@@ -99,26 +63,10 @@ class RequestServiceTest {
     @Test
     void findByUser() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
-
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setUserR(user);
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when
@@ -129,57 +77,24 @@ class RequestServiceTest {
     @Test
     void findByStatus() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
-
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.CANCEL);
-        request.setUserR(user);
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when
-        assertEquals(requestService.findByStatus(RequestStatus.REGISTER).stream().findFirst(), Optional.empty());
-        assertEquals(requestService.findByStatus(RequestStatus.CANCEL).size(), 1l);
-        assertEquals(requestService.findByStatus(RequestStatus.CANCEL).stream().findFirst().get().getId(), request.getId());
+        assertEquals(requestService.findByStatus(RequestStatus.REGISTER).stream().findFirst().get().getId(), request.getId());
+        assertEquals(requestService.findByStatus(RequestStatus.CANCEL).size(), 0l);
     }
 
     @Test
     void findKakaomapList() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
-
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setUserR(user);
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when
@@ -190,26 +105,10 @@ class RequestServiceTest {
     @Test
     void findAll() {
         //given
-        User user=new User();
-        user.setBirth("0000.00.00");
-        user.setPassword("1234");
-        user.setPid("000000-0000000");
-        user.setEmail("user@gmail.com");
-        user.setPhone("000-0000-0000");
-        user.setName("user1");
-
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        LocalDateTime exectime=LocalDateTime.now().plusDays(1l);
-
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setExectime(exectime);
-        request.setReqtime(LocalDateTime.now());
-        request.setContent("교육봉사");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setUserR(user);
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
         requestService.join(request);
 
         //when

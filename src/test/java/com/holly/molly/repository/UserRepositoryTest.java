@@ -25,14 +25,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findOne() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when
@@ -45,14 +38,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findByName() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when
@@ -65,14 +51,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findByEmail() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when
@@ -85,14 +64,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findByPhone() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when
@@ -105,14 +77,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findByPid() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when
@@ -125,14 +90,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
     @Test
     void findAll() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
         //when

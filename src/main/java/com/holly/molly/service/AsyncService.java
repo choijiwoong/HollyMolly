@@ -38,7 +38,7 @@ public class AsyncService {
     public void checkCancelCondition(List<Request> requests){
         for(Request request : requests){
             if(request.getStatus()==RequestStatus.REGISTER && request.getExectime().isBefore(LocalDateTime.now())){
-                request.setStatus(RequestStatus.CANCEL);
+                request.changeStatus(RequestStatus.CANCEL);
             }
         }
     }
@@ -49,7 +49,7 @@ public class AsyncService {
                 continue;
 
             if (accept.getRequest().getStatus() == RequestStatus.CANCEL) {//요청자 취소시
-                accept.setStatus(AcceptStatus.CANCEL);
+                accept.changeStatus(AcceptStatus.CANCEL);
             }
         }
     }
@@ -73,8 +73,8 @@ public class AsyncService {
 
             Request request = accept.getRequest();
             if (isComplete(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
-                request.setStatus(RequestStatus.COMPLETE);
-                accept.setStatus(AcceptStatus.COMPLETE);
+                request.changeStatus(RequestStatus.COMPLETE);
+                accept.changeStatus(AcceptStatus.COMPLETE);
             }
         }
     }

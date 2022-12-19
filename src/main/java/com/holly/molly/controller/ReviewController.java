@@ -27,7 +27,7 @@ public class ReviewController {
     @GetMapping("review/r/{id}")
     public String createRequestReview(@PathVariable("id") Long id, Model model){
         model.addAttribute("isRequest", true);
-        requestService.findOne(id).setStatus(RequestStatus.REVIEWD);//post이후에 세팅해야하지만 임시로 미리 설정
+        requestService.findOne(id).changeStatus(RequestStatus.REVIEWD);//post이후에 세팅해야하지만 임시로 미리 설정
         return "volun/createReview";
     }
 
@@ -35,7 +35,7 @@ public class ReviewController {
     @GetMapping("review/a/{id}")
     public String createAcceptReview(@PathVariable("id") Long id, Model model){
         model.addAttribute("isRequest", false);
-        acceptService.findOne(id).setStatus(AcceptStatus.REVIEWD);
+        acceptService.findOne(id).changeStatus(AcceptStatus.REVIEWD);
         return "volun/createReview";
     }
 

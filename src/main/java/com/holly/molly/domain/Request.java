@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Request {
     @Id
@@ -25,21 +23,26 @@ public class Request {
     @JoinColumn(name="userR_id")
     private User userR;
 
+    @Column(nullable = false)
     private LocalDateTime reqtime;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
+    @Column(nullable = false)@Setter//test for making situation
     private LocalDateTime exectime;
 
+    @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
     private String content;
 
     @OneToOne(fetch =FetchType.LAZY)
     private Accept accept;
 
-    @OneToMany(mappedBy = "request")//자기 맴버변수 이름을 참조
+    @OneToMany(mappedBy = "request")
     private List<RequestComment> comments=new ArrayList<>();
 
     public Request(User user, LocalDateTime exectime, String address, String content){
@@ -54,6 +57,14 @@ public class Request {
     //---연관관계 메서드---
     public void connectUser(User user){
         this.userR=user;
-        user.getRequests().add(this);//유저에 변경사항 적용
+        user.getRequests().add(this);
+    }
+
+    public void setAccept(Accept accept){
+        this.accept=accept;
+    }
+
+    public void changeStatus(RequestStatus status){
+        this.status=status;
     }
 }

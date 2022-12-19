@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RequestComment extends Comment{
     @Id
@@ -26,7 +25,6 @@ public class RequestComment extends Comment{
         this.connectRequest(request);
         this.name=name;
         this.content=content;
-        this.posttime=LocalDateTime.now();
     }
 
     //<----연관관계 매핑----->

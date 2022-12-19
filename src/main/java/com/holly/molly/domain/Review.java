@@ -10,16 +10,17 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="review_id")
     Long id;
 
+    @Column(nullable = false)
     String title;
 
+    @Column(nullable = false)
     String content;
 
     @ElementCollection//1:N매핑

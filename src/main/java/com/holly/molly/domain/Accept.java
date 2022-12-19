@@ -3,16 +3,14 @@ package com.holly.molly.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Accept{
+public class Accept extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="accept_id")
@@ -22,8 +20,7 @@ public class Accept{
     @JoinColumn(name="userA_id")
     private User userA;
 
-    private LocalDateTime acctime;
-
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AcceptStatus status;
 
@@ -32,7 +29,6 @@ public class Accept{
 
     public Accept(User user, Request request){
         this.connectUser(user);
-        this.acctime=LocalDateTime.now();
         this.status=AcceptStatus.REGISTER;
         this.connectRequest(request);
     }
@@ -40,12 +36,12 @@ public class Accept{
     //---연관관계 메서드---
     public void connectUser(User user){
         this.userA=user;
-        user.getAccepts().add(this);//유저에 변경사항 적용
+        user.getAccepts().add(this);
     }
 
-    public void connectRequest(Request request){//이 메서드로 Accept와 Request의 연관관계를 매핑하며, Request는 Accept에게 종속된다.
+    public void connectRequest(Request request){
         request.setAccept(this);
-        request.setStatus(RequestStatus.ACCEPT);
+        request.changeStatus(RequestStatus.ACCEPT);
         this.request=request;
     }
 
@@ -53,16 +49,16 @@ public class Accept{
         if(status.equals(AcceptStatus.COMPLETE)){
             this.status=AcceptStatus.COMPLETE;
 
-            this.request.setStatus(RequestStatus.COMPLETE);
+            this.request.changeStatus(RequestStatus.COMPLETE);
         }
 
         if(status.equals(AcceptStatus.CANCEL)){
             this.status=AcceptStatus.CANCEL;
 
             if(this.getRequest().getExectime().isBefore(LocalDateTime.now())){
-                this.request.setStatus(RequestStatus.CANCEL);
+                this.request.changeStatus(RequestStatus.CANCEL);
             } else{
-                this.request.setStatus(RequestStatus.REGISTER);
+                this.request.changeStatus(RequestStatus.REGISTER);
             }
         }
 

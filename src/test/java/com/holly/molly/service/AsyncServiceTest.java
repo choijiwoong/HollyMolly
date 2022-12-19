@@ -51,7 +51,7 @@ class AsyncServiceTest {
         acceptService.join(accept);
 
         //when
-        request.setStatus(RequestStatus.CANCEL);
+        request.changeStatus(RequestStatus.CANCEL);
         asyncService.checkCancleStatus(acceptService.findAll());
 
         //then

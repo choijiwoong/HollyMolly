@@ -7,12 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@Getter@Setter
+@Getter
 @MappedSuperclass
-public abstract class Comment {
-    @Column(nullable = false)
-    protected LocalDateTime posttime;
-
+public abstract class Comment extends JpaBaseEntity{
     @Column(nullable = false)
     protected String name;
 

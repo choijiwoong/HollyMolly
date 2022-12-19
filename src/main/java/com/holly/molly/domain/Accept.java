@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Accept{
+public class Accept extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="accept_id")
@@ -21,9 +21,6 @@ public class Accept{
     private User userA;
 
     @Column(nullable = false)
-    private LocalDateTime acctime;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AcceptStatus status;
 
@@ -32,7 +29,6 @@ public class Accept{
 
     public Accept(User user, Request request){
         this.connectUser(user);
-        this.acctime=LocalDateTime.now();
         this.status=AcceptStatus.REGISTER;
         this.connectRequest(request);
     }

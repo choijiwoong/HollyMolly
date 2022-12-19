@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Table(name="users")//DB SQL user키워드와의 충돌을 방지
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="user_id")

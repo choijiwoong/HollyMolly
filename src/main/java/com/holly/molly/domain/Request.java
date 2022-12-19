@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Request {
+public class Request extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="request_id")
@@ -22,9 +22,6 @@ public class Request {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="userR_id")
     private User userR;
-
-    @Column(nullable = false)
-    private LocalDateTime reqtime;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -47,7 +44,6 @@ public class Request {
 
     public Request(User user, LocalDateTime exectime, String address, String content){
         this.connectUser(user);
-        this.reqtime=LocalDateTime.now();
         this.status=RequestStatus.REGISTER;
         this.exectime=exectime;
         this.address=address;

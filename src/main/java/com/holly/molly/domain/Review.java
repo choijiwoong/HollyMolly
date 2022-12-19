@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends JpaBaseEntity{
     @Id
     @GeneratedValue
     @Column(name="review_id")

@@ -43,7 +43,6 @@ class RequestCommentRepositoryTest {
 
         //then
         assertEquals(requestComment2.getId(), requestComment.getId());
-        assertEquals(requestComment2.getPosttime(), requestComment.getPosttime());
     }
 
     @Test

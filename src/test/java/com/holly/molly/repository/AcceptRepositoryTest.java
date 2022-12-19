@@ -29,42 +29,16 @@ class AcceptRepositoryTest {
     @Test
     void findOne() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request();
-        request.setUserR(user);
-        request.setStatus(RequestStatus.REGISTER);
-        request.setExectime(LocalDateTime.now().plusDays(1l));
-        request.setContent("아동복지관 봉사활동");
-        request.setReqtime(LocalDateTime.now());
-        request.setAddress("서울시 서초구 방배동");
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
         requestRepository.save(request);
 
-        User user2=new User();
-        user.setName("수바기");
-        user.setPhone("010-1111-1111");
-        user.setEmail("water@gmail.com");
-        user.setPid("000000-1000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user2=new User("수바기","water@gmail.com","1234","010-1111-1111","000000-1000000");
         userRepository.save(user2);
 
-        Accept accept=new Accept();
-        accept.setUserA(user2);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(user2, request);
         acceptRepository.save(accept);
 
         //when
@@ -79,42 +53,16 @@ class AcceptRepositoryTest {
     @Test
     void findByStatus() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request();
-        request.setUserR(user);
-        request.setStatus(RequestStatus.REGISTER);
-        request.setExectime(LocalDateTime.now().plusDays(1l));
-        request.setContent("아동복지관 봉사활동");
-        request.setReqtime(LocalDateTime.now());
-        request.setAddress("서울시 서초구 방배동");
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
         requestRepository.save(request);
 
-        User user2=new User();
-        user.setName("수바기");
-        user.setPhone("010-1111-1111");
-        user.setEmail("water@gmail.com");
-        user.setPid("000000-1000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user2=new User("수바기","water@gmail.com","1234","010-1111-1111","000000-1000000");
         userRepository.save(user2);
 
-        Accept accept=new Accept();
-        accept.setUserA(user2);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(user2, request);
         acceptRepository.save(accept);
 
         //when
@@ -127,42 +75,16 @@ class AcceptRepositoryTest {
     @Test
     void findByUser() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request();
-        request.setUserR(user);
-        request.setStatus(RequestStatus.REGISTER);
-        request.setExectime(LocalDateTime.now().plusDays(1l));
-        request.setContent("아동복지관 봉사활동");
-        request.setReqtime(LocalDateTime.now());
-        request.setAddress("서울시 서초구 방배동");
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
         requestRepository.save(request);
 
-        User user2=new User();
-        user.setName("수바기");
-        user.setPhone("010-1111-1111");
-        user.setEmail("water@gmail.com");
-        user.setPid("000000-1000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user2=new User("수바기","water@gmail.com","1234","010-1111-1111","000000-1000000");
         userRepository.save(user2);
 
-        Accept accept=new Accept();
-        accept.setUserA(user2);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(user2, request);
         acceptRepository.save(accept);
 
         //when
@@ -175,42 +97,16 @@ class AcceptRepositoryTest {
     @Test
     void findAll() {
         //given
-        User user=new User();
-        user.setName("홍길동");
-        user.setPhone("010-0000-0000");
-        user.setEmail("hongil@gmail.com");
-        user.setPid("000000-0000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request();
-        request.setUserR(user);
-        request.setStatus(RequestStatus.REGISTER);
-        request.setExectime(LocalDateTime.now().plusDays(1l));
-        request.setContent("아동복지관 봉사활동");
-        request.setReqtime(LocalDateTime.now());
-        request.setAddress("서울시 서초구 방배동");
-
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
         requestRepository.save(request);
 
-        User user2=new User();
-        user.setName("수바기");
-        user.setPhone("010-1111-1111");
-        user.setEmail("water@gmail.com");
-        user.setPid("000000-1000000");
-        user.setPassword("1234");
-        user.setBirth("0000.00.00");
-
+        User user2=new User("수바기","water@gmail.com","1234","010-1111-1111","000000-1000000");
         userRepository.save(user2);
 
-        Accept accept=new Accept();
-        accept.setUserA(user2);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(user2, request);
         acceptRepository.save(accept);
 
         //when

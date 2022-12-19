@@ -6,13 +6,12 @@ import lombok.Setter;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Getter@Setter
 @MappedSuperclass
 public abstract class Comment {
-    private LocalDateTime posttime;
+    protected LocalDateTime posttime;
 
-    private String name;
+    protected String name;
 
-    private String content;
+    protected String content;
 }

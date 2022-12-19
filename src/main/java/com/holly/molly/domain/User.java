@@ -1,15 +1,14 @@
 package com.holly.molly.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Getter @Setter
 @Table(name="users")//DB SQL user키워드와의 충돌을 방지
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @GeneratedValue
@@ -33,4 +32,13 @@ public class User {
 
     @OneToMany(mappedBy="userA")//자기 맴버변수 이름을 참조
     private List<Accept> accepts=new ArrayList<>();
+
+    public User(String name, String email, String password, String phone, String pid){
+        this.name=name;
+        this.email=email;
+        this.password=password;
+        this.phone=phone;
+        this.birth=pid.substring(0,6);
+        this.pid=pid;
+    }
 }

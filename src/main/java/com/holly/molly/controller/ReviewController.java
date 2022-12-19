@@ -42,11 +42,7 @@ public class ReviewController {
     @Transactional
     @PostMapping("volun/createReview")
     public String uploadReview(ReviewDTO reviewDTO){
-        Review review=new Review();
-        review.setTitle(reviewDTO.getTitle());
-        review.setContent(reviewDTO.getContent());
-        //review.setImage(review.getImage());
-
+        Review review=new Review(reviewDTO.getTitle(), reviewDTO.getContent());
         reviewService.join(review);
         return "redirect:/";
     }

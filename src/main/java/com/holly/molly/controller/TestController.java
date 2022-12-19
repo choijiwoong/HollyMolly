@@ -28,25 +28,11 @@ public class TestController {
         response.addCookie(prevCookie);
 
         //어드민 정보 생성
-        User admin=new User();
-        admin.setName("admin");
-        admin.setBirth("a");
-        admin.setEmail("gogogi313@gmail.com");
-        admin.setPassword("a");
-        admin.setPid("a");
-        admin.setPhone("a");
-
+        User admin=new User("admin", "gogogi313@gmail.com", "a", "a", "a");
         userService.join(admin);
 
         //어드민2 정보 생성
-        User admin2=new User();
-        admin2.setName("admin2");
-        admin2.setBirth("a2");
-        admin2.setEmail("zonpark75@gmail.com");
-        admin2.setPassword("a2");
-        admin2.setPid("a2");
-        admin2.setPhone("a2");
-
+        User admin2=new User("admin2", "zonpark75@gmail.com", "a2", "a2", "a2");
         userService.join(admin2);
 
         //어드민 쿠키 등록
@@ -54,22 +40,10 @@ public class TestController {
         idCookie.setPath("/");
         response.addCookie(idCookie);
 
-        Request request=new Request();
-        request.setAddress("서울시 서초구 방배동");
-        request.setStatus(RequestStatus.REGISTER);
-        request.setReqtime(LocalDateTime.now().minusMinutes(1));
-        request.setContent("test");
-        request.setUserR(admin);
-        request.setExectime(LocalDateTime.now().plusMinutes(1l));
+        Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l), "서울시 서초구 방배동", "test");
         requestService.join(request);
 
-
-        Accept accept=new Accept();
-        accept.setStatus(AcceptStatus.REGISTER);
-        accept.setAcctime(LocalDateTime.now());
-        accept.setUserA(admin2);
-        accept.setRequest(request);
-
+        Accept accept=new Accept(admin2, request);
         acceptService.join(accept);
 
         return "redirect:/kakaomap";

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,14 +25,12 @@ public class IntegralTest {
 
     @Autowired
     RequestCommentService requestCommentService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        userService.clear();
-        requestService.clear();
-        acceptService.clear();
-        reviewService.clear();
-        requestCommentService.clear();
+        em.clear();
     }
 
     @Test

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,6 +35,4 @@ public class ReviewService {
     public List<Review> findAll(){
         return reviewRepository.findAll();
     }
-
-    public void clear(){ reviewRepository.clear(); }//for test
 }

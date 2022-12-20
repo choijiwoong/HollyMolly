@@ -24,9 +24,6 @@ public class UserService {
     }
 
     @Transactional
-    public void clear(){ userRepository.clear(); }//for test
-
-    @Transactional
     public Long delete(User user){
         userRepository.delete(user);
         return user.getId();
@@ -54,7 +51,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> findByEmail(String email){ return userRepository.findByEmail(email); }
+    public Optional<User> findByEmail(String email){ return userRepository.findByEmail(email); }
 
     public Optional<User> signUp(LoginDTO loginDTO) {
         return this.findByEmail(loginDTO.getEmail())

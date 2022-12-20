@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,9 +21,6 @@ public class RequestCommentService {
 
     @Transactional
     public void delete(RequestComment requestComment){ requestCommentRepository.delete(requestComment); }
-
-    @Transactional
-    public void clear(){ requestCommentRepository.clear(); }
 
     public RequestComment findOne(Long id){ return requestCommentRepository.findOne(id); }
 

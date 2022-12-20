@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
 
     @AfterEach
     public void afterEach(){
-        userRepository.clear();
+        em.clear();
     }
 
     @Test
@@ -89,10 +90,11 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        List<User> users=userRepository.findByEmail(user.getEmail());
+        Optional<User> userResult=userRepository.findByEmail(user.getEmail());
 
         //then
-        assertEquals(users.stream().findFirst().get().getId(), user.getId());
+        assertEquals(userResult.isPresent(), true);
+        assertEquals(userResult.get().getId(), user.getId());
     }
 
     @Test
@@ -102,10 +104,11 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        List<User> users=userRepository.findByPhone(user.getPhone());
+        Optional<User> userResult=userRepository.findByPhone(user.getPhone());
 
         //then
-        assertEquals(users.stream().findFirst().get().getId(), user.getId());
+        assertEquals(userResult.isPresent(), true);
+        assertEquals(userResult.get().getId(), user.getId());
     }
 
     @Test
@@ -115,10 +118,11 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        List<User> users=userRepository.findByPid(user.getPid());
+        Optional<User> userResult=userRepository.findByPid(user.getPid());
 
         //then
-        assertEquals(users.stream().findFirst().get().getId(), user.getId());
+        assertEquals(userResult.isPresent(), true);
+        assertEquals(userResult.get().getId(), user.getId());
     }
 
     @Test

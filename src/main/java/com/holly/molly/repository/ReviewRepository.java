@@ -1,16 +1,23 @@
 package com.holly.molly.repository;
 
+import com.holly.molly.domain.QReview;
 import com.holly.molly.domain.Review;
-import lombok.RequiredArgsConstructor;
+import static com.holly.molly.domain.QReview.review;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class ReviewRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
+    public ReviewRepository(EntityManager em){
+        this.em=em;
+        this.queryFactory=new JPAQueryFactory(em);
+    }
 
     public void save(Review review){
         em.persist(review);
@@ -22,8 +29,6 @@ public class ReviewRepository {
     }
 
     public List<Review> findAll(){
-        return em.createQuery("select r from Review r", Review.class).getResultList();
+        return queryFactory.selectFrom(review).fetch();
     }
-
-    public void clear(){ em.clear(); }//for test code
 }

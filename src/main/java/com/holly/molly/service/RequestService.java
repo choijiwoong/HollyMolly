@@ -64,6 +64,4 @@ public class RequestService {
     public List<Request> findAll(){
         return requestRepository.findAll();
     }
-
-    public void clear(){ requestRepository.clear(); }//for test
 }

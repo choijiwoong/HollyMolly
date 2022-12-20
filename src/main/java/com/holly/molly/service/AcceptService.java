@@ -38,6 +38,4 @@ public class AcceptService {
     public List<Accept> findAll(){
         return acceptRepository.findAll();
     }
-
-    public void clear(){ acceptRepository.clear(); }//for test
 }

@@ -23,7 +23,7 @@ public class Review extends JpaBaseEntity{
     @Column(nullable = false)
     String content;
 
-    @ElementCollection//1:N매핑
+    @ElementCollection(fetch = FetchType.LAZY)//1:N매핑
     List<String> comment;
 
     public Review(String title, String content){

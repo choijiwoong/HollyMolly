@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,21 +25,19 @@ public class IntegralTest {
 
     @Autowired
     RequestCommentService requestCommentService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        userService.clear();
-        requestService.clear();
-        acceptService.clear();
-        reviewService.clear();
-        requestCommentService.clear();
+        em.clear();
     }
 
     @Test
     public void fullLogic(){
         //given
-        User user1=new User("홍길동", "honghonghong@gmail.com", "0000", "010-1234-5678", "950128-2038273");
-        User user2=new User("홍승만", "hongmangirl@gmail.com", "1234", "010-5678-1234", "450128-2038273");
+        User user1=new User("홍길동", "ASfsafjl90asafsaf@gmail.com", "0000", "010-1234-5678", "950128-2038273");
+        User user2=new User("홍승만", "asfag_agslaslg@gmail.com", "1234", "010-5678-1234", "450128-2038273");
         userService.join(user1);
         userService.join(user2);
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,7 +18,7 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    @Transactional//필요시에만 readOnly=false
+    @Transactional
     public Long join(Review review){
         reviewRepository.save(review);
         return review.getId();
@@ -25,15 +26,16 @@ public class ReviewService {
 
     @Transactional
     public Long delete(Review review){
+        if(Optional.ofNullable(reviewRepository.findOne(review.getId())).isEmpty()){
+            throw new RuntimeException("삭제하려는 Accept가 존재하지 않습니다.");
+        }
         reviewRepository.delete(review);
         return review.getId();
     }
 
-    public Review findOne(Long id){ return reviewRepository.findOne(id); }
+    public Optional<Review> findOne(Long id){ return Optional.ofNullable(reviewRepository.findOne(id)); }
 
     public List<Review> findAll(){
         return reviewRepository.findAll();
     }
-
-    public void clear(){ reviewRepository.clear(); }//for test
 }

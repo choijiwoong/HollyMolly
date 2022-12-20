@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,9 +24,11 @@ class RequestCommentRepositoryTest {
     RequestCommentRepository requestCommentRepository;
     @Autowired RequestRepository requestRepository;
     @Autowired UserRepository userRepository;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
-    public void afterEach(){ requestCommentRepository.clear(); }
+    public void afterEach(){ em.clear(); }
 
     @Test
     void findOne() {

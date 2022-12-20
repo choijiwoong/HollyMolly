@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,10 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class UserServiceTest {
     @Autowired UserService userService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        userService.clear();
+        em.clear();
     }
 
     @Test
@@ -69,7 +72,8 @@ class UserServiceTest {
         userService.join(user1);
 
         //when
-        assertEquals(userService.findOne(user1.getId()), user1);
+        assertEquals(userService.findOne(user1.getId()).isPresent(), true);
+        assertEquals(userService.findOne(user1.getId()).get().getId(), user1.getId());
     }
 
     @Test
@@ -101,7 +105,7 @@ class UserServiceTest {
         userService.join(user1);
 
         //when
-        assertEquals(userService.findByEmail(user1.getEmail()).size(), 1l);
+        assertEquals(userService.findByEmail(user1.getEmail()).isPresent(), true);
         assertEquals(userService.findByEmail(user1.getEmail()).stream().findFirst().get(), user1);
     }
 

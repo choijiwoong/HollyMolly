@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,11 +20,12 @@ class AcceptRepositoryTest {
     @Autowired UserRepository userRepository;
 
     @Autowired RequestRepository requestRepository;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        acceptRepository.clear();
-        userRepository.clear();
+        em.clear();
     }
 
     @Test

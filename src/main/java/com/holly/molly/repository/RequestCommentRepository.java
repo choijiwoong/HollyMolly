@@ -1,17 +1,24 @@
 package com.holly.molly.repository;
 
+import com.holly.molly.domain.QRequestComment;
+import static com.holly.molly.domain.QRequestComment.requestComment;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestComment;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class RequestCommentRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
+    public RequestCommentRepository(EntityManager em){
+        this.em=em;
+        this.queryFactory=new JPAQueryFactory(em);
+    }
 
     public void save(RequestComment requestComment){ em.persist(requestComment); }
 
@@ -20,14 +27,10 @@ public class RequestCommentRepository {
     public RequestComment findOne(Long id){ return em.find(RequestComment.class, id); }
 
     public List<RequestComment> findAll(){
-        return em.createQuery("select c from RequestComment c", RequestComment.class).getResultList();
+        return queryFactory.selectFrom(requestComment).fetch();
     }
 
     public List<RequestComment> findByRequest(Request request){
-        return em.createQuery("select rc from RequestComment rc where rc.request.id=:id")
-                .setParameter("id", request.getId())
-                .getResultList();
+        return queryFactory.selectFrom(requestComment).where(requestComment.request.id.eq(request.getId())).fetch();
     }
-
-    public void clear(){ em.clear(); }//for test code
 }

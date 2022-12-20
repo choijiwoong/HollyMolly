@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,9 +27,11 @@ class RequestRequestCommentServiceTest {
     RequestService requestService;
     @Autowired
     UserService userService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
-    public void afterEach(){ requestCommentService.clear(); }
+    public void afterEach(){ em.clear(); }
 
     @Test
     void findOne() {

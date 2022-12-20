@@ -1,18 +1,25 @@
 package com.holly.molly.repository;
 
+import com.holly.molly.domain.QRequest;
+import static com.holly.molly.domain.QRequest.request;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
 import com.holly.molly.domain.User;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class RequestRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
+    public RequestRepository(EntityManager em){
+        this.em=em;
+        this.queryFactory=new JPAQueryFactory(em);
+    }
 
     public void save(Request request){
         em.persist(request);
@@ -25,20 +32,14 @@ public class RequestRepository {
     }
 
     public List<Request> findByUser(User user){
-        return em.createQuery("select r from Request r where r.userR.id=:id", Request.class)
-                .setParameter("id", user.getId())
-                .getResultList();
+        return queryFactory.selectFrom(request).where(request.userR.id.eq(user.getId())).fetch();
     }
 
     public List<Request> findByStatus(RequestStatus status){
-        return em.createQuery("select r from Request r where r.status=:status", Request.class)
-                .setParameter("status", status)
-                .getResultList();
+        return queryFactory.selectFrom(request).where(request.status.eq(status)).fetch();
     }
 
     public List<Request> findAll(){
-        return em.createQuery("select r from Request r", Request.class).getResultList();
+        return queryFactory.selectFrom(request).fetch();
     }
-
-    public void clear(){ em.clear(); }//for test code
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,10 +18,12 @@ class AcceptServiceTest {
     @Autowired AcceptService acceptService;
     @Autowired RequestService requestService;
     @Autowired UserService userService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        acceptService.clear();
+        em.flush();
     }
 
     @Test
@@ -39,7 +42,7 @@ class AcceptServiceTest {
         acceptService.join(accept);
 
         //when
-        assertEquals(acceptService.findOne(accept.getId()).getId(), accept.getId());
+        assertEquals(acceptService.findOne(accept.getId()).get().getId(), accept.getId());
     }
 
     @Test

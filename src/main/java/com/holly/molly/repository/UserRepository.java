@@ -1,16 +1,24 @@
 package com.holly.molly.repository;
 
+import com.holly.molly.domain.QUser;
+import static com.holly.molly.domain.QUser.user;
 import com.holly.molly.domain.User;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
+    public UserRepository(EntityManager em){
+        this.em=em;
+        this.queryFactory=new JPAQueryFactory(em);//em에 의존하기에 동시성 문제X
+    }
 
     public void save(User user){
         em.persist(user);
@@ -22,32 +30,22 @@ public class UserRepository {
     }
 
     public List<User> findByName(String name){
-        return em.createQuery("select u from User u where u.name=:name", User.class)
-                .setParameter("name", name)
-                .getResultList();
+        return queryFactory.selectFrom(user).where(user.name.eq(name)).fetch();
     }
 
-    public List<User> findByEmail(String email){
-        return em.createQuery("select u from User u where u.email=:email", User.class)
-                .setParameter("email", email)
-                .getResultList();
+    public User findByEmail(String email){
+        return queryFactory.selectFrom(user).where(user.email.eq(email)).fetchOne();
     }
 
-    public List<User> findByPhone(String phone){
-        return em.createQuery("select u from User u where u.phone=:phone", User.class)
-                .setParameter("phone", phone)
-                .getResultList();
+    public User findByPhone(String phone){
+        return queryFactory.selectFrom(user).where(user.phone.eq(phone)).fetchOne();
     }
 
-    public List<User> findByPid(String pid){
-        return em.createQuery("select u from User u where u.pid=:pid", User.class)
-                .setParameter("pid", pid)
-                .getResultList();
+    public User findByPid(String pid){
+        return queryFactory.selectFrom(user).where(user.pid.eq(pid)).fetchOne();
     }
 
     public List<User> findAll(){
-        return em.createQuery("select u from User u", User.class).getResultList();
+        return queryFactory.selectFrom(user).fetch();
     }
-
-    public void clear(){ em.clear(); }//for test code
 }

@@ -7,16 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class ReviewServiceTest {
     @Autowired ReviewService reviewService;
+    @Autowired
+    EntityManager em;
 
     @AfterEach
     public void afterEach(){
-        reviewService.clear();
+        em.clear();
     }
 
     @Test

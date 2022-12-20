@@ -64,7 +64,7 @@ public class LogicController {
     public String accept(@PathVariable("requestid") Long requestId, @CookieValue(value = "userId", required = false) Cookie cookie) {
         System.out.println("accept requestId is " + requestId);
         User userA = parseUserCookie(cookie);
-        Request request = requestService.findOne(requestId);
+        Request request = requestService.findOne(requestId).get();
 
         if (request.getUserR().getId().equals(userA.getId())) {
             throw new RuntimeException("Request user & Accept user is same");
@@ -91,7 +91,7 @@ public class LogicController {
         ArrayList<String> addresses = new ArrayList<String>();
         ArrayList<Long> ids = new ArrayList<Long>();
         for (Long id : requestIds) {
-            addresses.add(requestService.findOne(id).getAddress());
+            addresses.add(requestService.findOne(id).get().getAddress());
             ids.add(id);
         }
         model.addAttribute("addresses", addresses);
@@ -102,7 +102,7 @@ public class LogicController {
 
     @GetMapping("/volun/detailRequest/{requestid}")
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model) {
-        Request request = requestService.findOne(requestId);
+        Request request = requestService.findOne(requestId).get();
         model.addAttribute("request", request);
 
         List<RequestComment> comments = request.getComments();
@@ -120,7 +120,7 @@ public class LogicController {
     public String makeCommentRequest(@CookieValue(value = "userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model) {
         Long requestId = commentDTO.getHid();
         User user = parseUserCookie(cookie);
-        Request request = requestService.findOne(requestId);
+        Request request = requestService.findOne(requestId).get();
 
         RequestComment comment = new RequestComment(request, user.getName(), commentDTO.getContent());
         requestCommentService.join(comment);
@@ -133,7 +133,7 @@ public class LogicController {
     //<-----내부 로직------>
 
     private User parseUserCookie(Cookie cookie) {
-        Optional<User> userInfo = Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
+        Optional<User> userInfo = userService.findOne(Long.valueOf(cookie.getValue()));
         if (userInfo.isEmpty()) {
             throw new RuntimeException("cannot find current user information on cookie");
         }

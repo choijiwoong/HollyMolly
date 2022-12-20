@@ -5,12 +5,11 @@ import com.holly.molly.domain.AcceptStatus;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.asm.Advice;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,14 +54,18 @@ public class AsyncService {
     }
 
     public void checkNoticeMailTiming(List<Accept> accepts){
+        ArrayList<String> emailList=new ArrayList<String>();
         for (Accept accept : accepts) {
             Request request = accept.getRequest();
 
             if (request.getStatus() == RequestStatus.ACCEPT && isEmailTime(request.getExectime())) {
-                mailService.advanceNotice(request.getUserR().getEmail());
-                mailService.advanceNotice(accept.getUserA().getEmail());
+                emailList.add(request.getUserR().getEmail());
+                emailList.add(accept.getUserA().getEmail());
             }
         }
+        if(emailList.isEmpty())
+            return;
+        mailService.advanceNotice(emailList);
     }
 
     @Transactional
@@ -89,37 +92,20 @@ public class AsyncService {
     }
 
     //<---- 하위 내부 로직 ---->
-    private Boolean isEmailTime(LocalDateTime time){
+    private Boolean isEmailTime(LocalDateTime exectime){
         Long dayUnit=1l;
-        time.plusDays(dayUnit);
-        if(time.isAfter(LocalDateTime.now())){//차이가 하루 미만이라면
-            return true;
-        } else{
-            return false;
-        }
+        exectime.plusDays(dayUnit);
+
+        return exectime.isAfter(LocalDateTime.now()) ? true : false;
     }
 
-    private Boolean isReviewTime(LocalDateTime time){
-        return true;
-        /*
-        Long dayUnit=1l;
-        time.minusHours(time.getHour());
-        time.minusMinutes(time.getMinute());
-        time.minusSeconds(time.getSecond());
-        time.plusDays(dayUnit);
-        if(time.isBefore(LocalDateTime.now())){//봉사활동 일이 마무리되는 00시 00분이 지났는지
-            return true;
-        } else{
-            return false;
-        }
-        */
+    private Boolean isReviewTime(LocalDateTime exectime){
+        LocalDateTime dayUnit=LocalDateTime.of(exectime.getYear(), exectime.getMonth(), exectime.plusDays(1).getDayOfMonth(),0,0);
+
+        return dayUnit.isBefore(LocalDateTime.now()) ? true: false;
     }
 
-    private Boolean isComplete(LocalDateTime time){//
-        if(time.isBefore(LocalDateTime.now())){
-            return true;
-        } else {
-            return false;
-        }
+    private Boolean isComplete(LocalDateTime exectime){
+        return exectime.isBefore(LocalDateTime.now()) ? true : false;
     }
 }

@@ -72,7 +72,8 @@ class UserServiceTest {
         userService.join(user1);
 
         //when
-        assertEquals(userService.findOne(user1.getId()), user1);
+        assertEquals(userService.findOne(user1.getId()).isPresent(), true);
+        assertEquals(userService.findOne(user1.getId()).get().getId(), user1.getId());
     }
 
     @Test

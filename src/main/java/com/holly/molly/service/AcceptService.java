@@ -8,22 +8,30 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AcceptService {
     private final AcceptRepository acceptRepository;
-    @Transactional//필요시에만 readOnly=false
+    @Transactional
     public Long join(Accept accept){//accept는 특성상 duplicate가 발생할 수 없음.
-        accept.getRequest().changeStatus(RequestStatus.ACCEPT);
-        accept.getRequest().setAccept(accept);
         acceptRepository.save(accept);
         return accept.getId();
     }
 
-    public Accept findOne(Long id){
-        return acceptRepository.findOne(id);
+    @Transactional
+    public Long delete(Accept accept){
+        if(Optional.ofNullable(acceptRepository.findOne(accept.getId())).isEmpty()){
+            throw new RuntimeException("삭제하려는 Accept가 존재하지 않습니다.");
+        }
+        acceptRepository.delete(accept);
+        return accept.getId();
+    }
+
+    public Optional<Accept> findOne(Long id){
+        return Optional.ofNullable(acceptRepository.findOne(id));
     }
 
     public List<Accept> findByUser(User user){
@@ -33,7 +41,6 @@ public class AcceptService {
     public List<Accept> findByStatus(AcceptStatus acceptStatus){
         return acceptRepository.findByStatus(acceptStatus);
     }
-
 
     public List<Accept> findAll(){
         return acceptRepository.findAll();

@@ -42,7 +42,7 @@ class AcceptServiceTest {
         acceptService.join(accept);
 
         //when
-        assertEquals(acceptService.findOne(accept.getId()).getId(), accept.getId());
+        assertEquals(acceptService.findOne(accept.getId()).get().getId(), accept.getId());
     }
 
     @Test

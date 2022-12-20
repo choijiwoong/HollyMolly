@@ -8,38 +8,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RequestService {
     private final RequestRepository requestRepository;
-    @Transactional//필요시에만 readOnly=false
+    @Transactional
     public Long join(Request request){
-        validateDuplicateRequest(request);
-        checkExectime(request);
+        validateDuplicateRequest(request);//request의 user가 올린 requests에서 중복되는 exectime & address 확인
+        checkExectime(request);//과거의 시간을 등록하려는지 확인
         requestRepository.save(request);
         return request.getId();
     }
 
-    private void checkExectime(Request request) {
-        if(request.getExectime().isBefore(LocalDateTime.now().minusMinutes(1l))){//-1m하는 이유는, LocalDateTime비교식이 너무 정밀하여 일부러 오차범위를 만듬.(for asyncservice.checkCancelCondition)
-            throw new IllegalStateException("수행시간이 현재시간보다 이전입니다.");
+    @Transactional
+    public Long delete(Request request){
+        if(Optional.ofNullable(requestRepository.findOne(request.getId())).isEmpty()){
+            throw new RuntimeException("삭제하려는 Request가 존재하지 않습니다.");
         }
+        requestRepository.delete(request);
+        return request.getId();
     }
 
-    private void validateDuplicateRequest(Request request) {//request를 보낸 유저의 기존 요청목록에 수행시간, 장소가 일치하는 항목이 이미 있는지 확인한다(유저기반)
-        if(!this.findByUser(request.getUserR()).stream().filter(r->r.getExectime().equals(request.getExectime())&r.getAddress().equals(request.getAddress())).toList().isEmpty()){
-            throw new IllegalStateException("이미 존재하는 봉사요청입니다.");
-        }
-    }
-
-    public Request findOne(Long id){
-        return requestRepository.findOne(id);
+    public Optional<Request> findOne(Long id){
+        return Optional.ofNullable(requestRepository.findOne(id));
     }
 
     public List<Request> findByUser(User user){
@@ -51,17 +47,26 @@ public class RequestService {
     }
 
     public List<Long> findKakaomapList(){
-        List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
-
-        ArrayList<Long> ids=new ArrayList<>();
-        for(Request request: requests){
-            ids.add(request.getId());
-        }
-
-        return ids.stream().toList();
+        return requestRepository.findByStatus(RequestStatus.REGISTER).stream().map(Request::getId).toList();
     }
 
     public List<Request> findAll(){
         return requestRepository.findAll();
+    }
+
+    //----내부로직----
+    private void validateDuplicateRequest(Request request) {
+        if(!this.findByUser(request.getUserR()).stream().filter(
+                        r->r.getExectime().equals(request.getExectime())
+                                &r.getAddress().equals(request.getAddress()))
+                .toList().isEmpty()){
+            throw new IllegalStateException("이미 존재하는 봉사요청입니다.");
+        }
+    }
+
+    private void checkExectime(Request request) {
+        if(request.getExectime().isBefore(LocalDateTime.now())){
+            throw new IllegalStateException("수행시간이 현재시간보다 이전입니다.");
+        }
     }
 }

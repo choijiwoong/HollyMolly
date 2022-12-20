@@ -60,7 +60,7 @@ class RequestServiceTest {
         requestService.join(request);
 
         //when
-        assertEquals(requestService.findOne(request.getId()).getId(), request.getId());
+        assertEquals(requestService.findOne(request.getId()).get().getId(), request.getId());
     }
 
     @Test

@@ -16,33 +16,26 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    @Transactional//필요시에만 readOnly=false
+    @Transactional
     public Long join(User user){
-        validateDuplicateMember(user);//중복회원 검증
+        validateDuplicateMember(user);//중복회원 검증(이메일, 전화번호, 주민번호)
         userRepository.save(user);
         return user.getId();
     }
 
     @Transactional
     public Long delete(User user){
+        if(Optional.ofNullable(userRepository.findOne(user.getId())).isEmpty()){
+            throw new RuntimeException("삭제하려는 User가 존재하지 않습니다.");
+            //System.out.println("[DEBUG] 삭제하려는 멤버가 없습니다.");
+            //return -1l;//별도 핸들링 필요..
+        }
         userRepository.delete(user);
         return user.getId();
     }
 
-    private void validateDuplicateMember(User user) {
-        if(!userRepository.findByEmail(user.getEmail()).isEmpty())
-            throw new IllegalStateException("이메일이 중복된 회원입니다.");
-
-        if(!userRepository.findByPhone(user.getPhone()).isEmpty())
-            throw new IllegalStateException("전화번호가 중복된 회원입니다.");
-
-        if(!userRepository.findByPid(user.getPid()).isEmpty())
-            throw new IllegalStateException("주민번호가 중복된 회원입니다.");
-        return;
-    }
-
-    public User findOne(Long memberId){
-        return userRepository.findOne(memberId);
+    public Optional<User> findOne(Long memberId){
+        return Optional.ofNullable(userRepository.findOne(memberId));
     }
 
     public List<User> findByName(String name){ return userRepository.findByName(name); }
@@ -51,13 +44,24 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findByEmail(String email){ return userRepository.findByEmail(email); }
+    public Optional<User> findByEmail(String email){ return Optional.ofNullable(userRepository.findByEmail(email)); }
 
     public Optional<User> signUp(LoginDTO loginDTO) {
         return this.findByEmail(loginDTO.getEmail())
-                .stream()
-                .filter(u->u.getPassword()
-                        .equals(loginDTO.getPassword()))
-                .findFirst();
+                .filter(u->u.getPassword().equals(loginDTO.getPassword()));
+    }
+
+    //----내부로직----
+    private void validateDuplicateMember(User user) {
+        if(Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent())
+            throw new IllegalStateException("이메일이 중복된 회원입니다.");
+
+        if(Optional.ofNullable(userRepository.findByPhone(user.getPhone())).isPresent())
+            throw new IllegalStateException("전화번호가 중복된 회원입니다.");
+
+        if(Optional.ofNullable(userRepository.findByPid(user.getPid())).isPresent()) {
+            throw new IllegalStateException("주민번호가 중복된 회원입니다.");
+        }
+        return;
     }
 }

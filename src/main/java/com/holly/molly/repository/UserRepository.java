@@ -33,16 +33,16 @@ public class UserRepository {
         return queryFactory.selectFrom(user).where(user.name.eq(name)).fetch();
     }
 
-    public Optional<User> findByEmail(String email){
-        return Optional.ofNullable(queryFactory.selectFrom(user).where(user.email.eq(email)).fetchOne());
+    public User findByEmail(String email){
+        return queryFactory.selectFrom(user).where(user.email.eq(email)).fetchOne();
     }
 
-    public Optional<User> findByPhone(String phone){
-        return Optional.ofNullable(queryFactory.selectFrom(user).where(user.phone.eq(phone)).fetchOne());
+    public User findByPhone(String phone){
+        return queryFactory.selectFrom(user).where(user.phone.eq(phone)).fetchOne();
     }
 
-    public Optional<User> findByPid(String pid){
-        return Optional.ofNullable(queryFactory.selectFrom(user).where(user.pid.eq(pid)).fetchOne());
+    public User findByPid(String pid){
+        return queryFactory.selectFrom(user).where(user.pid.eq(pid)).fetchOne();
     }
 
     public List<User> findAll(){

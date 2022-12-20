@@ -90,11 +90,10 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        Optional<User> userResult=userRepository.findByEmail(user.getEmail());
+        User userResult=userRepository.findByEmail(user.getEmail());
 
         //then
-        assertEquals(userResult.isPresent(), true);
-        assertEquals(userResult.get().getId(), user.getId());
+        assertEquals(userResult.getId(), user.getId());
     }
 
     @Test
@@ -104,11 +103,10 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        Optional<User> userResult=userRepository.findByPhone(user.getPhone());
+        User userResult=userRepository.findByPhone(user.getPhone());
 
         //then
-        assertEquals(userResult.isPresent(), true);
-        assertEquals(userResult.get().getId(), user.getId());
+        assertEquals(userResult.getId(), user.getId());
     }
 
     @Test
@@ -118,11 +116,10 @@ class UserRepositoryTest {//em관련 메서드는 테스트서 제외
         userRepository.save(user);
 
         //when
-        Optional<User> userResult=userRepository.findByPid(user.getPid());
+       User userResult=userRepository.findByPid(user.getPid());
 
         //then
-        assertEquals(userResult.isPresent(), true);
-        assertEquals(userResult.get().getId(), user.getId());
+        assertEquals(userResult.getId(), user.getId());
     }
 
     @Test

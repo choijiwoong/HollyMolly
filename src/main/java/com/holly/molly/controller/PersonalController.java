@@ -29,7 +29,7 @@ public class PersonalController {
 
     //<----내부로직---->
     private User parseUserCookie(Cookie cookie){
-        Optional<User> userInfo=Optional.of(userService.findOne(Long.valueOf(cookie.getValue())));
+        Optional<User> userInfo=userService.findOne(Long.valueOf(cookie.getValue()));
         if(userInfo.isEmpty()){
             throw new RuntimeException("cannot find current user information on cookie");
         }

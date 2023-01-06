@@ -19,23 +19,8 @@ public class HomeController {
     private final AsyncService asyncService;
     private final ReviewService reviewService;
 
-    @GetMapping("/")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
-    public String home(Model model, @CookieValue(value="userId", required = false) Cookie cookie){
-        //asyncService.join();
-
-        if(cookie==null || cookie.getValue().equals("")){
-            model.addAttribute("user", Optional.empty());
-        } else{
-            model.addAttribute("user", Optional.of(userService.findOne(Long.valueOf(cookie.getValue()))));//cookie의 string(id)를 integer로
-        }
-
-        List<Review> reviews=reviewService.findAll();
-        model.addAttribute("reviews", reviews);
-        model.addAttribute("reviewSize", reviews.size());
-
-        return "homeTemplate/home";
+    @GetMapping("/intro")
+    public String home(){
+        return "homeTemplate/Nhome";
     }
-
-    @GetMapping("/introducePage")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
-    public String intro(){ return "homeTemplate/post/firstStep"; }
 }

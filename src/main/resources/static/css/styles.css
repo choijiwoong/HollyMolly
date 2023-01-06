@@ -1,6 +1,0 @@
-@tailwind components;
-@tailwind utilities;
-
-.product-name{
-    @apply text-2xl
-}

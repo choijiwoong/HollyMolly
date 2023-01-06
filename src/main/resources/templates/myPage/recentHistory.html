@@ -32,7 +32,7 @@
           <td th:text="${request.address}"></td>
           <td th:text="${request.exectime}"></td>
           <td th:text="${request.content}"></td>
-          <td th:text="${request.reqtime}"></td>
+          <td th:text="${request.createdDate}"></td>
           <td th:text="${request.status}"></td>
           <td>
             <a th:if="${request.status}==REGISTER" href="#" th:href="@{/volun/detailRequest/{requestid} (requestid=${request.id})}"

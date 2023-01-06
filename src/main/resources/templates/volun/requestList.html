@@ -29,7 +29,7 @@
                         <td th:text="${request.address}"></td>
                         <td th:text="${request.exectime}"></td>
                         <td th:text="${request.content}"></td>
-                        <td th:text="${request.reqtime}"></td>
+                        <td th:text="${request.createdDate}"></td>
                         <td>
                             <a href="#" th:href="@{/volun/accept/{requestid} (requestid=${request.id})}"
                        class="btn btn-primary" role="button">수락하기</a>

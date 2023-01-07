@@ -1,7 +1,7 @@
 package com.holly.molly.controller;
 
 import com.holly.molly.DTO.LoginDTO;
-import com.holly.molly.DTO.RegisterDTO;
+import com.holly.molly.DTO.UserDTO;
 import com.holly.molly.domain.User;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,70 +26,51 @@ public class LoginController {
 
     @GetMapping("/members/list")
     public String list(Model model){
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.findAll());
         return "members/memberList";
     }
 
     @PostMapping("/members/register")
-    public String register(RegisterDTO registerDTO){
-        if(!checkRegisterDTO(registerDTO)){
+    public String register(UserDTO userDTO){
+        if(!checkRegisterDTO(userDTO))
             throw new RuntimeException("register format is incorrect!");
-        }
 
-        User user = new User(registerDTO.getName(), registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getPhone(), registerDTO.getPid());
-
-        userService.join(user);
+        userService.join(new User(userDTO));
         return "redirect:/";
     }
 
     @PostMapping("/members/login")
-    public String login(LoginDTO loginDTO, Model model, HttpServletResponse response){
-        Optional<User> user = userService.signUp(loginDTO);
-        if (user.isEmpty()) {//로그인 실패시
-            System.out.println("login fail!");
+    public String login(LoginDTO loginDTO, HttpServletResponse response){
+        Optional<User> user;
+        if ((user=userService.signUp(loginDTO)).isEmpty()) {//로그인 실패시
             return "members/login";
         }
-
         //로그인 성공시
-        System.out.println("Login Success");
-        Cookie idCookie=new Cookie("userId", String.valueOf(user.get().getId()));
-        idCookie.setPath("/");
-        response.addCookie(idCookie);
+        response.addCookie(registerCookie(user.get().getId()));
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
     }
 
     @GetMapping("/members/logout")
     public String logout(HttpServletResponse response){
-        Cookie idCookie=new Cookie("userId", null);
-        idCookie.setPath("/");
-        response.addCookie(idCookie);
-
+        response.addCookie(registerCookie(null));
         return "redirect:/";
     }
 
     @GetMapping("/admin")
     public String test(HttpServletResponse response){
         //기존 쿠키 제거
-        Cookie prevCookie=new Cookie("userId", null);
-        prevCookie.setPath("/");
-        response.addCookie(prevCookie);
-
+        response.addCookie(registerCookie(null));
         //어드민 정보 생성
         User admin=new User("admin", "a", "a", "a", "a");
-
         userService.join(admin);
-
         //어드민 쿠키 등록
-        Cookie idCookie=new Cookie("userId", String.valueOf(admin.getId()));
-        idCookie.setPath("/");
-        response.addCookie(idCookie);
+        response.addCookie(registerCookie(admin.getId()));
 
         return "redirect:/";
     }
 
     //<---------내부 함수---------->
-    private boolean checkRegisterDTO(RegisterDTO registerDTO) {
+    private boolean checkRegisterDTO(UserDTO userDTO) {
         /*
         String nameRegex="^[0-9가-힣a-zA-Z]+$";//영문자, 한글 허용(1개이상)
         if(!Pattern.matches(nameRegex, registerDTO.getName())) {
@@ -134,5 +114,11 @@ public class LoginController {
         }
         */
         return true;
+    }
+
+    private Cookie registerCookie(Long id){
+        Cookie idCookie=new Cookie("userId", id==null?null:String.valueOf(id));
+        idCookie.setPath("/");
+        return idCookie;
     }
 }

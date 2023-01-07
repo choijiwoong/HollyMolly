@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,10 +57,10 @@ public class IntegralTest {
         request.setExectime(LocalDateTime.now().minusMinutes(1l));
         //리뷰후 status변경 필요
 
-        Review review=new Review("봉사후기", "좆같았어요");
+        Review review=new Review("봉사후기", "좆같았어요", true);
         reviewService.join(review);
 
-        Review review1=new Review("피봉사자가 욕을 많이하네요..", "전 열심히 했는데 자꾸 좆같았데요...");
+        Review review1=new Review("피봉사자가 욕을 많이하네요..", "전 열심히 했는데 자꾸 좆같았데요...", false);
         reviewService.join(review1);
 
         asyncService.join();
@@ -97,5 +98,16 @@ public class IntegralTest {
         //when(review)
         //then
         assertEquals(reviewService.findAll().size(), 2);
+    }
+
+    @Test
+    public void tecTest(){
+        User user1=new User("홍길동", "ASfsafjl90asafsaf@gmail.com", "0000", "010-1234-5678", "950128-2038273");
+        userService.join(user1);
+
+        Optional<User> user;
+        if((user=userService.findOne(user1.getId())).isEmpty())
+            System.out.println("[DEBUG] he");
+        assertEquals(user.get().getId(), user1.getId());
     }
 }

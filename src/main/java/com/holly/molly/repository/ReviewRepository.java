@@ -31,4 +31,8 @@ public class ReviewRepository {
     public List<Review> findAll(){
         return queryFactory.selectFrom(review).fetch();
     }
+
+    public List<Review> findUserRReview(){ return queryFactory.selectFrom(review).where(review.isRequest.eq(true)).fetch(); }
+
+    public List<Review> findUserAReview(){ return queryFactory.selectFrom(review).where(review.isRequest.eq(false)).fetch(); }
 }

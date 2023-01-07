@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
 import com.holly.molly.domain.User;
@@ -8,15 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RequestService {
     private final RequestRepository requestRepository;
+    private final UserService userService;
+    //********************DB************************
     @Transactional
     public Long join(Request request){
         validateDuplicateRequest(request);//request의 user가 올린 requests에서 중복되는 exectime & address 확인
@@ -46,8 +51,10 @@ public class RequestService {
         return requestRepository.findByStatus(requestStatus);
     }
 
-    public List<Long> findKakaomapList(){
-        return requestRepository.findByStatus(RequestStatus.REGISTER).stream().map(Request::getId).toList();
+    public HashMap<Long, String> findKakaomapList(){
+        List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
+        Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
+        return new HashMap<Long, String>(kakaomapList);
     }
 
     public List<Request> findAll(){
@@ -68,5 +75,13 @@ public class RequestService {
         if(request.getExectime().isBefore(LocalDateTime.now())){
             throw new IllegalStateException("수행시간이 현재시간보다 이전입니다.");
         }
+    }
+
+    //********************서비스로직************************
+    @Transactional
+    public void SrvCreateRequest(Cookie cookie, RequestDTO requestDTO) {
+        User userInfo = userService.parseUserCookie(cookie);
+        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent());
+        this.join(request);
     }
 }

@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
 import com.holly.molly.domain.User;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -102,7 +104,7 @@ class RequestServiceTest {
 
         //when
         assertEquals(requestService.findKakaomapList().size(),1l);
-        assertEquals(requestService.findKakaomapList().stream().findFirst().get(), request.getId());
+        assertEquals(requestService.findKakaomapList().get(request.getId()), request.getAddress());
     }
 
     @Test
@@ -117,5 +119,22 @@ class RequestServiceTest {
         //when
         assertEquals(requestService.findAll().size(), 1l);
         assertEquals(requestService.findAll().stream().findFirst().get().getId(), request.getId());
+    }
+
+    @Test
+    void SrvCreateRequest(){
+        //given
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user);
+
+        Cookie cookie=new Cookie("userId", String.valueOf(user.getId()));
+        RequestDTO requestDTO=new RequestDTO("2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사");
+
+        //when
+        requestService.SrvCreateRequest(cookie, requestDTO);
+
+        //then
+        assertEquals(requestService.findAll().size(),1);
+        assertEquals(requestService.findAll().stream().findFirst().get().getUserR().getId(), user.getId());
     }
 }

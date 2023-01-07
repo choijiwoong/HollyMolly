@@ -1,5 +1,7 @@
 package com.holly.molly.domain;
 
+import com.holly.molly.DTO.RequestDTO;
+import com.holly.molly.DTO.ReviewDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +28,18 @@ public class Review extends JpaBaseEntity{
     @ElementCollection(fetch = FetchType.LAZY)//1:N매핑
     List<String> comment;
 
-    public Review(String title, String content){
+    Boolean isRequest;
+
+    public Review(String title, String content, Boolean isRequest){
         this.title=title;
         this.content=content;
+        this.isRequest=isRequest;
+    }
+
+    public Review(ReviewDTO reviewDTO){
+        this.title=reviewDTO.getTitle();
+        this.content=reviewDTO.getContent();
+        this.isRequest=reviewDTO.getIsRequest();
     }
 
     //MultipartFile image;

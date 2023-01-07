@@ -18,6 +18,8 @@
       <input type="text" id="content" name="content", style="width:600px;">
     </div>
 
+    <input type="hidden" id="isRequest" name="isRequest">
+
     <!--
     <div class="form-group">
       <div class="card-header">이미지</div>
@@ -33,3 +35,11 @@
 </body>
 
 </html>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    var isRequest=/*[[${isRequest}]]*/;
+/*]]>*/
+var buffer=document.getElementById("isRequest");
+buffer.value=isRequest;
+</script>

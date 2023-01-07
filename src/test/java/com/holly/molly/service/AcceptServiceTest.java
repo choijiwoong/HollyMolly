@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,5 +105,27 @@ class AcceptServiceTest {
         //when
         assertEquals(acceptService.findAll().size(), 1l);
         assertEquals(acceptService.findAll().stream().findFirst().get().getId(), accept.getId());
+    }
+
+    @Test
+    void SrvCreateAccept(){
+        //given
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user1);
+
+        Request request=new Request(user1, "2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사");
+        requestService.join(request);
+
+        User user2=new User("user2","user2@gmail.com","1234","010-0010-0000","100000-0000000");
+        userService.join(user2);
+
+        Cookie cookie=new Cookie("userId", String.valueOf(user2.getId()));
+
+        //when
+        acceptService.SrvCreateAccept(request.getId(), cookie);
+
+        //then
+        assertEquals(acceptService.findAll().size(),1);
+        assertEquals(acceptService.findAll().stream().findFirst().get().getUserA().getId(), user2.getId());
     }
 }

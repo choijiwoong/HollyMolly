@@ -6,7 +6,6 @@ import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
@@ -40,7 +39,7 @@ public class TestController {
         idCookie.setPath("/");
         response.addCookie(idCookie);
 
-        Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l), "서울시 서초구 방배동", "test");
+        Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l).toString(), "서울시 서초구 방배동", "test");
         requestService.join(request);
 
         Accept accept=new Accept(admin2, request);

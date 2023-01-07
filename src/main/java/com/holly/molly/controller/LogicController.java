@@ -6,24 +6,19 @@ import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
-import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class LogicController {
-    private final UserService userService;
     private final RequestService requestService;
     private final AcceptService acceptService;
-
     private final RequestCommentService requestCommentService;
 
     @GetMapping("/volun/createRequest")
@@ -33,120 +28,53 @@ public class LogicController {
 
     @PostMapping("/volun/createRequest")
     public String saveRequest(RequestDTO requestDTO, @CookieValue(value = "userId", required = false) Cookie cookie) {
-        User userInfo = parseUserCookie(cookie);
-
-        String exectime = requestDTO.getExectime();//2022.11.16.14.24
-        if (!checkLocaldatetime(exectime)) {
-            throw new RuntimeException("check time format");
-        }
-
-        Integer year = Integer.parseInt(exectime.substring(0, 4));
-        Integer month = Integer.parseInt(exectime.substring(5, 7));
-        Integer date = Integer.parseInt(exectime.substring(8, 10));
-        Integer hour = Integer.parseInt(exectime.substring(11, 13));
-        Integer minute = Integer.parseInt(exectime.substring(14, 16));
-
-        Request request = new Request(userInfo, LocalDateTime.of(year, month, date, hour, minute), requestDTO.getAddress(), requestDTO.getContent());
-        requestService.join(request);
-
+        requestService.SrvCreateRequest(cookie, requestDTO);
         return "redirect:/";
     }
 
     @GetMapping("/volun/requestList")
     public String requestList(Model model) {
-        List<Request> requests = requestService.findByStatus(RequestStatus.REGISTER);
-        System.out.println("request list length: " + requests.size());
-        model.addAttribute("requests", requests);
+        model.addAttribute("requests", requestService.findByStatus(RequestStatus.REGISTER));
         return "volun/requestList";
     }
 
     @GetMapping("/volun/accept/{requestid}")
     public String accept(@PathVariable("requestid") Long requestId, @CookieValue(value = "userId", required = false) Cookie cookie) {
-        System.out.println("accept requestId is " + requestId);
-        User userA = parseUserCookie(cookie);
-        Request request = requestService.findOne(requestId).get();
-
-        if (request.getUserR().getId().equals(userA.getId())) {
-            throw new RuntimeException("Request user & Accept user is same");
-        }
-
-        Accept accept = new Accept(userA, request);
-        acceptService.join(accept);
-
+        acceptService.SrvCreateAccept(requestId, cookie);
         return "redirect:/";
     }
 
     @GetMapping("/volun/acceptList")
     public String acceptList(Model model) {
-        List<Accept> accepts = acceptService.findByStatus(AcceptStatus.REGISTER);
-        System.out.println("accepts list length: " + accepts.size());
-        model.addAttribute("accepts", accepts);
-
+        model.addAttribute("accepts", acceptService.findByStatus(AcceptStatus.REGISTER));
         return "volun/acceptList";
     }
 
     @GetMapping("/kakaomap")
     public String showMap(Model model) {
-        List<Long> requestIds = requestService.findKakaomapList();
-        ArrayList<String> addresses = new ArrayList<String>();
-        ArrayList<Long> ids = new ArrayList<Long>();
-        for (Long id : requestIds) {
-            addresses.add(requestService.findOne(id).get().getAddress());
-            ids.add(id);
+        HashMap<Long, String> kakaomapList = requestService.findKakaomapList();
+
+        ArrayList<Long> ids=new ArrayList<>();
+        ArrayList<String> addresses=new ArrayList<>();
+        for(Map.Entry<Long, String> mapElement: kakaomapList.entrySet()){
+            ids.add(mapElement.getKey());
+            addresses.add(mapElement.getValue());
         }
+
         model.addAttribute("addresses", addresses);
         model.addAttribute("ids", ids);
-
         return "apis/kakaoMap";
     }
 
     @GetMapping("/volun/detailRequest/{requestid}")
     public String detailRequest(@PathVariable("requestid") Long requestId, Model model) {
-        Request request = requestService.findOne(requestId).get();
-        model.addAttribute("request", request);
-
-        List<RequestComment> comments = request.getComments();
-        if (comments.isEmpty()) {
-            System.out.println("[DEBUG] 비어있다!!!!!");
-        }
-        for (RequestComment cmt : comments) {
-            System.out.println("[DEBUG] " + cmt.getContent());
-        }
-
+        model.addAttribute("request", requestService.findOne(requestId).get());//comment 추후 사용. 리팩토링 필요
         return "volun/detailRequest";
     }
 
     @PostMapping("/comment/request")
     public String makeCommentRequest(@CookieValue(value = "userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model) {
-        Long requestId = commentDTO.getHid();
-        User user = parseUserCookie(cookie);
-        Request request = requestService.findOne(requestId).get();
-
-        RequestComment comment = new RequestComment(request, user.getName(), commentDTO.getContent());
-        requestCommentService.join(comment);
-
-        model.addAttribute("request", request);
-
+        model.addAttribute("request", requestCommentService.SrvCreateRequestComment(cookie, commentDTO));
         return "volun/detailRequest";
-    }
-
-    //<-----내부 로직------>
-
-    private User parseUserCookie(Cookie cookie) {
-        Optional<User> userInfo = userService.findOne(Long.valueOf(cookie.getValue()));
-        if (userInfo.isEmpty()) {
-            throw new RuntimeException("cannot find current user information on cookie");
-        }
-        return userInfo.get();
-    }
-
-    //<-------내부 함수-------->
-    private boolean checkLocaldatetime(String time) {
-        /*
-        String pattern="^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$";
-        if(!Pattern.matches(pattern, time))
-            return false;
-         */
-        return true;
     }
 }

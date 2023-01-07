@@ -28,6 +28,9 @@ public class Accept extends JpaBaseEntity{
     private Request request;
 
     public Accept(User user, Request request){
+        if(request.getUserR().getId().equals(user.getId()))
+            throw new RuntimeException("봉사신청자와 봉사자 정보가 동일합니다!");
+
         this.connectUser(user);
         this.status=AcceptStatus.REGISTER;
         this.connectRequest(request);

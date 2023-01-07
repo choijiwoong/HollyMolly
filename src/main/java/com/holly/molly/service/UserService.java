@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +28,6 @@ public class UserService {
     public Long delete(User user){
         if(Optional.ofNullable(userRepository.findOne(user.getId())).isEmpty()){
             throw new RuntimeException("삭제하려는 User가 존재하지 않습니다.");
-            //System.out.println("[DEBUG] 삭제하려는 멤버가 없습니다.");
-            //return -1l;//별도 핸들링 필요..
         }
         userRepository.delete(user);
         return user.getId();
@@ -63,5 +62,13 @@ public class UserService {
             throw new IllegalStateException("주민번호가 중복된 회원입니다.");
         }
         return;
+    }
+
+    public User parseUserCookie(Cookie cookie) {
+        Optional<User> userInfo = this.findOne(Long.valueOf(cookie.getValue()));
+        if (userInfo.isEmpty()) {
+            throw new RuntimeException("cannot find current user information on cookie");
+        }
+        return userInfo.get();
     }
 }

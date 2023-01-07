@@ -1,5 +1,6 @@
 package com.holly.molly.domain;
 
+import com.holly.molly.DTO.UserDTO;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,5 +42,13 @@ public class User extends JpaBaseEntity{
         this.password=password;
         this.phone=phone;
         this.pid=pid;
+    }
+
+    public User(UserDTO userDTO){
+        this.name= userDTO.getName();
+        this.email= userDTO.getEmail();
+        this.password= userDTO.getPassword();
+        this.phone= userDTO.getPhone();
+        this.pid= userDTO.getPid();
     }
 }

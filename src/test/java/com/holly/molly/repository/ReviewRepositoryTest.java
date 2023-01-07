@@ -19,7 +19,7 @@ class ReviewRepositoryTest {
     @Test
     void findOne() {
         //given
-        Review review=new Review("노인복지관 봉사리뷰", "재밌었다");
+        Review review=new Review("노인복지관 봉사리뷰", "재밌었다", true);
         reviewRepository.save(review);
 
         //when
@@ -32,7 +32,7 @@ class ReviewRepositoryTest {
     @Test
     void findAll() {
         //given
-        Review review=new Review("노인복지관 봉사리뷰", "재밌었다");
+        Review review=new Review("노인복지관 봉사리뷰", "재밌었다", true);
 
         reviewRepository.save(review);
 

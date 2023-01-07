@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class ReviewController {
     private final RequestService requestService;
     private final AcceptService acceptService;
-
     private final ReviewService reviewService;
 
     @Transactional
@@ -41,16 +42,18 @@ public class ReviewController {
 
     @Transactional
     @PostMapping("volun/createReview")
-    public String uploadReview(ReviewDTO reviewDTO){
-        Review review=new Review(reviewDTO.getTitle(), reviewDTO.getContent());
-        reviewService.join(review);
+    public String uploadReviewA(ReviewDTO reviewDTO){
+        reviewService.SrvRegisterReview(reviewDTO);
         return "redirect:/";
     }
 
     @GetMapping("review/detail/{id}")
     public String detailReview(@PathVariable("id") Long id, Model model){
-        Review review=reviewService.findOne(id).get();
-        model.addAttribute("review", review);
+        Optional<Review> review;
+        if((review=reviewService.findOne(id)).isEmpty())
+            throw new RuntimeException("리뷰 상세정보를 찾는 중 리뷰에 대한 정보를 찾을 수 없습니다.");
+
+        model.addAttribute("review", review.get());
         return "volun/detailReview";
     }
 }

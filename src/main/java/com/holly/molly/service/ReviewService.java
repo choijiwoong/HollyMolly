@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.ReviewDTO;
 import com.holly.molly.domain.Review;
 import com.holly.molly.domain.User;
 import com.holly.molly.repository.ReviewRepository;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
+    //**********DB**********
     @Transactional
     public Long join(Review review){
         reviewRepository.save(review);
@@ -37,5 +39,11 @@ public class ReviewService {
 
     public List<Review> findAll(){
         return reviewRepository.findAll();
+    }
+
+    //***********서비스로직************
+    @Transactional
+    public void SrvRegisterReview(ReviewDTO reviewDTO){
+        this.join(new Review(reviewDTO.getTitle(), reviewDTO.getContent(), reviewDTO.getIsRequest()));
     }
 }

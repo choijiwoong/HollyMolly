@@ -6,6 +6,7 @@ import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
+import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ public class LogicController {
     private final RequestService requestService;
     private final AcceptService acceptService;
     private final RequestCommentService requestCommentService;
+    private final UserService userService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest() {
@@ -51,7 +53,7 @@ public class LogicController {
     }
 
     @GetMapping("/kakaomap")
-    public String showMap(Model model) {
+    public String showMap(Model model, @CookieValue(value = "userId", required = false) Cookie cookie) {
         HashMap<Long, String> kakaomapList = requestService.findKakaomapList();
 
         ArrayList<Long> ids=new ArrayList<>();
@@ -63,7 +65,16 @@ public class LogicController {
 
         model.addAttribute("addresses", addresses);
         model.addAttribute("ids", ids);
+        model.addAttribute("userName", userService.parseUserCookie(cookie).getName());
+        model.addAttribute("requests", requestService.findByStatus(RequestStatus.REGISTER));
         return "apis/kakaoMap";
+    }
+
+    @ResponseBody
+    @RequestMapping("/getNearVolun")
+    public String valueTest(){
+        String value = "테스트 String";
+        return value;
     }
 
     @GetMapping("/volun/detailRequest/{requestid}")

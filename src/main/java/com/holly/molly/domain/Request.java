@@ -29,6 +29,10 @@ public class Request extends JpaBaseEntity{
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestCategory category;
+
     @Column(nullable = false)@Setter//test for making situation
     private LocalDateTime exectime;
 
@@ -37,6 +41,11 @@ public class Request extends JpaBaseEntity{
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    private String longitude;
+    @Column(nullable = false)
+    private String latitude;
 
     @OneToOne(fetch =FetchType.LAZY)
     private Accept accept;
@@ -50,6 +59,9 @@ public class Request extends JpaBaseEntity{
         this.exectime=this.parseStringDate(exectime);
         this.address=address;
         this.content=content;
+        this.category=RequestCategory.UNDIFINED;
+        this.longitude="";
+        this.latitude="";
     }
 
     public Request(User user, LocalDateTime exectime, String address, String content){
@@ -58,6 +70,9 @@ public class Request extends JpaBaseEntity{
         this.exectime=exectime;
         this.address=address;
         this.content=content;
+        this.category=RequestCategory.UNDIFINED;
+        this.longitude="";
+        this.latitude="";
     }
 
     public Request(User user, RequestDTO requestDTO){
@@ -66,6 +81,9 @@ public class Request extends JpaBaseEntity{
         this.exectime=this.parseStringDate(requestDTO.getExectime());
         this.address=requestDTO.getAddress();
         this.content=requestDTO.getContent();
+        this.category=RequestCategory.UNDIFINED;
+        this.longitude="";
+        this.latitude="";
     }
 
     //---연관관계 메서드---

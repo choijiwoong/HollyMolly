@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
@@ -50,13 +51,6 @@ public class RequestService {
     public List<Request> findByStatus(RequestStatus requestStatus){
         return requestRepository.findByStatus(requestStatus);
     }
-
-    public HashMap<Long, String> findKakaomapList(){
-        List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
-        Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
-        return new HashMap<Long, String>(kakaomapList);
-    }
-
     public List<Request> findAll(){
         return requestRepository.findAll();
     }
@@ -84,4 +78,19 @@ public class RequestService {
         Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent());
         this.join(request);
     }
+
+    public HashMap<Long, String> findKakaomapList(){
+        List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
+        Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
+        return new HashMap<Long, String>(kakaomapList);
+    }
+
+    /*public HashMap<Long, String> nearVolun(LocationDTO locationDTO){
+        List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
+        ArrayList<Double> distances=new ArrayList<Double>();
+        for(Request request: requests){
+            distances.add(Math.sqrt(Math.pow(Long.parseLong(request.getLatitude())-Long.parseLong(locationDTO.getLatitude()), 2)+
+                    Math.pow(Long.parseLong(request.getLongitude())-Long.parseLong(locationDTO.getLongitude()), 2));
+        }
+    }*/
 }

@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -46,25 +45,25 @@ public class LoginController {
             return "members/login";
         }
         //로그인 성공시
-        response.addCookie(registerCookie(user.get().getId()));
+        response.addCookie(userService.createCookie(user.get().getId()));
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
     }
 
     @GetMapping("/members/logout")
     public String logout(HttpServletResponse response){
-        response.addCookie(registerCookie(null));
+        response.addCookie(userService.createCookie(null));
         return "redirect:/";
     }
 
     @GetMapping("/admin")
     public String test(HttpServletResponse response){
         //기존 쿠키 제거
-        response.addCookie(registerCookie(null));
+        response.addCookie(userService.createCookie(null));
         //어드민 정보 생성
         User admin=new User("admin", "a", "a", "a", "a");
         userService.join(admin);
         //어드민 쿠키 등록
-        response.addCookie(registerCookie(admin.getId()));
+        response.addCookie(userService.createCookie(admin.getId()));
 
         return "redirect:/";
     }
@@ -114,11 +113,5 @@ public class LoginController {
         }
         */
         return true;
-    }
-
-    private Cookie registerCookie(Long id){
-        Cookie idCookie=new Cookie("userId", id==null?null:String.valueOf(id));
-        idCookie.setPath("/");
-        return idCookie;
     }
 }

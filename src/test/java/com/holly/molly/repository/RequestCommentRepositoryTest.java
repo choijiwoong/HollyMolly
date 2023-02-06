@@ -36,7 +36,7 @@ class RequestCommentRepositoryTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestRepository.save(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -55,7 +55,7 @@ class RequestCommentRepositoryTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestRepository.save(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -75,7 +75,7 @@ class RequestCommentRepositoryTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userRepository.save(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestRepository.save(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");

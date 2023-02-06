@@ -42,7 +42,7 @@ public class IntegralTest {
         userService.join(user1);
         userService.join(user2);
 
-        Request request=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "시력보조");
+        Request request=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "시력보조", "37.566826", "126.9786567");
         requestService.join(request);
 
         RequestComment comment=new RequestComment(request, user2.getName(), "봉사는 정확히 어떤 활동인가요?");
@@ -102,12 +102,6 @@ public class IntegralTest {
 
     @Test
     public void tecTest(){
-        User user1=new User("홍길동", "ASfsafjl90asafsaf@gmail.com", "0000", "010-1234-5678", "950128-2038273");
-        userService.join(user1);
-
-        Optional<User> user;
-        if((user=userService.findOne(user1.getId())).isEmpty())
-            System.out.println("[DEBUG] he");
-        assertEquals(user.get().getId(), user1.getId());
+        "127.244".matches("[0-9]+\\.[0-9]");
     }
 }

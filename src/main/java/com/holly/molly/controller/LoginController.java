@@ -1,16 +1,20 @@
 package com.holly.molly.controller;
 
+import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.LoginDTO;
+import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.UserDTO;
 import com.holly.molly.domain.User;
+import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -46,8 +50,11 @@ public class LoginController {
         }
         //로그인 성공시
         response.addCookie(userService.createCookie(user.get().getId()));
+
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
     }
+
+
 
     @GetMapping("/members/logout")
     public String logout(HttpServletResponse response){

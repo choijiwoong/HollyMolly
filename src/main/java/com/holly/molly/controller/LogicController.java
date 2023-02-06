@@ -1,6 +1,8 @@
 package com.holly.molly.controller;
 
 import com.holly.molly.DTO.CommentDTO;
+import com.holly.molly.DTO.LocationDTO;
+import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
@@ -53,9 +55,8 @@ public class LogicController {
     }
 
     @GetMapping("/kakaomap")
-    public String showMap(Model model, @CookieValue(value = "userId", required = false) Cookie cookie) {
-        HashMap<Long, String> kakaomapList = requestService.findKakaomapList();
-
+    public String showMap(Model model, @CookieValue(value = "userId", required = false) Cookie cookie, @CookieValue(value = "latitude", required = false) Cookie cookie2, @CookieValue(value = "longitude", required = false) Cookie cookie3) {
+        HashMap<Long, String> kakaomapList = requestService.findKakaomapList();//requestId, address
         ArrayList<Long> ids=new ArrayList<>();
         ArrayList<String> addresses=new ArrayList<>();
         for(Map.Entry<Long, String> mapElement: kakaomapList.entrySet()){
@@ -63,18 +64,11 @@ public class LogicController {
             addresses.add(mapElement.getValue());
         }
 
-        model.addAttribute("addresses", addresses);
-        model.addAttribute("ids", ids);
-        model.addAttribute("userName", userService.parseUserCookie(cookie).getName());
-        model.addAttribute("requests", requestService.findByStatus(RequestStatus.REGISTER));
+        List<NearRequestListElementDTO> nearVoluns=requestService.nearVolun(new LocationDTO(cookie2.getValue(), cookie2.getValue()), 10);
+        model.addAttribute("nearVoluns", nearVoluns);
+        model.addAttribute("addresses", addresses);//kakaomap에 마크표시위함
+        model.addAttribute("ids", ids);//kakaomap에 마크표시위함
         return "apis/kakaoMap";
-    }
-
-    @ResponseBody
-    @RequestMapping("/getNearVolun")
-    public String valueTest(){
-        String value = "테스트 String";
-        return value;
     }
 
     @GetMapping("/volun/detailRequest/{requestid}")

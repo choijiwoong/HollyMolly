@@ -53,26 +53,26 @@ public class Request extends JpaBaseEntity{
     @OneToMany(mappedBy = "request")
     private List<RequestComment> comments=new ArrayList<>();
 
-    public Request(User user, String exectime, String address, String content){
+    public Request(User user, String exectime, String address, String content, String latitude, String longitude){
         this.connectUser(user);
         this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(exectime);
         this.address=address;
         this.content=content;
         this.category=RequestCategory.UNDIFINED;
-        this.longitude="";
-        this.latitude="";
+        this.longitude=latitude;
+        this.latitude=longitude;
     }
 
-    public Request(User user, LocalDateTime exectime, String address, String content){
+    public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude){
         this.connectUser(user);
         this.status=RequestStatus.REGISTER;
         this.exectime=exectime;
         this.address=address;
         this.content=content;
         this.category=RequestCategory.UNDIFINED;
-        this.longitude="";
-        this.latitude="";
+        this.longitude=longitude;
+        this.latitude=latitude;
     }
 
     public Request(User user, RequestDTO requestDTO){
@@ -82,8 +82,8 @@ public class Request extends JpaBaseEntity{
         this.address=requestDTO.getAddress();
         this.content=requestDTO.getContent();
         this.category=RequestCategory.UNDIFINED;
-        this.longitude="";
-        this.latitude="";
+        this.longitude=requestDTO.getLongitude();
+        this.latitude=requestDTO.getLatitude();
     }
 
     //---연관관계 메서드---

@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor
 public class LocationDTO {
-    String Longitude;
-    String Latitude;
+    String longitude;
+    String latitude;
 }

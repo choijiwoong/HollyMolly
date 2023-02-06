@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter @AllArgsConstructor
 public class RequestDTO {
     private String exectime;
     private String address;
     private String content;
+    private String longitude;
+    private String latitude;
 }

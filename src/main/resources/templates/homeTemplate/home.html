@@ -172,3 +172,34 @@
 
 </html>
 
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0b2461641fe36bfad41a885e385288f&libraries=services"></script>
+
+<script th:inline="javascript">
+	function nearVolunGPS() {//kakaoAPI사용여부 체크
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(sendLatLng);
+		} else {
+			loc.innerHTML = "이 문장은 사용자의 웹 브라우저가 Geolocation API를 지원하지 않을 때 나타납니다!";
+		}
+	}
+
+	function sendLatLng(position) {
+	    let form={//현위치 불러오기
+	        longitude: position.coords.longitude,
+	        latitude: position.coords.latitude
+	    }
+           alert("well");
+	     $.ajax({//현위치 전송
+            url: "sendLocLat",
+            type: "POST",
+            data: form,
+            success: function(data){
+                $('#result').text(data);//이후 과정 추가 필요
+            },
+            error: function(){
+                alert("ajax err send GPSinfo to controller");//*********보안사항******
+            }
+        });
+	}
+    nearVolunGPS();
+</script>

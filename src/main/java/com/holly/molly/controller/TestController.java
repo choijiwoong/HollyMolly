@@ -39,8 +39,14 @@ public class TestController {
         idCookie.setPath("/");
         response.addCookie(idCookie);
 
-        Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l).toString(), "서울시 서초구 방배동", "test");
+        Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l), "서울시 서초구 방배동", "test", "37.566826", "126.9786567");
         requestService.join(request);
+
+        Request request2=new Request(admin, LocalDateTime.now().plusDays(3l), "서울시 강남구", "test", "37.566826", "126.9786567");
+        requestService.join(request2);
+
+        Request request3=new Request(admin, LocalDateTime.now().plusDays(5l), "서울시 용산구", "test", "37.566826", "126.9786567");
+        requestService.join(request3);
 
         Accept accept=new Accept(admin2, request);
         acceptService.join(accept);

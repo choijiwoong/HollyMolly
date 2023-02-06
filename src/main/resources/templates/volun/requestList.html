@@ -18,6 +18,8 @@
                         <th>봉사날짜</th>
                         <th>요청내용</th>
                         <th>요청시간</th>
+                        <th>lng</th>
+                        <th>lat</th>
                         <th>수락</th>
                     </tr>
                 </thead>
@@ -30,6 +32,8 @@
                         <td th:text="${request.exectime}"></td>
                         <td th:text="${request.content}"></td>
                         <td th:text="${request.createdDate}"></td>
+                        <td th:text="${request.longitude}"></td>
+                        <td th:text="${request.latitude}"></td>
                         <td>
                             <a href="#" th:href="@{/volun/accept/{requestid} (requestid=${request.id})}"
                        class="btn btn-primary" role="button">수락하기</a>

@@ -7,7 +7,28 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
-    <div id="map" style="width:750px;height:350px;"></div>
+    <div class="container">
+        <h2>실시간 도와줘!</h2>
+        <p><img src="/images/m1.png" width="auto" height="30"/>재능기부(20p) <img src="/images/m2.png" width="auto" height="30"/>청소봉사(40p) <img src="/images/m3.png" width="auto" height="30"/>동물관련 봉사(15p)</p>
+        <div class="row">
+            <div class="col-sm-7">
+                <div id="map" style="width:750px;height:350px;"></div>
+            </div>
+
+            <div class="col-sm-5">
+                <table class="table table-striped">
+                    <tbody>
+                    <tr th:each="request : ${nearVoluns}">
+                        <td th:text="${request.address}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <p id="myLocation">djhfd</p>
+    <button onclick="">현위치 기준 인근 봉사정보 불러오기</button>
 
     <div th:replace="fragments/footer :: footer" />
 </div>

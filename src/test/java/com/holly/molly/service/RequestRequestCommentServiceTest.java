@@ -42,7 +42,7 @@ class RequestRequestCommentServiceTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestService.join(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -61,7 +61,7 @@ class RequestRequestCommentServiceTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestService.join(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -81,7 +81,7 @@ class RequestRequestCommentServiceTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestService.join(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -101,7 +101,7 @@ class RequestRequestCommentServiceTest {
         User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567");
         requestService.join(request);
 
         RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
@@ -126,7 +126,7 @@ class RequestRequestCommentServiceTest {
         User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
 
-        Request request=new Request(user1, "2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사");
+        Request request=new Request(user1, "2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         User user2=new User("user2","user2@gmail.com","1234","010-0010-0000","100000-0000000");

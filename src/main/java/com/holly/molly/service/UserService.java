@@ -71,4 +71,10 @@ public class UserService {
         }
         return userInfo.get();
     }
+
+    public Cookie createCookie(Long id){
+        Cookie idCookie=new Cookie("userId", id==null?null:String.valueOf(id));
+        idCookie.setPath("/");
+        return idCookie;
+    }
 }

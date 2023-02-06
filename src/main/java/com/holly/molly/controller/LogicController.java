@@ -1,11 +1,14 @@
 package com.holly.molly.controller;
 
 import com.holly.molly.DTO.CommentDTO;
+import com.holly.molly.DTO.LocationDTO;
+import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
+import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +23,7 @@ public class LogicController {
     private final RequestService requestService;
     private final AcceptService acceptService;
     private final RequestCommentService requestCommentService;
+    private final UserService userService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest() {
@@ -51,9 +55,8 @@ public class LogicController {
     }
 
     @GetMapping("/kakaomap")
-    public String showMap(Model model) {
-        HashMap<Long, String> kakaomapList = requestService.findKakaomapList();
-
+    public String showMap(Model model, @CookieValue(value = "userId", required = false) Cookie cookie, @CookieValue(value = "latitude", required = false) Cookie cookie2, @CookieValue(value = "longitude", required = false) Cookie cookie3) {
+        HashMap<Long, String> kakaomapList = requestService.findKakaomapList();//requestId, address
         ArrayList<Long> ids=new ArrayList<>();
         ArrayList<String> addresses=new ArrayList<>();
         for(Map.Entry<Long, String> mapElement: kakaomapList.entrySet()){
@@ -61,8 +64,10 @@ public class LogicController {
             addresses.add(mapElement.getValue());
         }
 
-        model.addAttribute("addresses", addresses);
-        model.addAttribute("ids", ids);
+        List<NearRequestListElementDTO> nearVoluns=requestService.nearVolun(new LocationDTO(cookie2.getValue(), cookie2.getValue()), 10);
+        model.addAttribute("nearVoluns", nearVoluns);
+        model.addAttribute("addresses", addresses);//kakaomap에 마크표시위함
+        model.addAttribute("ids", ids);//kakaomap에 마크표시위함
         return "apis/kakaoMap";
     }
 

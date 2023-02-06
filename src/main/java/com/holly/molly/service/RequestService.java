@@ -1,5 +1,7 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.LocationDTO;
+import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
@@ -12,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,13 +52,6 @@ public class RequestService {
     public List<Request> findByStatus(RequestStatus requestStatus){
         return requestRepository.findByStatus(requestStatus);
     }
-
-    public HashMap<Long, String> findKakaomapList(){
-        List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
-        Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
-        return new HashMap<Long, String>(kakaomapList);
-    }
-
     public List<Request> findAll(){
         return requestRepository.findAll();
     }
@@ -81,7 +76,67 @@ public class RequestService {
     @Transactional
     public void SrvCreateRequest(Cookie cookie, RequestDTO requestDTO) {
         User userInfo = userService.parseUserCookie(cookie);
-        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent());
+        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent(), requestDTO.getLatitude(), requestDTO.getLongitude());
         this.join(request);
+    }
+
+    public HashMap<Long, String> findKakaomapList(){
+        List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
+        Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
+        return new HashMap<Long, String>(kakaomapList);
+    }
+
+    public List<NearRequestListElementDTO> nearVolun(LocationDTO locationDTO, Integer pageSize){//위치정보, 페이지정부
+        List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
+        checkIsLocation(locationDTO);//LocationDTO유효성 체크(String티입이기에)
+
+        //해당 위치(locationDTO)로 부터 모든 request 위치의 거리 저장(페이지 결과 거리). ****requests와 distaces의 인덱스는 동일한 request의 정보를 의미한다****
+        ArrayList<Double> distances=getDistance(requests, locationDTO);
+
+        Stream<Request> sortResults=requests.stream().sorted(new Comparator<Request>() {//거리가 적은 순서대로 정렬
+            @Override
+            public int compare(Request o1, Request o2) {
+                Double dis1=Math.sqrt(Math.pow(Long.parseLong(o1.getLatitude())-Long.parseLong(locationDTO.getLatitude()), 2)+
+                        Math.pow(Long.parseLong(o1.getLongitude())-Long.parseLong(locationDTO.getLongitude()), 2));
+                Double dis2=Math.sqrt(Math.pow(Long.parseLong(o2.getLatitude())-Long.parseLong(locationDTO.getLatitude()), 2)+
+                        Math.pow(Long.parseLong(o2.getLongitude())-Long.parseLong(locationDTO.getLongitude()), 2));
+                if(dis1<dis2)
+                    return -1;
+                if(dis1>dis2)
+                    return 1;
+                return 0;
+            }
+        });
+
+        ArrayList<NearRequestListElementDTO> results=new ArrayList<NearRequestListElementDTO>();//반환 결과를 저장할 컨테이너.(거리정보가 포함된 새로운 requestDTO를 반환)
+        sortResults.toList().subList(0, (int) Math.min(sortResults.count(), pageSize)).stream().map(
+                request->results.add(
+                        new NearRequestListElementDTO(request.getId(), distances.get(requests.indexOf(request)), request.getAddress())
+                ));
+        return results.stream().toList();
+    }
+
+    private ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {
+        ArrayList<Double> distances=new ArrayList<Double>();
+
+        for(Request request: requests){
+            distances.add(Math.sqrt(Math.pow(Long.parseLong(request.getLatitude())-Long.parseLong(locationDTO.getLatitude()), 2)+
+                    Math.pow(Long.parseLong(request.getLongitude())-Long.parseLong(locationDTO.getLongitude()), 2)));
+        }
+        return distances;
+    }
+
+    private void checkIsLocation(LocationDTO locationDTO) {//lat 37.5381311 lng 126.9136286
+        String longitude= locationDTO.getLongitude();
+        String latitude=locationDTO.getLatitude();
+        if(latitude.isEmpty() || longitude.isEmpty())
+            throw new RuntimeException("locationDTO is empty");
+
+        try {
+            longitude.matches("[0-9]+\\.[0-9]");
+            latitude.matches("[0-9]+\\.[0-9]");
+        } catch(Exception e){
+            throw new RuntimeException("locationDTO's info has wrong format");
+        }
     }
 }

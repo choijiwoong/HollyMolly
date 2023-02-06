@@ -1,5 +1,7 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.LocationDTO;
+import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,11 +43,11 @@ class RequestServiceTest {
 
         LocalDateTime time=LocalDateTime.now().plusDays(1l);
 
-        Request request=new Request(user, time, "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
-        Request request2=new Request(user, time, "서울시 서초구 방배동", "교육봉사");
+        Request request2=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
 
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class,
@@ -58,7 +61,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
@@ -71,7 +74,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
@@ -85,7 +88,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
@@ -99,7 +102,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
@@ -113,7 +116,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
         //when
@@ -128,7 +131,7 @@ class RequestServiceTest {
         userService.join(user);
 
         Cookie cookie=new Cookie("userId", String.valueOf(user.getId()));
-        RequestDTO requestDTO=new RequestDTO("2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사");
+        RequestDTO requestDTO=new RequestDTO("2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사", "37.566826", "126.9786567");
 
         //when
         requestService.SrvCreateRequest(cookie, requestDTO);
@@ -136,5 +139,12 @@ class RequestServiceTest {
         //then
         assertEquals(requestService.findAll().size(),1);
         assertEquals(requestService.findAll().stream().findFirst().get().getUserR().getId(), user.getId());
+    }
+
+
+    @Test
+    void nearVolun(){//LocationDTO locationDTO, Integer pageSize){
+
+        //List<NearRequestListElementDTO>
     }
 }

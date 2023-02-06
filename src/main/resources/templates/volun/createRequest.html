@@ -17,6 +17,8 @@
                 <div class="card-header">주소(아래의 지도에서 마커로 표시해주세요)</div>
                 <input type="text" id="location" name="location" placeholder="검색할 주소를 입력해주세요", style="width:300px;"><button type="button" onclick="searchByAddress()">검색</button>
                 <input type="text" id="address" name="address" placeholder="주소", style="width:300px;"/>
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
                 <div id="map" style="width:750px;height:350px;"></div>
             </div>
 
@@ -55,14 +57,21 @@ var geocoder = new kakao.maps.services.Geocoder();
 
 // 지도클릭시 마커생성
 kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    // 클릭한 위도, 경도 정보를 가져옵니다
+    var latlng = mouseEvent.latLng;
+    var buffer=document.getElementById("latitude");
+    buffer.value=latlng.getLat();
+    buffer=document.getElementById("longitude");
+    buffer.value=latlng.getLng();
+
     // 마커를 클릭한 위치에 표시합니다
     marker.setPosition(mouseEvent.latLng);
     marker.setMap(map);
 
     geocoder.coord2Address(marker.getPosition().getLng(), marker.getPosition().getLat(), function(result, status) {
         if (status === kakao.maps.services.Status.OK) {
-            var buffer=document.getElementById("address");
-            buffer.value=result[0].road_address.address_name;
+            buffer=document.getElementById("address");
+            buffer.value=result[0].address.address_name;
             alert("위치가 설정되었습니다!");
         }
     });

@@ -65,6 +65,7 @@ public class UserService {
         return;
     }
 
+    //-----서비스로직------
     public User parseUserCookie(Cookie cookie) {
         Optional<User> userInfo = this.findOne(Long.valueOf(cookie.getValue()));
         if (userInfo.isEmpty()) {

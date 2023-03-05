@@ -8,7 +8,6 @@ import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
-import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ public class LogicController {
     private final RequestService requestService;
     private final AcceptService acceptService;
     private final RequestCommentService requestCommentService;
-    private final UserService userService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest() {

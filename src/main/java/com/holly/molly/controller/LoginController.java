@@ -2,7 +2,6 @@ package com.holly.molly.controller;
 
 import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.LoginDTO;
-import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.UserDTO;
 import com.holly.molly.domain.User;
 import com.holly.molly.service.RequestService;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
     private final UserService userService;
+    private final RequestService requestService;
     @GetMapping("/members/login")
     public String loginForm(){ return "members/login"; }
 
@@ -53,24 +52,13 @@ public class LoginController {
 
         //GPS정보 캐시 등록
         LocationDTO locationDTO=new LocationDTO(loginDTO.getLongitude(), loginDTO.getLatitude());
-        System.out.println("[DEBUG]: logincontroller에서 logindto를 이용해 가져온 정보 "+locationDTO.getLatitude()+", "+locationDTO.getLongitude());
-        checkIsLocation(locationDTO);
+        if(!requestService.checkIsLocation(locationDTO)){//유효성검사
+            throw new RuntimeException("GPS정보를 읽을 수 없습니다.");
+        }
         response.addCookie(userService.createCookieLng(locationDTO.getLongitude()));
         response.addCookie(userService.createCookieLat(locationDTO.getLatitude()));
 
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
-    }
-    private void checkIsLocation(LocationDTO locationDTO) {//lat 37.5381311 lng 126.9136286
-        String longitude= locationDTO.getLongitude();
-        String latitude=locationDTO.getLatitude();
-        if(latitude.isEmpty() || longitude.isEmpty())
-            throw new RuntimeException("locationDTO is empty");
-        try {
-            longitude.matches("[0-9]+\\.[0-9]");
-            latitude.matches("[0-9]+\\.[0-9]");
-        } catch(Exception e){
-            throw new RuntimeException("locationDTO's info has wrong format");
-        }
     }
 
     @GetMapping("/members/logout")

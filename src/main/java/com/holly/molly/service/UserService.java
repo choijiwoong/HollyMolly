@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.LoginDTO;
 import com.holly.molly.domain.User;
 import com.holly.molly.repository.UserRepository;
@@ -77,4 +78,17 @@ public class UserService {
         idCookie.setPath("/");
         return idCookie;
     }
+
+    public Cookie createCookieLat(String latitude){
+        Cookie idCookie=new Cookie("latitude", latitude);
+        idCookie.setPath("/");
+        return idCookie;
+    }
+
+    public Cookie createCookieLng(String longitude){
+        Cookie idCookie=new Cookie("longitude", longitude);
+        idCookie.setPath("/");
+        return idCookie;
+    }
+
 }

@@ -8,4 +8,7 @@ import lombok.Setter;
 public class LoginDTO {
     private String email;
     private String password;
+
+    private String latitude;
+    private String longitude;
 }

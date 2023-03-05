@@ -18,17 +18,14 @@
             <div class="col-sm-5">
                 <table class="table table-striped">
                     <tbody>
-                    <tr th:each="request : ${nearVoluns}">
-                        <td th:text="${request.address}"></td>
-                    </tr>
+                        <tr th:each="nearRequestListElementDTO : ${nearVoluns}">
+                            <td th:text="${nearRequestListElementDTO.address}"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-    <p id="myLocation">djhfd</p>
-    <button onclick="">현위치 기준 인근 봉사정보 불러오기</button>
 
     <div th:replace="fragments/footer :: footer" />
 </div>
@@ -67,7 +64,6 @@ function showMarkers(){
 		            map: map, // 마커를 표시할 지도
 		            position: location,
 	            });
-
 
 	            //인포윈도우 생성
                 var infowindow = new kakao.maps.InfoWindow({

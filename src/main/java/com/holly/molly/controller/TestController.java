@@ -5,8 +5,12 @@ import com.holly.molly.service.AcceptService;
 import com.holly.molly.service.RequestService;
 import com.holly.molly.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +29,12 @@ public class TestController {
         Cookie prevCookie=new Cookie("userId", null);
         prevCookie.setPath("/");
         response.addCookie(prevCookie);
+        Cookie prevCookie1=new Cookie("latitude", null);
+        prevCookie1.setPath("/");
+        response.addCookie(prevCookie1);
+        Cookie prevCookie2=new Cookie("longitude", null);
+        prevCookie2.setPath("/");
+        response.addCookie(prevCookie2);
 
         //어드민 정보 생성
         User admin=new User("admin", "gogogi313@gmail.com", "a", "a", "a");
@@ -38,6 +48,9 @@ public class TestController {
         Cookie idCookie=new Cookie("userId", String.valueOf(admin.getId()));
         idCookie.setPath("/");
         response.addCookie(idCookie);
+        //유저위치 쿠키 등록
+        response.addCookie(userService.createCookieLng("37.23"));
+        response.addCookie(userService.createCookieLat("127.212"));
 
         Request request=new Request(admin, LocalDateTime.now().plusMinutes(1l), "서울시 서초구 방배동", "test", "37.566826", "126.9786567");
         requestService.join(request);

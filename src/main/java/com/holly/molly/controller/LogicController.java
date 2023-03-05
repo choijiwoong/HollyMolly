@@ -64,7 +64,7 @@ public class LogicController {
             addresses.add(mapElement.getValue());
         }
 
-        List<NearRequestListElementDTO> nearVoluns=requestService.nearVolun(new LocationDTO(cookie2.getValue(), cookie2.getValue()), 10);
+        List<NearRequestListElementDTO> nearVoluns=requestService.nearVolun(new LocationDTO(cookie2.getValue(), cookie3.getValue()), 10);
         model.addAttribute("nearVoluns", nearVoluns);
         model.addAttribute("addresses", addresses);//kakaomap에 마크표시위함
         model.addAttribute("ids", ids);//kakaomap에 마크표시위함

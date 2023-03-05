@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -88,7 +88,9 @@ public class RequestService {
 
     public List<NearRequestListElementDTO> nearVolun(LocationDTO locationDTO, Integer pageSize){//위치정보, 페이지정부
         List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
-        checkIsLocation(locationDTO);//LocationDTO유효성 체크(String티입이기에)
+        if(!checkIsLocation(locationDTO)) {//LocationDTO유효성 체크.
+            return new ArrayList<NearRequestListElementDTO>();
+        }
 
         //해당 위치(locationDTO)로 부터 모든 request 위치의 거리 저장(페이지 결과 거리). ****requests와 distaces의 인덱스는 동일한 request의 정보를 의미한다****
         ArrayList<Double> distances=getDistance(requests, locationDTO);
@@ -109,7 +111,7 @@ public class RequestService {
         }).toList();
 
         ArrayList<NearRequestListElementDTO> results=new ArrayList<NearRequestListElementDTO>();//반환 결과를 저장할 컨테이너.(거리정보가 포함된 새로운 requestDTO를 반환)
-        for(Request request: sortResults){
+        for(Request request: sortResults.subList(0, Math.min(pageSize, sortResults.size()))){
             results.add(new NearRequestListElementDTO(
                     request.getId(), distances.get(requests.indexOf(request)), request.getAddress()
             ));
@@ -127,17 +129,19 @@ public class RequestService {
         return distances;
     }
 
-    private void checkIsLocation(LocationDTO locationDTO) {//lat 37.5381311 lng 126.9136286
+    public Boolean checkIsLocation(LocationDTO locationDTO) {//lat 37.5381311 lng 126.9136286
         String longitude= locationDTO.getLongitude();
         String latitude=locationDTO.getLatitude();
         if(longitude.isEmpty() || latitude.isEmpty())
-            throw new NumberFormatException("locationDTO is empty");
+            return false;
 
         try {
-            longitude.matches("[0-9]+\\.[0-9]");
-            latitude.matches("[0-9]+\\.[0-9]");
-        } catch(Exception e){
-            throw new RuntimeException("locationDTO's info has wrong format");
+            Double.parseDouble(longitude);
+            Double.parseDouble(latitude);
+        } catch(NumberFormatException e){
+            return false;
         }
+
+        return true;
     }
 }

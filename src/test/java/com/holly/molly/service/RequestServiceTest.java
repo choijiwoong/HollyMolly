@@ -144,7 +144,55 @@ class RequestServiceTest {
 
     @Test
     void nearVolun(){//LocationDTO locationDTO, Integer pageSize){
+        //given
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user1);
+        Request request1=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786557");
+        requestService.join(request1);
 
-        //List<NearRequestListElementDTO>
+        User user2=new User("user12","user2@gmail.com","1234","010-0020-0000","000200-0000000");
+        userService.join(user2);
+        Request request2=new Request(user2, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.564826", "126.9756567");
+        requestService.join(request2);
+
+        User user3=new User("user3","user3@gmail.com","1234","010-0300-0000","300000-0000000");
+        userService.join(user3);
+        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557");
+        requestService.join(request3);
+
+        //when
+        List<NearRequestListElementDTO> results=requestService.nearVolun(new LocationDTO("126.9786557", "37.566826"), 2);
+        List<NearRequestListElementDTO> results2=requestService.nearVolun(new LocationDTO("126.9786557", "37.566826"), 10);
+        //then
+        assertEquals(results.size(), 2);
+        assertEquals(results.get(0).getId(), request1.getId());
+        assertEquals(results.get(1).getId(), request2.getId());
+        assertEquals(results2.size(), 3);
+
+    }
+
+    @Test
+    void checkIsLocation(){
+        //given
+        LocationDTO correctDTO=new LocationDTO("127.13213", "37.55");
+
+        LocationDTO wrongDTO1=new LocationDTO("127.13213", "safsag");
+        LocationDTO wrongDTO2=new LocationDTO("asfsaf", "37.55");
+        LocationDTO wrongDTO3=new LocationDTO("fagaf", "afgdfg");
+
+        LocationDTO wrongDTO4=new LocationDTO("", "37.55");
+        LocationDTO wrongDTO5=new LocationDTO("127.165", "");
+        LocationDTO wrongDTO6=new LocationDTO("", "");
+
+        //when-then
+        assertTrue(requestService.checkIsLocation(correctDTO));
+
+        assertFalse(requestService.checkIsLocation(wrongDTO1));
+        assertFalse(requestService.checkIsLocation(wrongDTO2));
+        assertFalse(requestService.checkIsLocation(wrongDTO3));
+
+        assertFalse(requestService.checkIsLocation(wrongDTO4));
+        assertFalse(requestService.checkIsLocation(wrongDTO5));
+        assertFalse(requestService.checkIsLocation(wrongDTO6));
     }
 }

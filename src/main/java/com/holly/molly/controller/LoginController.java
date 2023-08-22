@@ -53,7 +53,6 @@ public class LoginController {
 
         //GPS정보 캐시 등록
         LocationDTO locationDTO=new LocationDTO(loginDTO.getLongitude(), loginDTO.getLatitude());
-        System.out.println("[tlqkf] 유저 위치: "+locationDTO.toString());
         if(!requestService.checkIsLocation(locationDTO)){//유효성검사
             throw new RuntimeException("GPS정보를 읽을 수 없습니다.");
         }

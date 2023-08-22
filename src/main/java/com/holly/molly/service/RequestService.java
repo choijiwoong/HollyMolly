@@ -1,5 +1,6 @@
 package com.holly.molly.service;
 
+import com.holly.molly.DTO.EmergencyDTO;
 import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 public class RequestService {
     private final RequestRepository requestRepository;
     private final UserService userService;
+
+    private final MailService mailService;
 
     private final Double DISTANCE_FIX=133.33;
     //********************DB************************

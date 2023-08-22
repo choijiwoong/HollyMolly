@@ -73,5 +73,13 @@ public class Accept extends JpaBaseEntity{
         if(status.equals(AcceptStatus.REVIEWD)){
             this.status=AcceptStatus.REVIEWD;
         }
+
+        if(status.equals(AcceptStatus.RUNNING)){
+            this.status=AcceptStatus.RUNNING;
+        }
+
+        if(status.equals(AcceptStatus.EMERGENCY)){
+            this.status=AcceptStatus.EMERGENCY;
+        }
     }
 }

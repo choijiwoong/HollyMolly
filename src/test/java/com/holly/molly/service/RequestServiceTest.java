@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -141,6 +142,25 @@ class RequestServiceTest {
         assertEquals(requestService.findAll().stream().findFirst().get().getUserR().getId(), user.getId());
     }
 
+    @Test
+    void getDistance(){
+        //given
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user);
+
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        requestService.join(request);
+
+        LocationDTO currentLocation=new LocationDTO("37.529231", "126.929244");
+
+        //when
+        ArrayList<Double> results=requestService.getDistance(requestService.findAll(), currentLocation);
+
+        //then
+        assertEquals(results.size(), 1);
+        System.out.println("[DEBUG] "+results.get(0));
+        assertTrue(results.get(0)<8.5 && results.get(0)>7.5);
+    }
 
     @Test
     void nearVolun(){//LocationDTO locationDTO, Integer pageSize){

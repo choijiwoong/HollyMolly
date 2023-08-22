@@ -151,15 +151,14 @@ class RequestServiceTest {
         Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
         requestService.join(request);
 
-        LocationDTO currentLocation=new LocationDTO("37.529231", "126.929244");
+        LocationDTO currentLocation=new LocationDTO("126.929244", "37.529231");
 
         //when
         ArrayList<Double> results=requestService.getDistance(requestService.findAll(), currentLocation);
 
         //then
         assertEquals(results.size(), 1);
-        System.out.println("[DEBUG] "+results.get(0));
-        assertTrue(results.get(0)<8.5 && results.get(0)>7.5);
+        assertTrue(results.get(0)<8.5 && results.get(0)>7.5);// 대충 8키로가 나옴. +-0.5로 오차범위
     }
 
     @Test

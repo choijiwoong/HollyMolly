@@ -24,7 +24,7 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final UserService userService;
 
-    private final Double DISTANCE_FIX=15.9493;
+    private final Double DISTANCE_FIX=133.33;
     //********************DB************************
     @Transactional
     public Long join(Request request){
@@ -112,7 +112,7 @@ public class RequestService {
             }
         }).toList();
 
-        ArrayList<NearRequestListElementDTO> results=new ArrayList<NearRequestListElementDTO>();//반환 결과를 저장할 컨테이너.(거리정보가 포함된 새로운 requestDTO를 반환)
+        ArrayList<NearRequestListElementDTO> results= new ArrayList<>();//반환 결과를 저장할 컨테이너.(거리정보가 포함된 새로운 requestDTO를 반환)
         for(Request request: sortResults.subList(0, Math.min(pageSize, sortResults.size()))){
             results.add(new NearRequestListElementDTO(
                     request.getId(), distances.get(requests.indexOf(request)), request.getAddress()
@@ -125,8 +125,8 @@ public class RequestService {
         ArrayList<Double> distances=new ArrayList<Double>();
 
         for(Request request: requests){
-            distances.add(Math.sqrt(Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
-                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2))/DISTANCE_FIX);
+            distances.add(DISTANCE_FIX * Math.sqrt(Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
+                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)));
         }
         return distances;
     }

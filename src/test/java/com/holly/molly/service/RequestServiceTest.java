@@ -3,6 +3,7 @@ package com.holly.molly.service;
 import com.holly.molly.DTO.LocationDTO;
 import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
+import com.holly.molly.domain.Accept;
 import com.holly.molly.domain.Request;
 import com.holly.molly.domain.RequestStatus;
 import com.holly.molly.domain.User;

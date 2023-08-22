@@ -6,6 +6,7 @@ import com.holly.molly.DTO.NearRequestListElementDTO;
 import com.holly.molly.DTO.RequestDTO;
 import com.holly.molly.domain.*;
 import com.holly.molly.service.AcceptService;
+import com.holly.molly.service.AsyncService;
 import com.holly.molly.service.RequestCommentService;
 import com.holly.molly.service.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class LogicController {
     private final RequestService requestService;
     private final AcceptService acceptService;
     private final RequestCommentService requestCommentService;
+    private final AsyncService asyncService;
 
     @GetMapping("/volun/createRequest")
     public String createRequest() {
@@ -80,5 +82,11 @@ public class LogicController {
     public String makeCommentRequest(@CookieValue(value = "userId", required = false) Cookie cookie, CommentDTO commentDTO, Model model) {
         model.addAttribute("request", requestCommentService.SrvCreateRequestComment(cookie, commentDTO));
         return "volun/detailRequest";
+    }
+
+    @GetMapping("/request/emergency/{requestId}")
+    public String emergency(@PathVariable("requestId") Long requestId){
+        asyncService.emergency(requestId);
+        return "redirect:/";
     }
 }

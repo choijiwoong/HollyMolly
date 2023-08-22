@@ -72,6 +72,13 @@ class AsyncServiceTest {
     }
 
     @Test
+    void checkRunning(){
+        //given
+        //when
+        //then
+    }
+
+    @Test
     void checkComplete() {//exectime이 지나면 complete처리
         //given
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
@@ -87,8 +94,12 @@ class AsyncServiceTest {
         acceptService.join(accept);
 
         //when
-        request.setExectime(LocalDateTime.now().minusDays(1l));//시간이 지난 경우를 가정
+        request.setExectime(LocalDateTime.now().minusHours(3l));//시간이 한참지났는데
+        request.changeStatus(RequestStatus.RUNNING);//아직 봉사중인 경우
+        accept.changeStatus(AcceptStatus.RUNNING);
+        System.out.println("[DEBUG]1 "+request.getStatus()+", "+accept.getStatus());
         asyncService.checkComplete(accept);
+        System.out.println("[DEBUG]4 "+request.getStatus()+", "+accept.getStatus());
 
         //then
         assertEquals(request.getStatus(), RequestStatus.COMPLETE);
@@ -117,7 +128,26 @@ class AsyncServiceTest {
     }
 
     @Test
-    public void checkVolunStart(){
+    void emergency(){
+        //given
+        User user=new User("user1","_@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user);
 
+        Request request=new Request(user, LocalDateTime.now().plusMinutes(1l), "*********테스트중*********", "교육봉사", "37.566826", "126.9786567");
+        requestService.join(request);
+
+        User user2=new User("user2","__@gmail.com","1234","010-0010-0000","100000-0000000");
+        userService.join(user2);
+
+        Accept accept=new Accept(user2, request);
+        acceptService.join(accept);
+
+        //when_이미 시작한 경우에
+        request.setExectime(LocalDateTime.now().minusMinutes(1l));
+        request.changeStatus(RequestStatus.RUNNING);
+        asyncService.emergency(request.getId());
+
+        //then
+        assertEquals(request.getStatus(), RequestStatus.EMERGENCY);
     }
 }

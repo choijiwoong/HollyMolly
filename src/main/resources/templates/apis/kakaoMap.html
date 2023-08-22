@@ -18,8 +18,10 @@
             <div class="col-sm-5">
                 <table class="table table-striped">
                     <tbody>
+                        <th>주소</th> <th>거리km</th>
                         <tr th:each="nearRequestListElementDTO : ${nearVoluns}">
-                            <td th:text="${nearRequestListElementDTO.address}"></td>
+                            <td> <a th:href="@{/volun/detailRequest/{id}(id=${nearRequestListElementDTO.getId()})}" th:text="${nearRequestListElementDTO.address}"></a></td>
+                            <td th:text="${nearRequestListElementDTO.getDistance()}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -98,7 +100,6 @@ function makeOutListener(infowindow) {
         infowindow.close();
     };
 }
-
 
 //<-------------개발도우미------------->
 // 지도에 확대 축소 컨트롤을 생성한다

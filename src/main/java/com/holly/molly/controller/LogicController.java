@@ -52,7 +52,7 @@ public class LogicController {
         return "volun/acceptList";
     }
 
-    @GetMapping("/kakaomap")
+    @GetMapping("/volun")
     public String showMap(Model model, @CookieValue(value = "userId", required = false) Cookie cookie, @CookieValue(value = "latitude", required = false) Cookie cookie2, @CookieValue(value = "longitude", required = false) Cookie cookie3) {
         HashMap<Long, String> kakaomapList = requestService.findKakaomapList();//requestId, address
         ArrayList<Long> ids=new ArrayList<>();
@@ -66,6 +66,7 @@ public class LogicController {
         model.addAttribute("nearVoluns", nearVoluns);
         model.addAttribute("addresses", addresses);//kakaomap에 마크표시위함
         model.addAttribute("ids", ids);//kakaomap에 마크표시위함
+
         return "apis/kakaoMap";
     }
 

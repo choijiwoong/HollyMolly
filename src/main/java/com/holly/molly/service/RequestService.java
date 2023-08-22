@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 public class RequestService {
     private final RequestRepository requestRepository;
     private final UserService userService;
+
+    private final Double DISTANCE_FIX=15.9493;
     //********************DB************************
     @Transactional
     public Long join(Request request){
@@ -119,12 +121,12 @@ public class RequestService {
         return results.stream().toList();
     }
 
-    private ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {
+    public ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {
         ArrayList<Double> distances=new ArrayList<Double>();
 
         for(Request request: requests){
             distances.add(Math.sqrt(Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
-                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)));
+                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2))/DISTANCE_FIX);
         }
         return distances;
     }

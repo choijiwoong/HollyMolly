@@ -20,6 +20,7 @@
                     <tbody>
                         <tr th:each="nearRequestListElementDTO : ${nearVoluns}">
                             <td th:text="${nearRequestListElementDTO.address}"></td>
+                            <td th:text="${nearRequestListElementDTO.getDistance()}"></td>
                         </tr>
                     </tbody>
                 </table>

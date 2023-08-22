@@ -10,3 +10,4 @@ public class NearRequestListElementDTO {
     Double distance;
     String address;
 }
+

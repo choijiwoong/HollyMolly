@@ -66,6 +66,7 @@ public class LogicController {
         model.addAttribute("nearVoluns", nearVoluns);
         model.addAttribute("addresses", addresses);//kakaomap에 마크표시위함
         model.addAttribute("ids", ids);//kakaomap에 마크표시위함
+
         return "apis/kakaoMap";
     }
 

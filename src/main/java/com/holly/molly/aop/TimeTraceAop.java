@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class TimeTraceAop {
+public class TimeTraceAop {//실행속도 측정을 위한 모듈
 
     @Around("execution(* com.holly.molly..*(..))")//molly.service..로 변경시 해당 부분만 AOP가 적용되게 수정이 가능
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable{

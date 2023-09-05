@@ -56,6 +56,7 @@ public class AcceptService {
         if((request=requestService.findOne(requestId)).isEmpty())
             throw new RuntimeException("수락하고자 하는 봉사요청에 대한 정보가 없습니다!");
 
-        this.join(new Accept(userService.parseUserCookie(cookie), request.get()));
+        this.join(new Accept(userService.parseUserCookie(cookie), request.get()));//accept저장이 성공적으로 되면
+        request.get().changeStatus(RequestStatus.ACCEPT);//request의 상태를 변경
     }
 }

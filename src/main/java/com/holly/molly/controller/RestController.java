@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @org.springframework.web.bind.annotation.RestController
-public class RestController {
+public class RestController {//ajax를 이용한 Rest API방식 컨트롤러. 개발중.
     @RequestMapping(value="ajax", method= RequestMethod.POST)
     public ResponseEntity<String> ajaxTest(){
         System.out.println("********work*******");

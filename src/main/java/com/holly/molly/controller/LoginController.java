@@ -20,19 +20,19 @@ import java.util.Optional;
 public class LoginController {
     private final UserService userService;
     private final RequestService requestService;
-    @GetMapping("/members/login")
+    @GetMapping("/members/login")//로그인 폼
     public String loginForm(){ return "members/login"; }
 
-    @GetMapping("/members/register")
+    @GetMapping("/members/register")//회원가입 폼
     public String registerForm(){ return "members/createUser1Form"; }
 
-    @GetMapping("/members/list")
+    @GetMapping("/members/list")//멤버정보 리스트
     public String list(Model model){
         model.addAttribute("users", userService.findAll());
         return "members/memberList";
     }
 
-    @PostMapping("/members/register")
+    @PostMapping("/members/register")//회원가입 POST시 DB저장 및 쿠키 초기화(로그아웃 시 초기화로 충분하지만, 회원가입시 정보 초기화 규칙)
     public String register(HttpServletResponse response, UserDTO userDTO){
         response.addCookie(userService.createCookie(null));
         if(!checkRegisterDTO(userDTO))
@@ -42,7 +42,7 @@ public class LoginController {
         return "redirect:/";
     }
 
-    @PostMapping("/members/login")
+    @PostMapping("/members/login")//로그인 POST 시 확인 후 쿠키등록
     public String login(LoginDTO loginDTO, HttpServletResponse response){
         Optional<User> user;
         if ((user=userService.signUp(loginDTO)).isEmpty()) {//로그인 실패시
@@ -62,34 +62,14 @@ public class LoginController {
         return "redirect:/";//웹브라우저는 종료전까지 회원의 id를 서버에 계속 보내준다.
     }
 
-    @GetMapping("/members/logout")
+    @GetMapping("/members/logout")//로그아웃 쿠키 초기화
     public String logout(HttpServletResponse response){
         response.addCookie(userService.createCookie(null));
         return "redirect:/";
     }
 
-    @GetMapping("/admin")
-    public String test(HttpServletResponse response){
-        //기존 쿠키 제거
-        response.addCookie(userService.createCookie(null));
-        //위경도 쿠기 초기화
-        Cookie idCookie=new Cookie("latitude", null);
-        idCookie.setPath("/");
-        Cookie idCookie2=new Cookie("longitude", null);
-        idCookie2.setPath("/");
-        //어드민 정보 생성
-        User admin=new User("admin", "a", "a", "a", "a");
-        userService.join(admin);
-        //어드민 쿠키 등록
-        response.addCookie(userService.createCookie(admin.getId()));
-        response.addCookie(idCookie);
-        response.addCookie(idCookie2);
-
-        return "redirect:/";
-    }
-
     //<---------내부 함수---------->
-    private boolean checkRegisterDTO(UserDTO userDTO) {
+    private boolean checkRegisterDTO(UserDTO userDTO) {//회원가입 시 입력조건 확인
         /*
         String nameRegex="^[0-9가-힣a-zA-Z]+$";//영문자, 한글 허용(1개이상)
         if(!Pattern.matches(nameRegex, registerDTO.getName())) {
@@ -124,7 +104,7 @@ public class LoginController {
         return true;
     }
 
-    private boolean checkLoginDTO(LoginDTO loginDTO){
+    private boolean checkLoginDTO(LoginDTO loginDTO){//로그인 시 입력조건 확인
         /*
         String emailRegex="\\w+@\\w+\\.\\w+(\\.\\w+)?";
         if(!Pattern.matches(emailRegex, loginDTO.getEmail())) {

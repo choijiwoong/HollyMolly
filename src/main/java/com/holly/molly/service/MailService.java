@@ -19,8 +19,8 @@ public class MailService {
         ArrayList<String> emailBuffer=new ArrayList<String>();
         emailBuffer.add(adminAddress);
         this.sendMail(emailBuffer, "[긴급상황] requestId: "+emergencyDTO.getRequestId(),
-                "[긴급상황 접수]<br/>"+emergencyDTO.getExecTime()+", "+emergencyDTO.getAddress()+"에서 시작한 봉사활동에서 긴급신고가 접수되었습니다<br/>"+
-                "피봉사자 전화번호: "+emergencyDTO.getPhoneUserR()+", 봉사자 전화번호: "+emergencyDTO.getPhoneUserA()+"<br/>"
+                "[긴급상황 접수]"+'\n'+'\n'+emergencyDTO.getExecTime()+", "+emergencyDTO.getAddress()+"봉사활동에서 긴급신고가 접수되었습니다"+'\n'+'\n'+
+                "피봉사자 전화번호: "+emergencyDTO.getPhoneUserR()+'\n'+"봉사자 전화번호: "+emergencyDTO.getPhoneUserA()+'\n'
                 );
     }
 
@@ -30,13 +30,13 @@ public class MailService {
 
             list.add(DTO.getRequsrEmailAddress());//개별로 다른 정보이기에 따로 List형태만 맞추어 1개씩 전송
             this.sendMail(list, "[세모봉] 봉사활동이 바로 다음날이에요!",
-                    "늦지않게 준비해주세요:)<br/>응급상황일 경우에 다음의 링크를 눌러주세요! "+DTO.getEmergencyLink()+"<br/>"
+                    "늦지않게 준비해주세요:)"+'\n'+"응급상황일 경우에 다음의 링크를 눌러주세요! "+DTO.getEmergencyLink()+'\n'
             );
             list.clear();//리스트 비우기(재활용을 위함)
 
             list.add(DTO.getAcqusrEmailAddress());
             this.sendMail(list, "[세모봉] 봉사활동이 바로 다음날이에요!",
-                    "늦지않게 준비해주세요:)<br/>응급상황일 경우에 다음의 링크를 눌러주세요! "+DTO.getEmergencyLink()+"<br/>"
+                    "늦지않게 준비해주세요:)"+'\n'+"응급상황일 경우에 다음의 링크를 눌러주세요! "+DTO.getEmergencyLink()+'\n'
             );
         }
     }
@@ -47,7 +47,7 @@ public class MailService {
 
         String reviewUrl="http://localhost:8080/review/"+ ((isUserR)?"r/":"a/")+id;
 
-        this.sendMail(toUserList, "[세모봉] 오늘의 봉사활동은 어떠셨나요?", "아래의 링크를 통해 후기를 남겨주세요!<br/>"+reviewUrl);
+        this.sendMail(toUserList, "[세모봉] 오늘의 봉사활동은 어떠셨나요?", "아래의 링크를 통해 후기를 남겨주세요!"+'\n'+reviewUrl);
     }
 
     private void sendMail(ArrayList<String> emailTargets, String title, String content){

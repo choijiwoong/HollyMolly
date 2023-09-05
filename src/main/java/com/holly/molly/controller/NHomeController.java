@@ -15,7 +15,7 @@ import java.util.Optional;
 public class NHomeController {
     private final UserService userService;
 
-    @GetMapping("/")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
+    @GetMapping("/")//로그인 여부 정보전달, 기본 매핑(기본 매핑을 /index에서 homeTemplate/home으로 변경)
     public String home(Model model, @CookieValue(value="userId", required = false) Cookie cookie){
         model.addAttribute("user", cookie==null||cookie.getValue().equals("")
                 ? Optional.empty()
@@ -24,6 +24,6 @@ public class NHomeController {
         return "homeTemplate/home";
     }
 
-    @GetMapping("/introducePage")//지정X 시 index.html로 이동. 우선순위가 자바 컨테이너에서 먼저 찾기에 현재의 컨트롤러 매핑을 인지
+    @GetMapping("/introducePage")//설명 페이지
     public String intro(){ return "homeTemplate/post/firstStep"; }
 }

@@ -112,11 +112,13 @@ public class AsyncService {
         }
     }
 
+    @Transactional
     public void emergency(Long requestId) {
         Request request=requestService.findOne(requestId).get();
         if(request.getStatus()!=RequestStatus.RUNNING)//허위신고방지, 진행중인 것만
             return;
         request.changeStatus(RequestStatus.EMERGENCY);
+        request.getAccept().changeStatus(AcceptStatus.EMERGENCY);
         EmergencyDTO emergencyDTO=new EmergencyDTO(requestId, request.getExectime().toString(), request.getAddress(), request.getUserR().getPhone(), request.getAccept().getUserA().getPhone());
         mailService.emergencyMail(emergencyDTO);
     }

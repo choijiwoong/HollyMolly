@@ -25,7 +25,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Transactional
-    @GetMapping("review/r/{id}")
+    @GetMapping("review/r/{id}")//봉사요청자 리뷰생성 페이지 이동. 이미 리뷰 완료한것으로 임시처리
     public String createRequestReview(@PathVariable("id") Long id, Model model){
         model.addAttribute("isRequest", true);
         requestService.findOne(id).get().changeStatus(RequestStatus.REVIEWD);//post이후에 세팅해야하지만 임시로 미리 설정
@@ -33,7 +33,7 @@ public class ReviewController {
     }
 
     @Transactional
-    @GetMapping("review/a/{id}")
+    @GetMapping("review/a/{id}")//봉사수락자 리뷰생성 페이지 이동. 이미 리뷰 완료한것으로 임시처리
     public String createAcceptReview(@PathVariable("id") Long id, Model model){
         model.addAttribute("isRequest", false);
         acceptService.findOne(id).get().changeStatus(AcceptStatus.REVIEWD);
@@ -41,13 +41,13 @@ public class ReviewController {
     }
 
     @Transactional
-    @PostMapping("volun/createReview")
-    public String uploadReviewA(ReviewDTO reviewDTO){
+    @PostMapping("volun/createReview")//리뷰 등록(봉사요청자와 봉사수락자 구분X)
+    public String uploadReview(ReviewDTO reviewDTO){
         reviewService.SrvRegisterReview(reviewDTO);
         return "redirect:/";
     }
 
-    @GetMapping("review/detail/{id}")
+    @GetMapping("review/detail/{id}")//봉사리뷰의 상세페이지
     public String detailReview(@PathVariable("id") Long id, Model model){
         Optional<Review> review;
         if((review=reviewService.findOne(id)).isEmpty())

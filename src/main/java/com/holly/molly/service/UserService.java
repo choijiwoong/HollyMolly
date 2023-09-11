@@ -21,16 +21,16 @@ public class UserService {
     @Transactional
     public Long join(User user){
         validateDuplicateMember(user);//중복회원 검증(이메일, 전화번호, 주민번호)
-        userRepository.save(user);
+        userRepository.save(user);//DB저장
         return user.getId();
     }
 
     @Transactional
     public Long delete(User user){
-        if(Optional.ofNullable(userRepository.findOne(user.getId())).isEmpty()){
+        if(Optional.ofNullable(userRepository.findOne(user.getId())).isEmpty()){//탐색
             throw new RuntimeException("삭제하려는 User가 존재하지 않습니다.");
         }
-        userRepository.delete(user);
+        userRepository.delete(user);//DB삭제
         return user.getId();
     }
 
@@ -46,13 +46,13 @@ public class UserService {
 
     public Optional<User> findByEmail(String email){ return Optional.ofNullable(userRepository.findByEmail(email)); }
 
-    public Optional<User> signUp(LoginDTO loginDTO) {
+    public Optional<User> signUp(LoginDTO loginDTO) {//회원가입..?로그인로직같은데
         return this.findByEmail(loginDTO.getEmail())
                 .filter(u->u.getPassword().equals(loginDTO.getPassword()));
     }
 
     //----내부로직----
-    private void validateDuplicateMember(User user) {
+    private void validateDuplicateMember(User user) {//중복회원 검증
         if(Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent())
             throw new IllegalStateException("이메일이 중복된 회원입니다.");
 
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     //-----서비스로직------
-    public User parseUserCookie(Cookie cookie) {
+    public User parseUserCookie(Cookie cookie) {//쿠키를 Optional<User>로 변환
         Optional<User> userInfo = this.findOne(Long.valueOf(cookie.getValue()));
         if (userInfo.isEmpty()) {
             throw new RuntimeException("cannot find current user information on cookie");
@@ -74,19 +74,19 @@ public class UserService {
         return userInfo.get();
     }
 
-    public Cookie createCookie(Long id){
+    public Cookie createCookie(Long id){//userId 쿠키생성
         Cookie idCookie=new Cookie("userId", id==null?null:String.valueOf(id));
         idCookie.setPath("/");
         return idCookie;
     }
 
-    public Cookie createCookieLat(String latitude){
+    public Cookie createCookieLat(String latitude){//user latitude쿠키생성
         Cookie idCookie=new Cookie("latitude", latitude);
         idCookie.setPath("/");
         return idCookie;
     }
 
-    public Cookie createCookieLng(String longitude){
+    public Cookie createCookieLng(String longitude){//user longitude쿠키생성
         Cookie idCookie=new Cookie("longitude", longitude);
         idCookie.setPath("/");
         return idCookie;

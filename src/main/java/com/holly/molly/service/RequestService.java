@@ -30,7 +30,7 @@ public class RequestService {
     private final Double DISTANCE_FIX=133.33;
     //********************DB************************
     @Transactional
-    public Long join(Request request){
+    public Long join(Request request){//DB등록
         validateDuplicateRequest(request);//request의 user가 올린 requests에서 중복되는 exectime & address 확인
         checkExectime(request);//과거의 시간을 등록하려는지 확인
         requestRepository.save(request);
@@ -38,7 +38,7 @@ public class RequestService {
     }
 
     @Transactional
-    public Long delete(Request request){
+    public Long delete(Request request){//DB에서삭제
         if(Optional.ofNullable(requestRepository.findOne(request.getId())).isEmpty()){
             throw new RuntimeException("삭제하려는 Request가 존재하지 않습니다.");
         }
@@ -62,7 +62,7 @@ public class RequestService {
     }
 
     //----내부로직----
-    private void validateDuplicateRequest(Request request) {
+    private void validateDuplicateRequest(Request request) {//중복요청검증(봉사요청 유저가 같은시간 같은주소의 요청이 있었는지)
         if(!this.findByUser(request.getUserR()).stream().filter(
                         r->r.getExectime().equals(request.getExectime())
                                 &r.getAddress().equals(request.getAddress()))
@@ -71,7 +71,7 @@ public class RequestService {
         }
     }
 
-    private void checkExectime(Request request) {
+    private void checkExectime(Request request) {//시간유효성 검증
         if(request.getExectime().isBefore(LocalDateTime.now())){
             throw new IllegalStateException("수행시간이 현재시간보다 이전입니다.");
         }
@@ -79,19 +79,19 @@ public class RequestService {
 
     //********************서비스로직************************
     @Transactional
-    public void SrvCreateRequest(Cookie cookie, RequestDTO requestDTO) {
+    public void SrvCreateRequest(Cookie cookie, RequestDTO requestDTO) {//유저로그인쿠키와 봉사요청DTO로 봉사생성 및 등록
         User userInfo = userService.parseUserCookie(cookie);
-        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent(), requestDTO.getLatitude(), requestDTO.getLongitude());
+        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent(), requestDTO.getLatitude(), requestDTO.getLongitude(), requestDTO.getDuration());
         this.join(request);
     }
 
-    public HashMap<Long, String> findKakaomapList(){
+    public HashMap<Long, String> findKakaomapList(){//등록상태의 봉사요청들을 requestId, Address형태의 Map으로 반환. 후에 JS에서 지도에 가시화
         List<Request> requests = requestRepository.findByStatus(RequestStatus.REGISTER);
         Map<Long, String> kakaomapList=requests.stream().collect(Collectors.toMap(Request::getId, Request::getAddress));
         return new HashMap<Long, String>(kakaomapList);
     }
 
-    public List<NearRequestListElementDTO> nearVolun(LocationDTO locationDTO, Integer pageSize){//위치정보, 페이지정부
+    public List<NearRequestListElementDTO> nearVolun(LocationDTO locationDTO, Integer pageSize){//인근 봉사요청 가져오기. 위치정보, 페이지정보
         List<Request> requests=requestRepository.findByStatus(RequestStatus.REGISTER);
         if(!checkIsLocation(locationDTO)) {//LocationDTO유효성 체크.
             return new ArrayList<NearRequestListElementDTO>();
@@ -124,17 +124,19 @@ public class RequestService {
         return results.stream().toList();
     }
 
-    public ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {
-        ArrayList<Double> distances=new ArrayList<Double>();
+    public ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {//위치기준 봉사요청들의 거리를 전부 계산
+        ArrayList<Double> distances=new ArrayList<Double>();//
 
         for(Request request: requests){
-            distances.add(DISTANCE_FIX * Math.sqrt(Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
-                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)));
+            distances.add(DISTANCE_FIX * Math.sqrt(
+                    Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
+                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)
+                    ));
         }
         return distances;
     }
 
-    public Boolean checkIsLocation(LocationDTO locationDTO) {//lat 37.5381311 lng 126.9136286
+    public Boolean checkIsLocation(LocationDTO locationDTO) {//정상적인 위경도 데이터가 맞는지 유효성 검증. ex) lat 37.5381311 lng 126.9136286
         String longitude= locationDTO.getLongitude();
         String latitude=locationDTO.getLatitude();
         if(longitude.isEmpty() || latitude.isEmpty())

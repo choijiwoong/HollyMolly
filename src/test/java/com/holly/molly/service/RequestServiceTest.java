@@ -45,11 +45,11 @@ class RequestServiceTest {
 
         LocalDateTime time=LocalDateTime.now().plusDays(1l);
 
-        Request request=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
-        Request request2=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request2=new Request(user, time, "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
 
         //then
         IllegalStateException e = assertThrows(IllegalStateException.class,
@@ -63,7 +63,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
@@ -76,7 +76,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
@@ -90,7 +90,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
@@ -104,7 +104,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
@@ -118,7 +118,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         //when
@@ -133,7 +133,7 @@ class RequestServiceTest {
         userService.join(user);
 
         Cookie cookie=new Cookie("userId", String.valueOf(user.getId()));
-        RequestDTO requestDTO=new RequestDTO("2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사", "37.566826", "126.9786567");
+        RequestDTO requestDTO=new RequestDTO("2025.01.01.00.00", "서울시 서초구 방배동", "노인봉사", "37.566826", "126.9786567", "1");
 
         //when
         requestService.SrvCreateRequest(cookie, requestDTO);
@@ -149,14 +149,14 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         LocationDTO currentLocation=new LocationDTO("126.929244", "37.529231");
 
         //when
         ArrayList<Double> results=requestService.getDistance(requestService.findAll(), currentLocation);
-
+        System.out.println("[DEBUG] result: "+results.get(0));
         //then
         assertEquals(results.size(), 1);
         assertTrue(results.get(0)<8.5 && results.get(0)>7.5);// 대충 8키로가 나옴. +-0.5로 오차범위
@@ -167,17 +167,17 @@ class RequestServiceTest {
         //given
         User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user1);
-        Request request1=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786557");
+        Request request1=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786557", "1");
         requestService.join(request1);
 
         User user2=new User("user12","user2@gmail.com","1234","010-0020-0000","000200-0000000");
         userService.join(user2);
-        Request request2=new Request(user2, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.564826", "126.9756567");
+        Request request2=new Request(user2, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.564826", "126.9756567", "1");
         requestService.join(request2);
 
         User user3=new User("user3","user3@gmail.com","1234","010-0300-0000","300000-0000000");
         userService.join(user3);
-        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557");
+        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557", "1");
         requestService.join(request3);
 
         //when

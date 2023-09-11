@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,10 +31,13 @@ public class Request extends JpaBaseEntity{
     private RequestStatus status;//봉사 진행 상태 정보. 절차적으로 진행
 
     @Column(nullable = false)@Setter//[DEBUG] test for making situation(시간을 조작하여 정상적으로 STATUS가 바뀌는지 생성자 외 조작 임시가능)
-    private LocalDateTime exectime;//봉사 진행 시각
+    private LocalDateTime exectime;
 
     @Column(nullable = false)
     private String address;//봉사 진행 장소
+
+    @Column(nullable = false)
+    private String duration;//봉사시간
 
     @Column(nullable = false)
     private String content;//봉사 내용
@@ -49,34 +53,37 @@ public class Request extends JpaBaseEntity{
     @OneToMany(mappedBy = "request")
     private List<RequestComment> comments=new ArrayList<>();
 
-    public Request(User user, String exectime, String address, String content, String latitude, String longitude){
+    public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude, String duration){
         this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
+        this.status=RequestStatus.REGISTER;
+        this.exectime=exectime;
+        this.address=address;
+        this.content=content;
+        this.longitude=latitude;
+        this.latitude=longitude;
+        this.duration=duration;
+    }
+
+    public Request(User user, String exectime, String address, String content, String latitude, String longitude, String duration){
+        this.connectUser(user);
+        this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(exectime);
         this.address=address;
         this.content=content;
         this.longitude=latitude;
         this.latitude=longitude;
-    }
-
-    public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude){//[DEBUG]없애자
-        this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
-        this.exectime=exectime;
-        this.address=address;
-        this.content=content;
-        this.longitude=longitude;
-        this.latitude=latitude;
+        this.duration=duration;
     }
 
     public Request(User user, RequestDTO requestDTO){
         this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
+        this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(requestDTO.getExectime());
         this.address=requestDTO.getAddress();
         this.content=requestDTO.getContent();
         this.longitude=requestDTO.getLongitude();
         this.latitude=requestDTO.getLatitude();
+        this.duration=requestDTO.getDuration();
     }
 
     //---연관관계 메서드---
@@ -93,7 +100,55 @@ public class Request extends JpaBaseEntity{
     }
 
     public void changeStatus(RequestStatus status){//request 상태변경. 이는 등록이후 전적으로 accept.changeStatus()메서드에 의해 통합하여 조작.
-        this.status=status;
+        //RequestStatus: REGISTER, ACCEPT, CANCEL, MAILED, RUNNING, EMERGENCY, COMPLETE, REVIEWD
+        if(this.getStatus()==status)
+            return;
+
+        //예외조건들
+        if(status.equals(RequestStatus.REGISTER)){
+            throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER로의 변경은 생성시에만 가능합니다.  현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.ACCEPT)){//accept변경 시
+            if(this.getStatus()!=RequestStatus.REGISTER)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER상태에서만 ACCEPT로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.CANCEL)){//cancel변경 시
+            if(this.getStatus().equals(RequestStatus.REGISTER) || this.getStatus().equals(RequestStatus.MAILED) || this.getStatus().equals(RequestStatus.ACCEPT)) {
+            } else {
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER혹은 MAILED혹은 ACCEPT상태에서만 CANCEL로 변경할 수 있습니다. 현재상태: " + this.getStatus());
+            }
+        }
+
+        if(status.equals(RequestStatus.MAILED)){//mailed변경 시
+            if(this.getStatus()!=RequestStatus.ACCEPT)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! ACCEPT상태에서만 MAILED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.RUNNING)){//running변경 시
+            if(this.getStatus()!=RequestStatus.MAILED)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! MAILED상태에서만 RUNNING으로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.EMERGENCY)){//emergency변경 시
+            if(this.getStatus()!=RequestStatus.RUNNING)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! RUNNING상태에서만 EMERGENCY로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.COMPLETE)){//complete변경 시
+            if(this.getStatus()!=RequestStatus.RUNNING)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! RUNNING상태에서만 COMPLETE로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.REVIEWD)){//revied변경 시
+            if(this.getStatus()!=RequestStatus.COMPLETE)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! COMPLETE상태에서만 REVIED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+            this.status=RequestStatus.REVIEWD;//리뷰는 종속성 X
+        }
+
+        //예외조건 통과시에 변경
+        this.status = status;
     }
 
     private LocalDateTime parseStringDate(String dateInfo){//0000.00.00.00.00형식의 데이터인지 확인

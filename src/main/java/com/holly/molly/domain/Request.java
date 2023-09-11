@@ -51,7 +51,7 @@ public class Request extends JpaBaseEntity{
 
     public Request(User user, String exectime, String address, String content, String latitude, String longitude){
         this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
+        this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(exectime);
         this.address=address;
         this.content=content;
@@ -61,7 +61,7 @@ public class Request extends JpaBaseEntity{
 
     public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude){//[DEBUG]없애자
         this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
+        this.status=RequestStatus.REGISTER;
         this.exectime=exectime;
         this.address=address;
         this.content=content;
@@ -71,7 +71,7 @@ public class Request extends JpaBaseEntity{
 
     public Request(User user, RequestDTO requestDTO){
         this.connectUser(user);
-        this.changeStatus(RequestStatus.REGISTER);
+        this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(requestDTO.getExectime());
         this.address=requestDTO.getAddress();
         this.content=requestDTO.getContent();
@@ -93,7 +93,54 @@ public class Request extends JpaBaseEntity{
     }
 
     public void changeStatus(RequestStatus status){//request 상태변경. 이는 등록이후 전적으로 accept.changeStatus()메서드에 의해 통합하여 조작.
-        this.status=status;
+        //RequestStatus: REGISTER, ACCEPT, CANCEL, MAILED, RUNNING, EMERGENCY, COMPLETE, REVIEWD
+        if(this.getStatus()==status)
+            return;
+
+        //예외조건들
+        if(status.equals(RequestStatus.REGISTER)){
+            throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER로의 변경은 생성시에만 가능합니다.  현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.ACCEPT)){//accept변경 시
+            if(this.getStatus()!=RequestStatus.REGISTER)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER상태에서만 ACCEPT로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.CANCEL)){//cancel변경 시
+            if(this.getStatus().equals(RequestStatus.REGISTER) || this.getStatus().equals(RequestStatus.MAILED) || this.getStatus().equals(RequestStatus.ACCEPT)) {
+            } else {
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! REGISTER혹은 MAILED혹은 ACCEPT상태에서만 CANCEL로 변경할 수 있습니다. 현재상태: " + this.getStatus());
+            }
+        }
+
+        if(status.equals(RequestStatus.MAILED)){//mailed변경 시
+            if(this.getStatus()!=RequestStatus.ACCEPT)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! ACCEPT상태에서만 MAILED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.RUNNING)){//running변경 시
+            if(this.getStatus()!=RequestStatus.MAILED)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! MAILED상태에서만 RUNNING으로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.EMERGENCY)){//emergency변경 시
+            if(this.getStatus()!=RequestStatus.RUNNING)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! RUNNING상태에서만 EMERGENCY로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.COMPLETE)){//complete변경 시
+            if(this.getStatus()!=RequestStatus.RUNNING)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! RUNNING상태에서만 COMPLETE로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        if(status.equals(RequestStatus.REVIEWD)){//revied변경 시
+            if(this.getStatus()!=RequestStatus.COMPLETE)
+                throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! COMPLETE상태에서만 REVIED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+        }
+
+        //예외조건 통과시에 변경
+        this.status = status;
     }
 
     private LocalDateTime parseStringDate(String dateInfo){//0000.00.00.00.00형식의 데이터인지 확인

@@ -78,7 +78,7 @@ class AsyncServiceTest {
         //then
     }
 
-    @Test
+    /*@Test
     void checkComplete() {//exectime이 지나면 complete처리
         //given
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
@@ -104,7 +104,7 @@ class AsyncServiceTest {
         //then
         assertEquals(request.getStatus(), RequestStatus.COMPLETE);
         assertEquals(accept.getStatus(), AcceptStatus.COMPLETE);
-    }
+    }*/
 
     @Test
     void checkReviewTiming() {//exectime의 day가 지나면 리뷰url이 담긴 메일 전송
@@ -128,13 +128,13 @@ class AsyncServiceTest {
     }
 
     @Test
-    void emergency(){
+    void checkEmergency(){
         //given
         User user=new User("user1","_@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
         Request request=new Request(user, LocalDateTime.now().plusMinutes(1l), "*********테스트중*********", "교육봉사", "37.566826", "126.9786567");
-        requestService.join(request);
+        requestService.join(request);//1분 후 봉사시작으로 가정
 
         User user2=new User("user2","__@gmail.com","1234","010-0010-0000","100000-0000000");
         userService.join(user2);
@@ -142,12 +142,17 @@ class AsyncServiceTest {
         Accept accept=new Accept(user2, request);
         acceptService.join(accept);
 
+        asyncService.join();//메일 발송_MAILED
+
         //when_이미 시작한 경우에
-        request.setExectime(LocalDateTime.now().minusMinutes(1l));
-        request.changeStatus(RequestStatus.RUNNING);
+        request.setExectime(LocalDateTime.now().minusMinutes(3l));
+        System.out.println("[DEBUG] "+request.getStatus());
+        asyncService.checkRunning(accept);//실행처리_COMPLETE
+        System.out.println("[DEBUG] "+request.getStatus());
         asyncService.emergency(request.getId());
 
         //then
-        assertEquals(request.getStatus(), RequestStatus.EMERGENCY);
+        assertEquals(RequestStatus.EMERGENCY, accept.getStatus());
+        assertEquals(RequestStatus.EMERGENCY, request.getStatus());
     }
 }

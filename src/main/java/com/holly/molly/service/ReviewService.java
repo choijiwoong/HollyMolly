@@ -43,7 +43,7 @@ public class ReviewService {
 
     //***********서비스로직************
     @Transactional
-    public void SrvRegisterReview(ReviewDTO reviewDTO){
+    public void SrvRegisterReview(ReviewDTO reviewDTO){//DTO이용 DB에 리뷰 저장
         this.join(new Review(reviewDTO.getTitle(), reviewDTO.getContent(), reviewDTO.getIsRequest()));
     }
 }

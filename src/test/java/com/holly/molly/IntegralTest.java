@@ -42,7 +42,7 @@ public class IntegralTest {
         userService.join(user1);
         userService.join(user2);
 
-        Request request=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "시력보조", "37.566826", "126.9786567");
+        Request request=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "시력보조", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         RequestComment comment=new RequestComment(request, user2.getName(), "봉사는 정확히 어떤 활동인가요?");
@@ -54,8 +54,22 @@ public class IntegralTest {
         Accept accept=new Accept(user2, request);
         acceptService.join(accept);
 
-        request.setExectime(LocalDateTime.now().minusMinutes(1l));
-        //리뷰후 status변경 필요
+        request.setExectime(LocalDateTime.now().plusMinutes(1l));//1분뒤로가정하여 메일전송테스트
+        asyncService.join();//ACCEPT->MAILED
+        assertEquals(RequestStatus.MAILED, request.getStatus());
+        assertEquals(AcceptStatus.MAILED, accept.getStatus());
+
+        request.setExectime(LocalDateTime.now().minusMinutes(1l));//1분앞으로가정하여 RUNNING테스트
+        asyncService.join();//MAILED->RUNNING
+        assertEquals(RequestStatus.RUNNING, request.getStatus());
+        assertEquals(AcceptStatus.RUNNING, accept.getStatus());
+
+        request.setExectime(LocalDateTime.now().minusHours(
+                Long.parseLong(request.getDuration())+1)
+        );//봉사완료 가정하여 RUNNING->COMPLETE테스트
+        asyncService.join();//RUNNING->COMPLETE
+        assertEquals(RequestStatus.COMPLETE, request.getStatus());
+        assertEquals(AcceptStatus.COMPLETE, accept.getStatus());
 
         Review review=new Review("봉사후기", "좆같았어요", true);
         reviewService.join(review);
@@ -63,7 +77,7 @@ public class IntegralTest {
         Review review1=new Review("피봉사자가 욕을 많이하네요..", "전 열심히 했는데 자꾸 좆같았데요...", false);
         reviewService.join(review1);
 
-        asyncService.join();
+        asyncService.join();//추후에 Review에 accept정보 넣어서 리뷰등록되면 그때 REVIEWD로 변경해도 될듯
 
         //when (user<->request and user<->accept)
         //then

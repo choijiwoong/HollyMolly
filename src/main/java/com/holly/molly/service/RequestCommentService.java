@@ -41,7 +41,7 @@ public class RequestCommentService {
 
     //***********서비스로직***********
     @Transactional
-    public Request SrvCreateRequestComment(Cookie cookie, CommentDTO commentDTO) {
+    public Request SrvCreateRequestComment(Cookie cookie, CommentDTO commentDTO) {//댓글생성
         Long requestId = commentDTO.getHid();
         User user = userService.parseUserCookie(cookie);
 

@@ -99,7 +99,7 @@ public class Accept extends JpaBaseEntity{
         }
 
         if(status.equals(AcceptStatus.COMPLETE)) {
-            if(this.getStatus()==AcceptStatus.RUNNING || this.getStatus()==AcceptStatus.MAILED){//[DEBUG]임시로 변경 23.09.11
+            if(this.getStatus()==AcceptStatus.RUNNING){
                 this.status = AcceptStatus.COMPLETE;
                 this.request.changeStatus(RequestStatus.COMPLETE);
             } else{
@@ -110,7 +110,7 @@ public class Accept extends JpaBaseEntity{
         if(status.equals(AcceptStatus.REVIEWD)){
             if(this.getStatus()==AcceptStatus.COMPLETE){
                 this.status = AcceptStatus.REVIEWD;
-                this.request.changeStatus(RequestStatus.REVIEWD);
+                //this.request.changeStatus(RequestStatus.REVIEWD);//리뷰는 종속성X
             } else{
                 throw new RuntimeException("[DEBUG] 잘못된 AcceptStatus조작입니다! COMPLETE상태에서만 REVIEWED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
             }

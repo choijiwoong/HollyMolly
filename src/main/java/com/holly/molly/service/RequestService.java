@@ -81,7 +81,7 @@ public class RequestService {
     @Transactional
     public void SrvCreateRequest(Cookie cookie, RequestDTO requestDTO) {//유저로그인쿠키와 봉사요청DTO로 봉사생성 및 등록
         User userInfo = userService.parseUserCookie(cookie);
-        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent(), requestDTO.getLatitude(), requestDTO.getLongitude());
+        Request request = new Request(userInfo, requestDTO.getExectime(), requestDTO.getAddress(), requestDTO.getContent(), requestDTO.getLatitude(), requestDTO.getLongitude(), requestDTO.getDuration());
         this.join(request);
     }
 
@@ -125,11 +125,13 @@ public class RequestService {
     }
 
     public ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {//위치기준 봉사요청들의 거리를 전부 계산
-        ArrayList<Double> distances=new ArrayList<Double>();
+        ArrayList<Double> distances=new ArrayList<Double>();//
 
         for(Request request: requests){
-            distances.add(DISTANCE_FIX * Math.sqrt(Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
-                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)));
+            distances.add(DISTANCE_FIX * Math.sqrt(
+                    Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
+                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)
+                    ));
         }
         return distances;
     }

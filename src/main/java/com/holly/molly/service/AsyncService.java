@@ -37,8 +37,8 @@ public class AsyncService {
 
             for(Accept accept: accepts){
                 checkCancleStatus(accept);//requestor가 취소시 acceptor도 취소처리. 반대로 acceptor는 취소시 자동 requestor취소이기에 별도처리X(의존성)
-                checkRunning(accept);
-                //checkComplete(accept);//exectime이 지나면 complete처리
+                checkRunning(accept);//exectime지나면 RUNNING처리
+                checkComplete(accept);//exectime+duration지나면 COMPLETE처리
                 checkReviewTiming(accept);//exectime의 day가 지나면 리뷰url이 담긴 메일 전송
             }
         }
@@ -58,7 +58,7 @@ public class AsyncService {
     }
 
     @Transactional
-    public void checkNoticeMailTiming(List<Accept> accepts){
+    public void checkNoticeMailTiming(List<Accept> accepts){//봉사예정일로부터 하루 전일 경우 메일전송
         ArrayList<AdvanceMailDTO> advanceMailDTOArrayList=new ArrayList<>();
         for (Accept accept : accepts) {
             Request request = accept.getRequest();
@@ -82,28 +82,28 @@ public class AsyncService {
     }
 
     @Transactional
-    public void checkRunning(Accept accept) {
+    public void checkRunning(Accept accept) {//봉사예정시각이 지나면 Status를 RUNNING으로 바꿈
         Request request = accept.getRequest();
-        if (isRunning(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
-            accept.changeStatus(AcceptStatus.COMPLETE);//[DEBUG] 임시로 RUNNING->COMPLETE변경_23.09.11
+        if (accept.getStatus()==AcceptStatus.MAILED && isRunning(request.getExectime())){//봉사활동시간이 지나면 COMPLETE처리
+            accept.changeStatus(AcceptStatus.RUNNING);
         }
     }
 
-    /*@Transactional
-    public void checkComplete(Accept accept) {//[DEBUG] 임시로 COMPLETE상태를 없앴기에 주석처리_23.09.11
+    @Transactional
+    public void checkComplete(Accept accept) {//봉사시간인 지나면 RUNNING에서 COMPLETE로 바꿈 
             if(accept.getStatus()!=AcceptStatus.RUNNING)//정상 대기상태가 아닌 경우
                 return;
 
             Request request = accept.getRequest();
             System.out.println("[DEBUG]2 "+request.getStatus()+", "+accept.getStatus());
-            if (isComplete(request.getExectime())) {//봉사활동시간이 지나면 COMPLETE처리
+            if (isComplete(request)) {//봉사활동시간이 지나면 COMPLETE처리
                 accept.changeStatus(AcceptStatus.COMPLETE);
                 System.out.println("[DEBUG]3 "+request.getStatus()+", "+accept.getStatus());
             }
-    }*/
+    }
 
     @Transactional
-    public void checkReviewTiming(Accept accept){
+    public void checkReviewTiming(Accept accept){//봉사시작 24시간 후 리뷰요청 메일전송
         if(accept.getStatus()==AcceptStatus.COMPLETE && isReviewTime(accept.getRequest().getExectime())){
             mailService.requestReview(accept.getRequest().getUserR().getEmail(), accept.getId(), false);
             mailService.requestReview(accept.getUserA().getEmail(), accept.getRequest().getId(), true);
@@ -111,7 +111,7 @@ public class AsyncService {
     }
 
     @Transactional
-    public void emergency(Long requestId) {
+    public void emergency(Long requestId) {//응급일 경우 관리자에게 응급메일 전송 및 EMERGENCY처리
         Request request=requestService.findOne(requestId).get();
         if(request.getStatus()!=RequestStatus.RUNNING)//허위신고방지, 진행중인 것만
             return;
@@ -121,23 +121,25 @@ public class AsyncService {
     }
 
     //<---- 하위 내부 로직 ---->
-    private Boolean isEmailTime(LocalDateTime exectime){
+    private Boolean isEmailTime(LocalDateTime exectime){//하루전
         Long dayUnit=1l;
         exectime.plusDays(dayUnit);
 
         return exectime.isAfter(LocalDateTime.now()) ? true : false;
     }
 
-    private Boolean isReviewTime(LocalDateTime exectime){
+    private Boolean isReviewTime(LocalDateTime exectime){//하루뒤
         LocalDateTime dayUnit=LocalDateTime.of(exectime.getYear(), exectime.getMonth(), exectime.plusDays(1).getDayOfMonth(),0,0);
 
         return dayUnit.isBefore(LocalDateTime.now()) ? true: false;
     }
 
-    private Boolean isRunning(LocalDateTime exectime){
+    private Boolean isRunning(LocalDateTime exectime){//실행시간
         return exectime.isBefore(LocalDateTime.now()) ? true : false;
     }
-    private Boolean isComplete(LocalDateTime exectime){
-        return exectime.plusHours(2l).isBefore(LocalDateTime.now()) ? true : false;//임시로 모든 봉사시간 2시간 지나면 끝난다고 가정
+    private Boolean isComplete(Request request){//봉사활동시간 지나면 완료
+        return request.getExectime()
+                .plusHours(Long.parseLong(request.getDuration()))
+                .isBefore(LocalDateTime.now()) ? true : false;
     }
 }

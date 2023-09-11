@@ -26,7 +26,7 @@ class AsyncServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         request.setExectime(LocalDateTime.now().minusMinutes(1l));
@@ -43,7 +43,7 @@ class AsyncServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         User user2=new User("user2","user2@gmail.com","1234","010-0010-0000","100000-0000000");
@@ -112,7 +112,7 @@ class AsyncServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);
 
         User user2=new User("user2","user2@gmail.com","1234","010-0010-0000","100000-0000000");
@@ -133,7 +133,7 @@ class AsyncServiceTest {
         User user=new User("user1","_@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusMinutes(1l), "*********테스트중*********", "교육봉사", "37.566826", "126.9786567");
+        Request request=new Request(user, LocalDateTime.now().plusMinutes(1l), "*********테스트중*********", "교육봉사", "37.566826", "126.9786567", "1");
         requestService.join(request);//1분 후 봉사시작으로 가정
 
         User user2=new User("user2","__@gmail.com","1234","010-0010-0000","100000-0000000");
@@ -152,7 +152,7 @@ class AsyncServiceTest {
         asyncService.emergency(request.getId());
 
         //then
-        assertEquals(RequestStatus.EMERGENCY, accept.getStatus());
+        assertEquals(AcceptStatus.EMERGENCY, accept.getStatus());
         assertEquals(RequestStatus.EMERGENCY, request.getStatus());
     }
 }

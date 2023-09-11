@@ -11,4 +11,5 @@ public class RequestDTO {
     private String content;
     private String longitude;
     private String latitude;
+    private String duration;
 }

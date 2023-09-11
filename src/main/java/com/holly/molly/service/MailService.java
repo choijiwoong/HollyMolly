@@ -15,7 +15,7 @@ public class MailService {
     private JavaMailSender javaMailSender;
     private String adminAddress="trianglestick0628@gmail.com";
 
-    public void emergencyMail(EmergencyDTO emergencyDTO){
+    public void emergencyMail(EmergencyDTO emergencyDTO){//응급메일전송용
         ArrayList<String> emailBuffer=new ArrayList<String>();
         emailBuffer.add(adminAddress);
         this.sendMail(emailBuffer, "[긴급상황] requestId: "+emergencyDTO.getRequestId(),
@@ -24,7 +24,7 @@ public class MailService {
                 );
     }
 
-    public void advanceNotice(ArrayList<AdvanceMailDTO> DTOs){
+    public void advanceNotice(ArrayList<AdvanceMailDTO> DTOs){//봉사알림메일전송용
         for(AdvanceMailDTO DTO: DTOs) {
             ArrayList<String> list=new ArrayList<String>();
 
@@ -41,7 +41,7 @@ public class MailService {
         }
     }
 
-    public void requestReview(String email, Long id, Boolean isUserR){
+    public void requestReview(String email, Long id, Boolean isUserR){//리뷰요청메일전송용
         ArrayList<String> toUserList=new ArrayList<>();
         toUserList.add(email);
 
@@ -50,7 +50,7 @@ public class MailService {
         this.sendMail(toUserList, "[세모봉] 오늘의 봉사활동은 어떠셨나요?", "아래의 링크를 통해 후기를 남겨주세요!"+'\n'+reviewUrl);
     }
 
-    private void sendMail(ArrayList<String> emailTargets, String title, String content){
+    private void sendMail(ArrayList<String> emailTargets, String title, String content){//실제메일전송로직
         int toUserSize=emailTargets.size();
 
         SimpleMailMessage simpleMessage=new SimpleMailMessage();

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,10 +31,13 @@ public class Request extends JpaBaseEntity{
     private RequestStatus status;//봉사 진행 상태 정보. 절차적으로 진행
 
     @Column(nullable = false)@Setter//[DEBUG] test for making situation(시간을 조작하여 정상적으로 STATUS가 바뀌는지 생성자 외 조작 임시가능)
-    private LocalDateTime exectime;//봉사 진행 시각
+    private LocalDateTime exectime;
 
     @Column(nullable = false)
     private String address;//봉사 진행 장소
+
+    @Column(nullable = false)
+    private String duration;//봉사시간
 
     @Column(nullable = false)
     private String content;//봉사 내용
@@ -49,7 +53,18 @@ public class Request extends JpaBaseEntity{
     @OneToMany(mappedBy = "request")
     private List<RequestComment> comments=new ArrayList<>();
 
-    public Request(User user, String exectime, String address, String content, String latitude, String longitude){
+    public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude, String duration){
+        this.connectUser(user);
+        this.status=RequestStatus.REGISTER;
+        this.exectime=exectime;
+        this.address=address;
+        this.content=content;
+        this.longitude=latitude;
+        this.latitude=longitude;
+        this.duration=duration;
+    }
+
+    public Request(User user, String exectime, String address, String content, String latitude, String longitude, String duration){
         this.connectUser(user);
         this.status=RequestStatus.REGISTER;
         this.exectime=this.parseStringDate(exectime);
@@ -57,16 +72,7 @@ public class Request extends JpaBaseEntity{
         this.content=content;
         this.longitude=latitude;
         this.latitude=longitude;
-    }
-
-    public Request(User user, LocalDateTime exectime, String address, String content, String latitude, String longitude){//[DEBUG]없애자
-        this.connectUser(user);
-        this.status=RequestStatus.REGISTER;
-        this.exectime=exectime;
-        this.address=address;
-        this.content=content;
-        this.longitude=longitude;
-        this.latitude=latitude;
+        this.duration=duration;
     }
 
     public Request(User user, RequestDTO requestDTO){
@@ -77,6 +83,7 @@ public class Request extends JpaBaseEntity{
         this.content=requestDTO.getContent();
         this.longitude=requestDTO.getLongitude();
         this.latitude=requestDTO.getLatitude();
+        this.duration=requestDTO.getDuration();
     }
 
     //---연관관계 메서드---
@@ -137,6 +144,7 @@ public class Request extends JpaBaseEntity{
         if(status.equals(RequestStatus.REVIEWD)){//revied변경 시
             if(this.getStatus()!=RequestStatus.COMPLETE)
                 throw new RuntimeException("[DEBUG] 잘못된 RequestStatus조작입니다! COMPLETE상태에서만 REVIED로 변경할 수 있습니다. 현재상태: "+this.getStatus());
+            this.status=RequestStatus.REVIEWD;//리뷰는 종속성 X
         }
 
         //예외조건 통과시에 변경

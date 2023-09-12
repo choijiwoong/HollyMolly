@@ -128,4 +128,24 @@ class AcceptServiceTest {
         assertEquals(acceptService.findAll().size(),1);
         assertEquals(acceptService.findAll().stream().findFirst().get().getUserA().getId(), user2.getId());
     }
+
+    @Test
+    void construction(){
+        //Accept는 DTO를 받지않고 SrvCreateAccept서비스 로직으로 쿠키를 이용해 생성한다.
+        //given
+        User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user);
+
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
+        requestService.join(request);
+
+        User user2=new User("user2","user2@gmail.com","1234","010-0010-0000","100000-0000000");
+        userService.join(user2);
+
+        Accept accept=new Accept(user2, request);
+        acceptService.join(accept);
+
+        //when
+        //then
+    }
 }

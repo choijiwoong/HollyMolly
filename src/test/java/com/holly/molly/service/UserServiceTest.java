@@ -1,6 +1,7 @@
 package com.holly.molly.service;
 
 import com.holly.molly.DTO.LoginDTO;
+import com.holly.molly.DTO.UserDTO;
 import com.holly.molly.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -136,5 +137,22 @@ class UserServiceTest {
         loginDTO.setEmail("user@gmail.com");
         //when4
         assertEquals(userService.signUp(loginDTO).get(), user1);
+    }
+
+    @Test
+    void construction(){//생성자 오버로딩 테스트
+        //given
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user1);
+
+        UserDTO userDTO=new UserDTO("user2","user2@gmail.com","1234","010-0000-0000","020000-0000000");
+        User user2=new User(userDTO);
+
+        //when
+        IllegalStateException e = assertThrows(IllegalStateException.class,
+                () -> userService.join(user2));//예외가 발생해야 한다.
+
+        //then
+        assertThat(e.getMessage()).isEqualTo("전화번호가 중복된 회원입니다.");
     }
 }

@@ -10,6 +10,5 @@ public class UserDTO {
     private String email;
     private String password;
     private String phone;
-    private String birth;
     private String pid;
 }

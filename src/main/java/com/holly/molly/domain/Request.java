@@ -59,8 +59,8 @@ public class Request extends JpaBaseEntity{
         this.exectime=exectime;
         this.address=address;
         this.content=content;
-        this.longitude=latitude;
-        this.latitude=longitude;
+        this.longitude=longitude;
+        this.latitude=latitude;
         this.duration=duration;
     }
 
@@ -70,8 +70,8 @@ public class Request extends JpaBaseEntity{
         this.exectime=this.parseStringDate(exectime);
         this.address=address;
         this.content=content;
-        this.longitude=latitude;
-        this.latitude=longitude;
+        this.longitude=longitude;
+        this.latitude=latitude;
         this.duration=duration;
     }
 

@@ -125,13 +125,14 @@ public class RequestService {
     }
 
     public ArrayList<Double> getDistance(List<Request> requests, LocationDTO locationDTO) {//위치기준 봉사요청들의 거리를 전부 계산
-        ArrayList<Double> distances=new ArrayList<Double>();//
-
+        ArrayList<Double> distances=new ArrayList<Double>();//요청들의 사이즈에 맞게 리스트 생성
         for(Request request: requests){
-            distances.add(DISTANCE_FIX * Math.sqrt(
-                    Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
-                    Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)
-                    ));
+            distances.add(DISTANCE_FIX *
+                    Math.sqrt(
+                        Math.pow(Double.parseDouble(request.getLatitude())-Double.parseDouble(locationDTO.getLatitude()), 2)+
+                        Math.pow(Double.parseDouble(request.getLongitude())-Double.parseDouble(locationDTO.getLongitude()), 2)
+                    )
+            );
         }
         return distances;
     }

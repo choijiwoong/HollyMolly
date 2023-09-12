@@ -149,7 +149,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.978656", "1");
         requestService.join(request);
 
         LocationDTO currentLocation=new LocationDTO("126.929244", "37.529231");
@@ -177,7 +177,8 @@ class RequestServiceTest {
 
         User user3=new User("user3","user3@gmail.com","1234","010-0300-0000","300000-0000000");
         userService.join(user3);
-        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557", "1");
+
+        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557", "1");//DTOconstruction테스트
         requestService.join(request3);
 
         //when

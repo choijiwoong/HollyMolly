@@ -36,7 +36,8 @@ class ReviewServiceTest {
         assertEquals(reviewService.findAll().stream().findFirst().get().getTitle(), review.getTitle());
     }
 
-    @Test void SrvRegisterReview() {
+    @Test
+    void SrvRegisterReview() {
         //given
         ReviewDTO reviewDTO=new ReviewDTO("testTitle", "content is test", true);
         reviewService.SrvRegisterReview(reviewDTO);
@@ -46,5 +47,19 @@ class ReviewServiceTest {
 
         //then
         assertEquals(review.getTitle(), reviewDTO.getTitle());
+    }
+
+    @Test
+    void construction(){
+        //given
+        Review review=new Review("test", "askla", true);
+        reviewService.join(review);
+
+        ReviewDTO reviewDTO=new ReviewDTO("testTitle", "content is test", true);
+        Review review2=new Review(reviewDTO);
+        reviewService.join(review2);
+
+        //when
+        //then
     }
 }

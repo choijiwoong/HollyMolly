@@ -143,4 +143,21 @@ class RequestRequestCommentServiceTest {
         assertEquals(requestCommentService.findAll().stream().findFirst().get().getRequest().getId(), request.getId());
         assertEquals(request2.getId(), request.getId());
     }
+
+    @Test
+    void construction(){
+        //RequestRequestComment는 DTO없이 SrvCreateRequestComment를 이용하여 Request와 연결하여 생성한다.
+        //given
+        User user=new User("홍길동","hongil@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user);
+
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서촉수 방배동", "아동복지관 봉사활동", "37.566826", "126.9786567", "1");
+        requestService.join(request);
+
+        RequestComment requestComment =new RequestComment(request, "홍길동", "안녕하세요");
+        requestCommentService.join(requestComment);
+
+        //when
+        //then
+    }
 }

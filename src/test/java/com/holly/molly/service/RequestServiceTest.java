@@ -149,7 +149,7 @@ class RequestServiceTest {
         User user=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
         userService.join(user);
 
-        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786567", "1");
+        Request request=new Request(user, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.978656", "1");
         requestService.join(request);
 
         LocationDTO currentLocation=new LocationDTO("126.929244", "37.529231");
@@ -177,7 +177,7 @@ class RequestServiceTest {
 
         User user3=new User("user3","user3@gmail.com","1234","010-0300-0000","300000-0000000");
         userService.join(user3);
-        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557", "1");
+        Request request3=new Request(user3, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "4.566426", "200.9786557", "1");//DTOconstruction테스트
         requestService.join(request3);
 
         //when
@@ -214,5 +214,29 @@ class RequestServiceTest {
         assertFalse(requestService.checkIsLocation(wrongDTO4));
         assertFalse(requestService.checkIsLocation(wrongDTO5));
         assertFalse(requestService.checkIsLocation(wrongDTO6));
+    }
+
+    @Test
+    void construction(){
+        //given
+        User user1=new User("user1","user@gmail.com","1234","010-0000-0000","000000-0000000");
+        userService.join(user1);
+        Request request1=new Request(user1, LocalDateTime.now().plusDays(1l), "서울시 서초구 방배동", "교육봉사", "37.566826", "126.9786557", "1");
+        requestService.join(request1);
+
+        User user2=new User("user12","user2@gmail.com","1234","010-0020-0000","000200-0000000");
+        userService.join(user2);
+        Request request2=new Request(user2, "2100.10.10.17.30", "서울시 서초구 방배동", "교육봉사", "37.564826", "126.9756567", "1");
+        requestService.join(request2);
+
+        //user2가 같은 내용의 request를 등록하려고 할 때
+        RequestDTO requestDTO=new RequestDTO("2100.10.10.17.30", "서울시 서초구 방배동", "교육봉사", "37.564826", "126.9756567", "1");
+        Request request3=new Request(user2, requestDTO);
+
+        //when
+        IllegalStateException e = assertThrows(IllegalStateException.class,
+                () -> requestService.join(request3));//예외가 발생해야 한다.
+        //then
+        assertThat(e.getMessage()).isEqualTo("이미 존재하는 봉사요청입니다.");
     }
 }

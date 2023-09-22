@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  test
+    <button onclick="ajaxText()">test</button>
+</body>
+<script>
+    //function ajaxTest() {
+        let testuser = {name: "jimo"};
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/rest/test1",
+            data: JSON.stringify(testuser),
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function(data, status, xhr) {
+                alert("success1"+data);
+            },
+            error: function(error, status, msg) {
+                alert("error1"+error+status+msg);
+            },
+        });
+
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/rest/test2",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data, status, xhr) {
+            alert("success2"+data['name']);
+        },
+        error: function(error, status, msg) {
+            alert("error2"+error+status+msg);
+        },
+    });
+    //}
+</script>
+</html>
